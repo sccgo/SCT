@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STATEMENT</title>
+    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V9</title>
     <style>
         :root {
             --bg-light: #f4f4f4;
@@ -89,7 +89,7 @@
             gap: 5px;
         }
 
-        /* أزرار لوحة التحرير المتقدمة للمحرر الرئيسي */
+        /* أزرار لوحة التحرير المتقدمة */
         .editor-toolbar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -164,7 +164,6 @@
             padding: 10mm 20mm 20mm 20mm;
             margin-bottom: 40px;
             box-sizing: border-box;
-            /* الإعداد الافتراضي للحدود: بدون حدود */
             border-style: none;
             border-width: 0px;
             border-color: #000000;
@@ -238,12 +237,10 @@
             padding-top: 0px;
         }
 
-        /* تطبيق نظام الخطوط المزدوجة المتزامنة الصارمة */
         #doc-title, #doc-rich-editor, .meta-line, .shape-text {
             font-family: 'Roboto Mono', 'Courier New', monospace !important;
         }
 
-        /* شريط التعتيم الأسود الحامي للسرية والخصوصية */
         .blackout-censor {
             background-color: #000000 !important;
             color: #000000 !important;
@@ -259,7 +256,6 @@
             cursor: pointer;
         }
 
-        /* هندسة وتصميم الأشكال الهندسية التفاعلية */
         .shape-element {
             display: flex;
             align-items: center;
@@ -271,7 +267,6 @@
             width: 150px;
             height: 2px;
             background-color: #000000;
-            border-top: 0px solid transparent;
         }
 
         .shape-rect {
@@ -313,7 +308,6 @@
             min-height: 24px;
         }
 
-        /* تنسيقات الطباعة الصارمة المصلحة */
         @media print {
             @page {
                 size: A4;
@@ -366,9 +360,16 @@
 
     <!-- لوحة هندسة العمليات والتحكم المتكاملة -->
     <div id="control-panel">
-        <h2>لوحة هندسة الوثائق V8</h2>
+        <h2>لوحة هندسة الوثائق V9</h2>
         
-        <!-- التحكم الشامل بحدود الصفحة المضافة حديثاً بناء على طلبك -->
+        <!-- ميزة حفظ واستدعاء القوالب المحلية المضافة حديثاً وبدون إنترنت -->
+        <div class="section-title">محرك حفظ واستدعاء القوالب (محلي)</div>
+        <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">💾 حفظ التصميم الحالي كقالب (.json)</button>
+        <div class="control-group">
+            <label>استدعاء قالب محفوظ من جهازك:</label>
+            <input type="file" id="template-loader" accept=".json">
+        </div>
+
         <div class="section-title">حدود وإطار صفحات المستند</div>
         <div class="control-group">
             <label>نمط إطار حدود الصفحة:</label>
@@ -441,9 +442,7 @@
         <button id="btn-apply-censor" style="background: #000; border: 1px solid #000;">• تطبيق شريط التعتيم السري •</button>
         <button id="btn-undo-censor" class="btn-danger" style="padding: 4px; font-size: 11px;">إزالة آخر شريط تعتيم</button>
 
-        <!-- لوحة التحكم الكاملة بخصائص وأبعاد الأشكال الهندسية والخطوط المحددة -->
         <div class="section-title">تعديل خصائص الشكل/الخط المحدد</div>
-        
         <div class="control-group">
             <label>محاذاة النص داخل الشكل المختَار:</label>
             <div class="row-inputs" style="grid-template-columns: repeat(3, 1fr);">
@@ -478,7 +477,6 @@
             <input type="color" id="shape-color" value="#000000">
         </div>
 
-        <!-- أدوات صناعة الأشكال الهندسية والخطوط الحرة -->
         <div class="section-title">إدراج خطوط وأشكال هندسية جديدة</div>
         <div class="shape-grid">
             <button onclick="createShape('line')">➖ خط حر</button>
@@ -496,40 +494,152 @@
     <div id="workspace">
         <div class="page" id="page-1">
             
-            <!-- الشعار الحركي التفاعلي -->
             <div class="draggable" id="doc-logo" draggable="true">
                 <div style="border: 1px dashed #000; padding: 12px; font-size: 11px; font-weight: bold;">[ موضع الشعار ]</div>
             </div>
 
-            <!-- كتلة البيانات المزدوجة الرقمية -->
             <div class="draggable" id="doc-header-info" draggable="true">
                 <div class="meta-line"><strong>DOC-REF:</strong> <span id="lbl-doc-id">PUB-9A4F</span></div>
                 <div class="meta-line"><strong>DATE-DTG:</strong> <span id="lbl-doc-date">2026-06-07</span></div>
                 <div class="meta-line"><strong>SECURITY:</strong> <span id="lbl-doc-status">GENERAL_PUBLIC</span></div>
             </div>
 
-            <!-- صندوق المحرر المتقدم المدمج بالوثيقة -->
             <div id="doc-editor-container">
                 <div id="doc-title" contenteditable="true">عنوان المستند أو البرقية الرسمية</div>
                 
                 <div id="doc-rich-editor" contenteditable="true">
-                    تم إصلاح ميزة أزرار المحاذاة (يمين، وسط، يسار) في شريط أدوات المحرر بالكامل وجعلها برمجياً تركز وتتحكم في أسطر وفقرات المحرر بدقة متناهية دون أدنى مشكلة! جرب الضغط على أزرار "▶ ع" أو "■" أو "ل ◀" في شريط أدوات المحرر الآن لتلاحظ استجابة النص الفورية.
+                    أهلاً بك في النسخة التاسعة (V9)! بناءً على طلبك، تم إدراج "محرك القوالب المحلي" الذي يغنيك تماماً عن إعادة تصميم وثيقتك وهندسة أبعادها وأشكالها في كل مرة تفتح فيها الأداة.
                     <br><br>
-                    كما تلاحظ، تمت إضافة وحدة تحكم هندسية جديدة بالكامل في القائمة اليمنى لتتيح لك إضافة حد وإطار رسمي لكامل صفحات المستند (A4) مع إمكانية تعديل نوع الخط (مصمت، متقطع، أو خط مزدوج ملكي)، بالإضافة إلى التحكم الكامل بالسمك واللون!
+                    قم بتجهيز تصميمك الكامل، ترويستك، إطاراتك، وعناوينك مرة واحدة فقط، ثم اضغط على زر "حفظ التصميم كقالب" الأزرق في الأعلى ليتم فوراً تحميل ملف خفيف جداً على جهازك. عندما تعود مجدداً وتريد استكمال العمل، ما عليك سوى اختيار هذا الملف من خانة "استدعاء قالب محفوظ" ليعود تصميمك بالكامل كما كان وفي أجزاء من الثانية!
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- هندسة العمليات والمنطق البرمجي التفاعلي المتطور (JavaScript) -->
     <script>
         let draggedElement = null;
         let selectedShapeElement = null; 
         let offsetX = 0;
         let offsetY = 0;
 
-        // منطق التحكم بحدود وإطار الصفحة الحركي الجديد
+        // ميزة حفظ واستدعاء بنية القوالب الهندسية محلياً ودون إنترنت
+        document.getElementById('btn-save-template').addEventListener('click', () => {
+            const templateData = {
+                borderStyle: document.getElementById('page-border-style').value,
+                borderWidth: document.getElementById('page-border-width').value,
+                borderColor: document.getElementById('page-border-color').value,
+                titleVisibility: document.getElementById('title-visibility-toggle').value,
+                startLinePadding: document.getElementById('input-start-line').value,
+                classification: document.getElementById('doc-classification').value,
+                docTitleHtml: document.getElementById('doc-title').innerHTML,
+                docEditorHtml: document.getElementById('doc-rich-editor').innerHTML,
+                logoPosition: {
+                    left: document.getElementById('doc-logo').style.left,
+                    top: document.getElementById('doc-logo').style.top,
+                    html: document.getElementById('doc-logo').innerHTML
+                },
+                headerInfoPosition: {
+                    left: document.getElementById('doc-header-info').style.left,
+                    top: document.getElementById('doc-header-info').style.top
+                },
+                customShapes: []
+            };
+
+            // حصر وحفظ كافة الأشكال والخطوط الحرة التي قام المستخدم برسمها وتوزيعها
+            document.querySelectorAll('.shape-element').forEach(shape => {
+                const inner = shape.querySelector('.shape-line, .shape-rect, .shape-diamond');
+                let shapeText = "";
+                let textObj = shape.querySelector('.shape-text');
+                if (textObj) shapeText = textObj.innerHTML;
+
+                templateData.customShapes.push({
+                    id: shape.id,
+                    top: shape.style.top,
+                    left: shape.style.left,
+                    html: shape.innerHTML,
+                    text: shapeText
+                });
+            });
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "Document_Template_RCI.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        });
+
+        document.getElementById('template-loader').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    // استعادة وضبط إعدادات التهيئة
+                    document.getElementById('page-border-style').value = data.borderStyle || 'none';
+                    document.getElementById('page-border-width').value = data.borderWidth || '4';
+                    document.getElementById('page-border-color').value = data.borderColor || '#000000';
+                    document.getElementById('title-visibility-toggle').value = data.titleVisibility || 'show';
+                    document.getElementById('input-start-line').value = data.startLinePadding || '0';
+                    document.getElementById('doc-classification').value = data.classification || 'public';
+                    
+                    // استعادة التراسل والنصوص
+                    document.getElementById('doc-title').innerHTML = data.docTitleHtml || '';
+                    document.getElementById('doc-rich-editor').innerHTML = data.docEditorHtml || '';
+                    
+                    // ضبط الرؤية للعنوان بناءً على المحتوى المستورد
+                    document.getElementById('doc-title').style.display = (data.titleVisibility === 'hide') ? 'none' : 'block';
+                    document.getElementById('doc-rich-editor').style.paddingTop = (data.startLinePadding || 0) + 'px';
+
+                    // استعادة مواضع الترويسة والشعار وتحديثهما
+                    if(data.logoPosition) {
+                        document.getElementById('doc-logo').style.left = data.logoPosition.left || '';
+                        document.getElementById('doc-logo').style.top = data.logoPosition.top || '';
+                        if(data.logoPosition.html) document.getElementById('doc-logo').innerHTML = data.logoPosition.html;
+                    }
+                    if(data.headerInfoPosition) {
+                        document.getElementById('doc-header-info').style.left = data.headerInfoPosition.left || '';
+                        document.getElementById('doc-header-info').style.top = data.headerInfoPosition.top || '';
+                    }
+
+                    // تنظيف الأشكال القديمة لإعادة بناء الأشكال المستوردة بدقة
+                    document.querySelectorAll('.shape-element').forEach(el => el.remove());
+
+                    if (data.customShapes && data.customShapes.length > 0) {
+                        data.customShapes.forEach(sData => {
+                            const sDiv = document.createElement('div');
+                            sDiv.className = 'draggable shape-element';
+                            sDiv.id = sData.id;
+                            sDiv.setAttribute('draggable', 'true');
+                            sDiv.style.top = sData.top;
+                            sDiv.style.left = sData.left;
+                            sDiv.innerHTML = sData.html;
+                            
+                            // إعادة ربط محتوى النص بداخل الشكل إن وجد
+                            let newTxt = sDiv.querySelector('.shape-text');
+                            if(newTxt && sData.text) newTxt.innerHTML = sData.text;
+
+                            document.getElementById('page-1').appendChild(sDiv);
+                            makeElementDraggable(sDiv);
+                        });
+                    }
+
+                    applyPageBorders();
+                    document.getElementById('doc-classification').dispatchEvent(new Event('change'));
+                    alert("نجاح: تم استدعاء وتطبيق قالب بنية التصميم بنجاح وكفاءة تامّة!");
+                } catch (err) {
+                    alert("خطأ: ملف القالب غير صالح أو تالف.");
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // بقية المنطق البرمجي المستقر للمنصة والحدود والأشكال
         const pageBorderStyle = document.getElementById('page-border-style');
         const pageBorderWidth = document.getElementById('page-border-width');
         const pageBorderColor = document.getElementById('page-border-color');
@@ -552,7 +662,6 @@
         pageBorderWidth.addEventListener('input', applyPageBorders);
         pageBorderColor.addEventListener('input', applyPageBorders);
 
-        // حل وإصلاح مشكلة أزرار محاذاة النص للمحرر بدقة متناهية
         document.getElementById('btn-editor-right').addEventListener('click', () => {
             document.getElementById('doc-rich-editor').style.textAlign = 'right';
         });
@@ -871,7 +980,7 @@
             `;
             workspace.appendChild(newPage);
             setupPageDropZones(newPage);
-            applyPageBorders(); // إجبار الصفحة الجديدة على محاكاة إعدادات الحدود الحالية فوراً
+            applyPageBorders();
         });
 
         document.getElementById('btn-print').addEventListener('click', () => {
