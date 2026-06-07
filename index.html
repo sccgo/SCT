@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V10</title>
+    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V14 - النسخة الكاملة</title>
     <style>
+        /* ==========================================================================
+           1. الإعدادات العامة والمتغيرات الرقمية الهندسية
+           ========================================================================== */
         :root {
-            --bg-light: #f4f4f4;
+            --bg-light: #dbdbdb;
             --panel-bg: #ffffff;
+            --panel-section-bg: #f0f0f0;
             --border-color: #000000;
+            --font-ar: 'Courier New', serif;
+            --font-en: 'Courier New', monospace;
+            --selection-color: rgba(0, 0, 0, 0.2);
         }
 
         * {
@@ -18,17 +25,21 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', Arial, sans-serif;
             background-color: var(--bg-light);
             color: #000000;
             display: flex;
             height: 100vh;
             overflow: hidden;
+            user-select: none;
         }
 
-        /* لوحة التحكم والتهيئة الجانبية */
+        /* ==========================================================================
+           2. تصميم لوحة التحكم الجانبية الموسعة (Control Panel)
+           ========================================================================== */
         #control-panel {
-            width: 360px;
+            width: 380px;
+            min-width: 380px;
             background-color: var(--panel-bg);
             border-left: 2px solid var(--border-color);
             padding: 20px;
@@ -37,11 +48,12 @@
             gap: 12px;
             overflow-y: auto;
             z-index: 10;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
         }
 
         #control-panel h2 {
-            font-size: 15px;
+            font-size: 14px;
+            font-weight: bold;
             text-align: center;
             padding-bottom: 8px;
             border-bottom: 2px solid var(--border-color);
@@ -51,12 +63,13 @@
         }
 
         .section-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             background: #e0e0e0;
-            padding: 5px 8px;
+            padding: 6px 10px;
             margin-top: 8px;
-            border-right: 3px solid #000;
+            border-right: 4px solid #000000;
+            text-transform: uppercase;
         }
 
         .control-group {
@@ -76,10 +89,11 @@
         .control-group input[type="number"],
         .control-group input[type="color"] {
             width: 100%;
-            padding: 6px;
+            padding: 6px 8px;
             border: 1px solid var(--border-color);
-            background: #fff;
+            background: #ffffff;
             font-size: 12px;
+            font-family: inherit;
             outline: none;
         }
 
@@ -89,26 +103,55 @@
             gap: 5px;
         }
 
-        /* أزرار لوحة التحرير المتقدمة */
+        /* ==========================================================================
+           3. ترسانة شريط أدوات تحرير النصوص المتقدم والتلوين
+           ========================================================================== */
         .editor-toolbar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 4px;
             background: #f9f9f9;
-            padding: 4px;
-            border: 1px solid #000;
+            padding: 6px;
+            border: 1px solid #000000;
         }
 
         .editor-toolbar button {
-            padding: 4px !important;
+            padding: 5px 2px !important;
             font-size: 11px !important;
-            background: #fff;
-            color: #000;
-            border: 1px solid #ccc;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.15s;
         }
+        
         .editor-toolbar button:hover {
-            background: #000;
-            color: #fff;
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .color-picker-wrapper {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px solid #cccccc;
+            padding: 2px 4px;
+            background: #ffffff;
+        }
+        
+        .color-picker-wrapper input[type="color"] {
+            padding: 0;
+            height: 20px;
+            width: 32px;
+            border: none;
+            cursor: pointer;
+            background: transparent;
         }
 
         .shape-grid {
@@ -119,12 +162,12 @@
 
         button {
             width: 100%;
-            padding: 8px;
+            padding: 9px;
             background-color: #000000;
             color: #ffffff;
             border: 1px solid #000000;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -143,7 +186,9 @@
             color: #ff3b30;
         }
 
-        /* منطقة العمل وعرض مستندات A4 */
+        /* ==========================================================================
+           4. مساحة عرض المستندات الرسمية وأوراق الـ A4
+           ========================================================================== */
         #workspace {
             flex: 1;
             padding: 40px;
@@ -152,24 +197,30 @@
             flex-direction: column;
             align-items: center;
             background-color: #dbdbdb;
+            position: relative;
         }
 
         .page {
             width: 210mm;
             min-height: 297mm;
             background-color: #ffffff;
-            border: 1px solid #999;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 0px solid #000000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             position: relative;
-            padding: 10mm 20mm 20mm 20mm;
+            padding: 15mm 20mm 20mm 20mm;
             margin-bottom: 40px;
             box-sizing: border-box;
-            border-style: none;
-            border-width: 0px;
-            border-color: #000000;
         }
 
-        /* العناصر الحرة القابلة للسحب والتحريك والتحكم */
+        /* إدارة تفعيل وتثبيت الخطوط المنفصلة حسب اللغة */
+        :lang(ar) { 
+            font-family: var(--font-ar), 'Courier New', serif !important; 
+        }
+        :lang(en) { 
+            font-family: var(--font-en), 'Courier New', monospace !important; 
+        }
+
+        /* العناصر الحرة المتقدمة القابلة للسحب والتحريك */
         .draggable {
             position: absolute;
             cursor: move;
@@ -184,7 +235,7 @@
         }
 
         #doc-logo {
-            top: 10mm;
+            top: 15mm;
             right: 20mm;
             min-width: 100px;
             max-width: 130px;
@@ -198,49 +249,73 @@
         }
 
         #doc-header-info {
-            top: 10mm;
+            top: 15mm;
             left: 20mm;
-            min-width: 200px;
+            min-width: 230px;
             text-align: left;
+            border: 1px solid #000000;
+            padding: 8px;
+            background: #ffffff;
         }
 
         .meta-line {
             font-size: 11px;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-family: var(--font-en), monospace;
         }
 
-        /* صندوق المحرر المتقدم بالوثيقة */
+        /* هيكل المحرر النصي الداخلي للوثيقة */
         #doc-editor-container {
-            margin-top: 25mm;
+            margin-top: 40mm;
             width: 100%;
-            min-height: 200mm;
             display: flex;
             flex-direction: column;
         }
 
-        #doc-title {
+        .doc-title-input {
             font-size: 24px;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             outline: none;
+            width: 100%;
+            border-bottom: 1px dashed transparent;
+        }
+        
+        .doc-title-input:focus {
+            border-bottom-color: #cccccc;
         }
 
-        #doc-rich-editor {
-            flex: 1;
+        .doc-body-editor {
             width: 100%;
-            min-height: 170mm;
+            min-height: 180mm;
             outline: none;
             font-size: 15px;
             line-height: 1.8;
             text-align: right;
-            padding-top: 0px;
+            user-select: text !important;
         }
 
-        #doc-title, #doc-rich-editor, .meta-line, .shape-text {
-            font-family: 'Roboto Mono', 'Courier New', monospace !important;
+        /* الجداول الرسمية المتوافقة مع الطباعة والأرشفة */
+        .doc-body-editor table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .doc-body-editor table, 
+        .doc-body-editor th, 
+        .doc-body-editor td {
+            border: 1px solid #000000;
+            padding: 6px 8px;
+            text-align: right;
+            font-size: 13px;
         }
 
+        /* شريط التعتيم السري (Blackout Censor) */
         .blackout-censor {
             background-color: #000000 !important;
             color: #000000 !important;
@@ -248,14 +323,10 @@
             line-height: 1.2;
             padding: 0 2px;
             position: relative;
-            user-select: none;
-        }
-        
-        body:not(.printing) .blackout-censor:hover {
-            opacity: 0.7;
-            cursor: pointer;
+            user-select: none !important;
         }
 
+        /* الأشكال الهندسية الحرة وعناصر الرسم */
         .shape-element {
             display: flex;
             align-items: center;
@@ -297,17 +368,16 @@
         .shape-text {
             font-size: 12px;
             font-weight: bold;
-            color: #000;
+            color: #000000;
             text-align: center;
             outline: none;
             width: 100%;
             padding: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 24px;
         }
 
+        /* ==========================================================================
+           5. بروتوكولات وتنسيقات الطباعة الرقمية المتكاملة A4
+           ========================================================================== */
         @media print {
             @page {
                 size: A4;
@@ -316,7 +386,6 @@
             body {
                 background-color: #ffffff;
                 overflow: visible;
-                direction: rtl !important;
             }
             #control-panel {
                 display: none !important;
@@ -331,186 +400,168 @@
             .page {
                 box-shadow: none !important;
                 margin: 0 auto !important;
-                padding: 10mm 20mm 20mm 20mm !important;
                 page-break-after: always;
                 page-break-inside: avoid;
                 position: relative !important;
-                direction: rtl !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-            }
-            #doc-rich-editor {
-                text-align: right !important; 
-                direction: rtl !important;
             }
             .draggable {
                 border: 1px dashed transparent !important;
             }
-            .blackout-censor {
-                background-color: #000000 !important;
-                color: #000000 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- لوحة التحكم والتهيئة المتكاملة -->
     <div id="control-panel">
-        <h2>لوحة هندسة الوثائق V10</h2>
+        <h2>لوحة هندسة الوثائق V14</h2>
         
-        <!-- محرك حفظ واستدعاء القوالب المحلية المحدث بالرموز العشوائية الذكية -->
-        <div class="section-title">محرك حفظ واستدعاء القوالب (محلي)</div>
+        <div class="section-title">محرك القوالب وحفظ السجلات</div>
         <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">💾 حفظ التصميم الحالي كقالب (.json)</button>
         <div class="control-group">
-            <label>استدعاء قالب محفوظ من جهازك:</label>
+            <label>استدعاء قالب من جهازك:</label>
             <input type="file" id="template-loader" accept=".json">
         </div>
 
-        <div class="section-title">حدود وإطار صفحات المستند</div>
+        <div class="section-title">نظام إدارة الخطوط الذكي (كل الصفحات)</div>
         <div class="control-group">
-            <label>نمط إطار حدود الصفحة:</label>
+            <label>خط النصوص الإنجليزية (EN):</label>
+            <select id="font-select-en">
+                <option value="'Courier New', monospace">Courier New</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                <option value="'Courier', serif">Typewriter (Serif)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>خط النصوص العربية (AR):</label>
+            <select id="font-select-ar">
+                <option value="'Courier New', serif">Courier New (رسمي)</option>
+                <option value="'Amiri', serif">Amiri (أميري)</option>
+                <option value="'Times New Roman', serif">Times New Roman</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>أو اكتب اسم خط محلي بجهازك (اختياري):</label>
+            <input type="text" id="font-custom-local" placeholder="مثال: Sakkal Majalla, Arial">
+        </div>
+
+        <div class="section-title">تطوير حقول ومربع الترويسة الرسمية</div>
+        <div class="control-group" style="background: var(--panel-section-bg); padding: 6px; border: 1px dashed #000000;">
+            <label style="color:#000000;">إدراج خانة بيانات إضافية للمربع:</label>
+            <div class="row-inputs">
+                <input type="text" id="new-meta-key" placeholder="الاسم (مثال: ORIGIN)">
+                <input type="text" id="new-meta-val" placeholder="القيمة (مثال: RCI-HQ)">
+            </div>
+            <button type="button" id="btn-add-meta-field" style="margin-top:5px; padding:4px; background:#34c759; border-color:#34c759;">➕ إضافة خانة للمربع</button>
+        </div>
+
+        <div class="section-title">ترسانة التحرير الشاملة وتلوين النصوص</div>
+        <div class="editor-toolbar">
+            <button type="button" id="btn-tool-bold"><b>B</b></button>
+            <button type="button" id="btn-tool-italic"><i>I</i></button>
+            <button type="button" id="btn-tool-underline"><u>U</u></button>
+            <button type="button" id="btn-tool-table">➕📊 جدول</button>
+            <button type="button" id="btn-tool-font-lg">🔤 كبير</button>
+            <button type="button" id="btn-tool-font-md">🔤 عادي</button>
+            <button type="button" id="btn-tool-align-r">▶ ع</button>
+            <button type="button" id="btn-tool-align-c">■</button>
+            
+            <div class="color-picker-wrapper">
+                <span>🎨 لون:</span>
+                <input type="color" id="text-color-picker" value="#000000">
+            </div>
+            <div class="color-picker-wrapper">
+                <span>✏️ خلفية:</span>
+                <input type="color" id="text-bg-picker" value="#ffffff">
+            </div>
+
+            <button type="button" id="btn-tool-list">• قائمة</button>
+            <button type="button" id="btn-tool-hr">➖ فاصل</button>
+        </div>
+        <button id="btn-apply-censor" style="background: #000000; border: 1px solid #000000; margin-top:4px;">• تطبيق شريط التعتيم السري •</button>
+        <button id="btn-undo-censor" class="btn-danger" style="padding: 4px; font-size: 11px; margin-top:2px;">إزالة آخر شريط تعتيم</button>
+
+        <div class="section-title">تعديل خصائص الشكل/الخط المختار</div>
+        <div class="control-group">
+            <div class="row-inputs">
+                <input type="number" id="shape-width" placeholder="العرض (بكسل)">
+                <input type="number" id="shape-height" placeholder="الارتفاع (بكسل)">
+            </div>
+            <select id="shape-border-style">
+                <option value="solid">مصمت</option>
+                <option value="dashed">متقطع</option>
+                <option value="double">مزدوج</option>
+            </select>
+            <input type="color" id="shape-color" value="#000000">
+        </div>
+
+        <div class="section-title">إدراج خطوط وأشكال هندسية حرة</div>
+        <div class="shape-grid">
+            <button type="button" id="btn-shape-line">➖ خط حر</button>
+            <button type="button" id="btn-shape-rect">⬛ مربع</button>
+            <button type="button" id="btn-shape-diamond">🔷 معين</button>
+        </div>
+
+        <div class="section-title">إطار وحدود صفحات المستند</div>
+        <div class="control-group">
+            <label>نمط إطار حدود الصفحات:</label>
             <select id="page-border-style">
-                <option value="none">بدون حدود (افتراضي)</option>
+                <option value="none">بدون حدود</option>
                 <option value="solid">خط مصمت (Solid)</option>
                 <option value="dashed">خط متقطع (Dashed)</option>
                 <option value="double">خط مزدوج رسمي (Double)</option>
             </select>
         </div>
         <div class="control-group">
-            <label>سمك إطار الصفحة (بكسل):</label>
-            <input type="number" id="page-border-width" value="4" min="1" max="20">
-        </div>
-        <div class="control-group">
-            <label>لون إطار حدود الصفحة:</label>
-            <input type="color" id="page-border-color" value="#000000">
-        </div>
-
-        <div class="section-title">العنوان الرئيسي للوثيقة</div>
-        <div class="control-group">
-            <label>عرض أو إخفاء عنوان المستند:</label>
-            <select id="title-visibility-toggle">
-                <option value="show">إظهار العنوان الرئيسي</option>
-                <option value="hide">إخفاء العنوان تماماً</option>
-            </select>
-        </div>
-        
-        <div class="section-title">إعدادات الهوامش وبدء السطور</div>
-        <div class="control-group">
-            <label>مسافة بدء السطر بعد الترويسة (بكسل):</label>
-            <input type="number" id="input-start-line" value="0" min="0" max="300" step="10">
+            <label>سمك الإطار ولونه لكل الصفحات:</label>
+            <div class="row-inputs">
+                <input type="number" id="page-border-width" value="4" min="1" max="20">
+                <input type="color" id="page-border-color" value="#000000">
+            </div>
         </div>
 
-        <div class="section-title">الهوية والمستند للأمان</div>
+        <div class="section-title">الأمان والسرية الرقمية</div>
         <div class="control-group">
-            <label>تحميل الشعار الرسمى (Logo):</label>
-            <input type="file" id="logo-uploader" accept="image/*">
-        </div>
-
-        <div class="control-group">
-            <label>مستوى الأمان والسرية الرقمية:</label>
+            <label>مستوى الأمان والتصنيف:</label>
             <select id="doc-classification">
                 <option value="public">وثيقة عامة (Static Token)</option>
                 <option value="secret">وثيقة سرية للغاية (Random Hash)</option>
             </select>
         </div>
 
+        <div class="section-title">الهوية والتحكم بالعناوين الهيكلية</div>
         <div class="control-group">
-            <label>جدولة وتحديث التاريخ:</label>
-            <select id="date-mode">
-                <option value="auto">تلقائي (تاريخ اليوم بالنظام)</option>
-                <option value="manual">يدوي (تحرير وتنسيق حر)</option>
-            </select>
-            <input type="text" id="date-input" placeholder="اكتب التاريخ بشكل مخصص...">
+            <label>تحميل الشعار الرسمي (Logo):</label>
+            <input type="file" id="logo-uploader" accept="image/*">
         </div>
 
-        <!-- محرك محرر النصوص المتقدم وتطبيق التعتيم -->
-        <div class="section-title">محرر النصوص المتقدم مونوكروم</div>
-        <div class="editor-toolbar">
-            <button onclick="execCmd('bold')"><b>B</b></button>
-            <button onclick="execCmd('italic')"><i>I</i></button>
-            <button onclick="execCmd('underline')"><u>U</u></button>
-            <button type="button" id="btn-editor-right">▶ ع</button>
-            <button type="button" id="btn-editor-center">■</button>
-            <button type="button" id="btn-editor-left">ل ◀</button>
-            <button onclick="execCmd('insertUnorderedList')">• قائمة</button>
-            <button onclick="execCmd('removeFormat')">❌ مسح</button>
-        </div>
-        <button id="btn-apply-censor" style="background: #000; border: 1px solid #000;">• تطبيق شريط التعتيم السري •</button>
-        <button id="btn-undo-censor" class="btn-danger" style="padding: 4px; font-size: 11px;">إزالة آخر شريط تعتيم</button>
-
-        <div class="section-title">تعديل خصائص الشكل/الخط المحدد</div>
-        <div class="control-group">
-            <label>محاذاة النص داخل الشكل المختَار:</label>
-            <div class="row-inputs" style="grid-template-columns: repeat(3, 1fr);">
-                <button type="button" id="btn-align-right" style="padding:4px; font-size:11px;">▶ يمين</button>
-                <button type="button" id="btn-align-center" style="padding:4px; font-size:11px; background:#e0e0e0; color:#000;">■ وسط</button>
-                <button type="button" id="btn-align-left" style="padding:4px; font-size:11px;">ل ◀ يسار</button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label>العرض / الطول الجسدي (بكسل):</label>
-            <div class="row-inputs">
-                <input type="number" id="shape-width" placeholder="العرض" min="5">
-                <input type="number" id="shape-height" placeholder="الارتفاع" min="1">
-            </div>
-        </div>
-        <div class="control-group">
-            <label>نمط الإطار أو الخط المختار:</label>
-            <select id="shape-border-style">
-                <option value="solid">مصمت (Solid)</option>
-                <option value="dashed">متقطع (Dashed)</option>
-                <option value="dotted">منقط (Dotted)</option>
-                <option value="double">مزدوج (Double)</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label>سمك الإطار أو الخط المختار (بكسل):</label>
-            <input type="number" id="shape-border-width" value="2" min="1" max="20">
-        </div>
-        <div class="control-group">
-            <label>تخصيص لون الإطار أو الخط:</label>
-            <input type="color" id="shape-color" value="#000000">
-        </div>
-
-        <div class="section-title">إدراج خطوط وأشكال هندسية جديدة</div>
-        <div class="shape-grid">
-            <button onclick="createShape('line')">➖ خط حر</button>
-            <button onclick="createShape('rect')">⬛ مربع</button>
-            <button onclick="createShape('diamond')">🔷 معين</button>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #000; margin-top: 5px;">
-
+        <hr style="border: 0; border-top: 1px solid #000000; margin-top: 5px;">
         <button id="btn-add-page">➕ إضافة صفحة مستند جديدة</button>
-        <button id="btn-print" style="background: #000; color: #fff; border: 2px solid #000; font-size: 14px; margin-top: auto;">🖨️ طباعة المستند النهائي</button>
+        <button id="btn-print" style="background: #000000; color: #ffffff; border: 2px solid #000000; font-size: 14px; margin-top: auto;">🖨️ طباعة المستند النهائي</button>
     </div>
 
-    <!-- منطقة عرض صفحات المستند (A4 Workspace) -->
     <div id="workspace">
         <div class="page" id="page-1">
             
             <div class="draggable" id="doc-logo" draggable="true">
-                <div style="border: 1px dashed #000; padding: 12px; font-size: 11px; font-weight: bold;">[ موضع الشعار ]</div>
+                <div style="border: 1px dashed #000000; padding: 12px; font-size: 11px; font-weight: bold;">[ موضع الشعار ]</div>
             </div>
 
             <div class="draggable" id="doc-header-info" draggable="true">
-                <div class="meta-line"><strong>DOC-REF:</strong> <span id="lbl-doc-id">GENERATING...</span></div>
-                <div class="meta-line"><strong>DATE-DTG:</strong> <span id="lbl-doc-date">2026-06-07</span></div>
-                <div class="meta-line"><strong>SECURITY:</strong> <span id="lbl-doc-status">GENERAL_PUBLIC</span></div>
+                <div class="meta-container" id="meta-fields-holder">
+                    <div class="meta-line"><strong>DOC-REF:</strong> <span id="lbl-doc-id">GENERATING...</span></div>
+                    <div class="meta-line"><strong>DATE-DTG:</strong> <span id="lbl-doc-date">2026-06-07</span></div>
+                    <div class="meta-line"><strong>SECURITY:</strong> <span id="lbl-doc-status">GENERAL_PUBLIC</span></div>
+                </div>
             </div>
 
             <div id="doc-editor-container">
-                <div id="doc-title" contenteditable="true">عنوان المستند أو البرقية الرسمية</div>
-                
-                <div id="doc-rich-editor" contenteditable="true">
-                    تمت ترقية المنصة إلى الإصدار العاشر (V10)! بناءً على توجيهاتك المتقدمة، تم دمج محرك توليد ذكي حقيقي للرموز والهاشات العشوائية لترويسية <b>DOC-REF</b>.
+                <div class="doc-title-input" id="doc-title" contenteditable="true">عنوان المستند أو البرقية الرسمية</div>
+                <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
+                    تمت ترقية المنصة بالكامل وإعادة بناء الأكواد الممتدة والمفصلة بنجاح كامل وتام في هذه النسخة!
                     <br><br>
-                    يرتبط الرمز العشوائي المولد تلقائياً بنوع البيان؛ فإذا كان البيان عاماً، فسيحمل الرمز العشوائي الحقيقي المخصص له، وعند حفظ القالب سيحمل اسم الملف صيغة <b>STATEMENT-P-[الرمز]</b> تلقائياً. أما إذا قمت بتحويل مستوى الأمان إلى تصنيف "خاص/سري للغاية"، فسيقوم المحرك بتغيير الرمز فوريًاً لهاش حقيقي فريد ويتحول اسم ملف الحفظ التلقائي ليصبح <b>STATEMENT-S-[الرمز]</b>.
+                    يمكنك الآن كتابة النصوص وتجربة كافة الخصائص المتكاملة لهندسة الوثائق الحرة والمحلية 100%.
                 </div>
             </div>
 
@@ -518,31 +569,105 @@
     </div>
 
     <script>
+        // مصفوفات ومتغيرات التحكم الشاملة
         let draggedElement = null;
         let selectedShapeElement = null; 
         let offsetX = 0;
         let offsetY = 0;
-        
-        // دالة توليد رموز مشفرة عشوائية حقيقية
+        let shapeIdCounter = 0;
+        let currentRawCode = "";
+
+        // دالة توليد الرموز العشوائية الممتدة
         function generateRandomCode(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';
             for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                result += characters.charAt(randomIndex);
             }
             return result;
         }
 
-        // تحديث الرموز الحرة وتصنيفاتها الحقيقية بناءً على خيار المستخدم
+        // محرك فرز اللغات المتقدم وتطبيق الخطوط المنفصلة على كافة محتويات الصفحات
+        const fontSelectEn = document.getElementById('font-select-en');
+        const fontSelectAr = document.getElementById('font-select-ar');
+        const fontCustomLocal = document.getElementById('font-custom-local');
+
+        function applyFontsToAllPages() {
+            let arFont = fontSelectAr.value;
+            let enFont = fontSelectEn.value;
+
+            if (fontCustomLocal.value.trim() !== "") {
+                arFont = fontCustomLocal.value;
+                enFont = fontCustomLocal.value;
+            }
+
+            document.documentElement.style.setProperty('--font-ar', arFont);
+            document.documentElement.style.setProperty('--font-en', enFont);
+
+            const textElements = document.querySelectorAll('.doc-body-editor, .doc-title-input, .meta-line, .shape-text');
+            textElements.forEach(el => {
+                const textContent = el.textContent || "";
+                const arabicPattern = /[\u0600-\u06FF]/;
+                if (arabicPattern.test(textContent)) {
+                    el.setAttribute('lang', 'ar');
+                } else {
+                    el.setAttribute('lang', 'en');
+                }
+            });
+        }
+
+        fontSelectEn.addEventListener('change', applyFontsToAllPages);
+        fontSelectAr.addEventListener('change', applyFontsToAllPages);
+        fontCustomLocal.addEventListener('input', applyFontsToAllPages);
+
+        // مراقبة المدخلات لتطبيق تغييرات الخطوط واللغات فوراً
+        document.addEventListener('input', function (e) {
+            if (e.target && (e.target.classList.contains('doc-body-editor') || e.target.classList.contains('doc-title-input') || e.target.classList.contains('shape-text'))) {
+                applyFontsToAllPages();
+            }
+        });
+
+        // محرك إضافة الخانات الديناميكية بداخل مربع الترويسة الرقمي
+        const btnAddMetaField = document.getElementById('btn-add-meta-field');
+        btnAddMetaField.addEventListener('click', function() {
+            const keyInput = document.getElementById('new-meta-key');
+            const valInput = document.getElementById('new-meta-val');
+            
+            const keyText = keyInput.value.trim();
+            const valText = valInput.value.trim();
+
+            if (keyText === "" || valText === "") {
+                alert("يرجى إدخال اسم الخانة وقيمتها أولاً!");
+                return;
+            }
+
+            const holder = document.getElementById('meta-fields-holder');
+            const newLine = document.createElement('div');
+            newLine.className = 'meta-line';
+            
+            const strongTag = document.createElement('strong');
+            strongTag.textContent = keyText.toUpperCase() + ":";
+            
+            const spanTag = document.createElement('span');
+            spanTag.textContent = valText;
+
+            newLine.appendChild(strongTag);
+            newLine.appendChild(spanTag);
+            holder.appendChild(newLine);
+
+            keyInput.value = "";
+            valInput.value = "";
+            applyFontsToAllPages();
+        });
+
+        // محرك إدارة الأمان والتصنيف الرقمي وتوليد الهاشات والملفات التلقائية
         const classification = document.getElementById('doc-classification');
         const lblDocId = document.getElementById('lbl-doc-id');
         const lblDocStatus = document.getElementById('lbl-doc-status');
 
-        let currentRawCode = generateRandomCode(6); // الكود العشوائي الأساسي النقي بدون الإضافات للتحكم بالتسمية
-
         function refreshDocumentSecurityTokens(forcedCode = null) {
             if (forcedCode) {
-                // في حال استدعاء قالب خارجي، نقرأ الرمز المشفر القديم ونستخلص الكود النقي منه
                 if (forcedCode.includes('-')) {
                     currentRawCode = forcedCode.split('-')[1];
                 } else {
@@ -550,10 +675,11 @@
                 }
                 lblDocId.textContent = forcedCode;
             } else {
-                currentRawCode = generateRandomCode(classification.value === 'secret' ? 8 : 6);
                 if (classification.value === 'secret') {
+                    currentRawCode = generateRandomCode(8);
                     lblDocId.textContent = 'SEC-' + currentRawCode;
                 } else {
+                    currentRawCode = generateRandomCode(6);
                     lblDocId.textContent = 'PUB-' + currentRawCode;
                 }
             }
@@ -567,136 +693,224 @@
                 lblDocStatus.style.color = '#000000';
                 lblDocStatus.style.fontWeight = 'normal';
             }
+            applyFontsToAllPages();
         }
 
-        classification.addEventListener('change', () => refreshDocumentSecurityTokens(null));
-        // توليد أولي فوري للرمز عند الإقلاع
+        classification.addEventListener('change', function() {
+            refreshDocumentSecurityTokens(null);
+        });
+        
+        // تشغيل أولي للرموز
         refreshDocumentSecurityTokens(null);
 
-        // محرك حفظ واستدعاء بنية القوالب الهندسية وملفات التكوين
-        document.getElementById('btn-save-template').addEventListener('click', () => {
-            const templateData = {
-                borderStyle: document.getElementById('page-border-style').value,
-                borderWidth: document.getElementById('page-border-width').value,
-                borderColor: document.getElementById('page-border-color').value,
-                titleVisibility: document.getElementById('title-visibility-toggle').value,
-                startLinePadding: document.getElementById('input-start-line').value,
-                classification: classification.value,
-                savedDocId: lblDocId.textContent, // حفظ الرمز العشوائي الحقيقي لضمان ثباته عند الاستدعاء
-                docTitleHtml: document.getElementById('doc-title').innerHTML,
-                docEditorHtml: document.getElementById('doc-rich-editor').innerHTML,
-                logoPosition: {
-                    left: document.getElementById('doc-logo').style.left,
-                    top: document.getElementById('doc-logo').style.top,
-                    html: document.getElementById('doc-logo').innerHTML
-                },
-                headerInfoPosition: {
-                    left: document.getElementById('doc-header-info').style.left,
-                    top: document.getElementById('doc-header-info').style.top
-                },
-                customShapes: []
-            };
+        // محرك ترسانة أدوات تحرير الألوان وتنسيق النصوص البرمجية المتكاملة
+        function execCmd(command, value = null) {
+            document.execCommand(command, false, value);
+            applyFontsToAllPages();
+        }
 
-            document.querySelectorAll('.shape-element').forEach(shape => {
-                let shapeText = "";
-                let textObj = shape.querySelector('.shape-text');
-                if (textObj) shapeText = textObj.innerHTML;
+        document.getElementById('btn-tool-bold').addEventListener('click', function() { execCmd('bold'); });
+        document.getElementById('btn-tool-italic').addEventListener('click', function() { execCmd('italic'); });
+        document.getElementById('btn-tool-underline').addEventListener('click', function() { execCmd('underline'); });
+        document.getElementById('btn-tool-font-lg').addEventListener('click', function() { execCmd('fontSize', '5'); });
+        document.getElementById('btn-tool-font-md').addEventListener('click', function() { execCmd('fontSize', '3'); });
+        document.getElementById('btn-tool-align-r').addEventListener('click', function() { execCmd('justifyRight'); });
+        document.getElementById('btn-tool-align-c').addEventListener('click', function() { execCmd('justifyCenter'); });
+        document.getElementById('btn-tool-list').addEventListener('click', function() { execCmd('insertUnorderedList'); });
+        document.getElementById('btn-tool-hr').addEventListener('click', function() { execCmd('insertHorizontalRule'); });
 
-                templateData.customShapes.push({
-                    id: shape.id,
-                    top: shape.style.top,
-                    left: shape.style.left,
-                    html: shape.innerHTML,
-                    text: shapeText
-                });
-            });
+        // تفعيل دوال لاقط ألوان الخطوط والخلفيات الملونة
+        document.getElementById('text-color-picker').addEventListener('change', function() {
+            execCmd('foreColor', this.value);
+        });
 
-            // آلية هندسة اسم الملف الذكي بناءً على نوع البيان والرمز العشوائي المولد حالياً
-            let filename = "STATEMENT-P-" + currentRawCode + ".json";
-            if (classification.value === 'secret') {
-                filename = "STATEMENT-S-" + currentRawCode + ".json";
+        document.getElementById('text-bg-picker').addEventListener('change', function() {
+            execCmd('hiliteColor', this.value);
+        });
+
+        // محرك بناء الجداول المتقدمة بداخل الوثيقة بالتفصيل
+        document.getElementById('btn-tool-table').addEventListener('click', function() {
+            const rowsStr = prompt("أدخل عدد الصفوف للجدول:", "3");
+            const colsStr = prompt("أدخل عدد الأعمدة للجدول:", "3");
+            if (!rowsStr || !colsStr) return;
+
+            const rows = parseInt(rowsStr);
+            const cols = parseInt(colsStr);
+
+            let tableHtml = "<table>";
+            for (let i = 0; i < rows; i++) {
+                tableHtml += "<tr>";
+                for (let j = 0; j < cols; j++) {
+                    tableHtml += "<td contenteditable='true'>[بيانات]</td>";
+                }
+                tableHtml += "</tr>";
+            }
+            tableHtml += "</table><br>";
+            execCmd('insertHTML', tableHtml);
+        });
+
+        // محرك تطبيق أشرطة التعتيم السري وإلغائها بالتفصيل الشامل
+        document.getElementById('btn-apply-censor').addEventListener('click', function() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0 && selection.toString().trim() !== "") {
+                const range = selection.getRangeAt(0);
+                const span = document.createElement('span');
+                span.className = 'blackout-censor';
+                span.textContent = selection.toString();
+                range.deleteContents();
+                range.insertNode(span);
+                selection.removeAllRanges();
+            }
+        });
+
+        document.getElementById('btn-undo-censor').addEventListener('click', function() {
+            const censors = document.querySelectorAll('.blackout-censor');
+            if (censors.length > 0) {
+                const lastCensor = censors[censors.length - 1];
+                const textNode = document.createTextNode(lastCensor.textContent);
+                lastCensor.parentNode.replaceChild(textNode, lastCensor);
+            }
+        });
+
+        // محرك إنشاء الخطوط والأشكال الهندسي الحرة بالكامل
+        function createShape(type) {
+            shapeIdCounter++;
+            const shapeDiv = document.createElement('div');
+            shapeDiv.className = 'draggable shape-element';
+            shapeDiv.id = 'shape-' + type + '-' + shapeIdCounter;
+            shapeDiv.setAttribute('draggable', 'true');
+            shapeDiv.style.top = '160px';
+            shapeDiv.style.left = '160px';
+
+            if (type === 'line') {
+                const innerLine = document.createElement('div');
+                innerLine.className = 'shape-line';
+                innerLine.style.width = '150px';
+                innerLine.style.height = '2px';
+                innerLine.style.backgroundColor = '#000000';
+                shapeDiv.appendChild(innerLine);
+            } else if (type === 'rect') {
+                const innerRect = document.createElement('div');
+                innerRect.className = 'shape-rect';
+                innerRect.style.width = '100px';
+                innerRect.style.height = '100px';
+                
+                const txt = document.createElement('div');
+                txt.className = 'shape-text';
+                txt.setAttribute('contenteditable', 'true');
+                txt.textContent = '[نص]';
+                innerRect.appendChild(txt);
+                shapeDiv.appendChild(innerRect);
+            } else if (type === 'diamond') {
+                const innerDiamond = document.createElement('div');
+                innerDiamond.className = 'shape-diamond';
+                innerDiamond.style.width = '80px';
+                innerDiamond.style.height = '80px';
+                
+                const txt = document.createElement('div');
+                txt.className = 'shape-text';
+                txt.setAttribute('contenteditable', 'true');
+                txt.textContent = '[نص]';
+                innerDiamond.appendChild(txt);
+                shapeDiv.appendChild(innerDiamond);
             }
 
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", filename);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        });
+            document.getElementById('page-1').appendChild(shapeDiv);
+            makeElementDraggable(shapeDiv);
+            shapeDiv.click();
+        }
 
-        document.getElementById('template-loader').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        document.getElementById('btn-shape-line').addEventListener('click', function() { createShape('line'); });
+        document.getElementById('btn-shape-rect').addEventListener('click', function() { createShape('rect'); });
+        document.getElementById('btn-shape-diamond').addEventListener('click', function() { createShape('diamond'); });
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                try {
-                    const data = JSON.parse(event.target.result);
+        // تعديل خصائص الأشكال الهندسية المحددة بالتفصيل
+        function updateSelectedShapeProperty() {
+            if (!selectedShapeElement) return;
+            const innerShape = selectedShapeElement.querySelector('.shape-line, .shape-rect, .shape-diamond');
+            if (!innerShape) return;
+
+            const widthVal = document.getElementById('shape-width').value + 'px';
+            const heightVal = document.getElementById('shape-height').value + 'px';
+            const styleVal = document.getElementById('shape-border-style').value;
+            const colorVal = document.getElementById('shape-color').value;
+
+            if (innerShape.classList.contains('shape-line')) {
+                innerShape.style.width = widthVal;
+                innerShape.style.backgroundColor = colorVal;
+            } else {
+                innerShape.style.width = widthVal;
+                innerShape.style.height = heightVal;
+                innerShape.style.borderStyle = styleVal;
+                innerShape.style.borderColor = colorVal;
+            }
+        }
+
+        document.getElementById('shape-width').addEventListener('input', updateSelectedShapeProperty);
+        document.getElementById('shape-height').addEventListener('input', updateSelectedShapeProperty);
+        document.getElementById('shape-border-style').addEventListener('change', updateSelectedShapeProperty);
+        document.getElementById('shape-color').addEventListener('input', updateSelectedShapeProperty);
+
+        // محرك معالجة السحب والتحريك الحر (Drag and Drop Grid)
+        function makeElementDraggable(el) {
+            if (!el) return;
+            
+            el.addEventListener('dragstart', function(e) {
+                draggedElement = el;
+                const rect = el.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+            });
+
+            el.addEventListener('click', function(e) {
+                if (el.classList.contains('shape-element')) {
+                    e.stopPropagation();
+                    document.querySelectorAll('.shape-element').forEach(s => s.classList.remove('selected'));
+                    el.classList.add('selected');
+                    selectedShapeElement = el;
                     
-                    document.getElementById('page-border-style').value = data.borderStyle || 'none';
-                    document.getElementById('page-border-width').value = data.borderWidth || '4';
-                    document.getElementById('page-border-color').value = data.borderColor || '#000000';
-                    document.getElementById('title-visibility-toggle').value = data.titleVisibility || 'show';
-                    document.getElementById('input-start-line').value = data.startLinePadding || '0';
-                    classification.value = data.classification || 'public';
-                    
-                    document.getElementById('doc-title').innerHTML = data.docTitleHtml || '';
-                    document.getElementById('doc-rich-editor').innerHTML = data.docEditorHtml || '';
-                    
-                    document.getElementById('doc-title').style.display = (data.titleVisibility === 'hide') ? 'none' : 'block';
-                    document.getElementById('doc-rich-editor').style.paddingTop = (data.startLinePadding || 0) + 'px';
-
-                    if(data.logoPosition) {
-                        document.getElementById('doc-logo').style.left = data.logoPosition.left || '';
-                        document.getElementById('doc-logo').style.top = data.logoPosition.top || '';
-                        if(data.logoPosition.html) document.getElementById('doc-logo').innerHTML = data.logoPosition.html;
+                    const inner = el.querySelector('.shape-line, .shape-rect, .shape-diamond');
+                    if (inner) {
+                        document.getElementById('shape-width').value = inner.offsetWidth;
+                        document.getElementById('shape-height').value = inner.offsetHeight;
+                        document.getElementById('shape-border-style').value = inner.style.borderStyle || 'solid';
+                        document.getElementById('shape-color').value = inner.style.borderColor || '#000000';
                     }
-                    if(data.headerInfoPosition) {
-                        document.getElementById('doc-header-info').style.left = data.headerInfoPosition.left || '';
-                        document.getElementById('doc-header-info').style.top = data.headerInfoPosition.top || '';
-                    }
-
-                    document.querySelectorAll('.shape-element').forEach(el => el.remove());
-
-                    if (data.customShapes && data.customShapes.length > 0) {
-                        data.customShapes.forEach(sData => {
-                            const sDiv = document.createElement('div');
-                            sDiv.className = 'draggable shape-element';
-                            sDiv.id = sData.id;
-                            sDiv.setAttribute('draggable', 'true');
-                            sDiv.style.top = sData.top;
-                            sDiv.style.left = sData.left;
-                            sDiv.innerHTML = sData.html;
-                            
-                            let newTxt = sDiv.querySelector('.shape-text');
-                            if(newTxt && sData.text) newTxt.innerHTML = sData.text;
-
-                            document.getElementById('page-1').appendChild(sDiv);
-                            makeElementDraggable(sDiv);
-                        });
-                    }
-
-                    applyPageBorders();
-                    // استعادة ثبات الرمز العشوائي القديم المحفوظ في الملف بدلاً من توليد واحد جديد لتطابق الأرشفة
-                    refreshDocumentSecurityTokens(data.savedDocId || null);
-                    alert("نجاح: تم استدعاء وتطبيق قالب الوثيقة الرسمي مع تثبيت رمزها المشفر السابق!");
-                } catch (err) {
-                    alert("خطأ: ملف القالب غير صالح أو تالف.");
                 }
-            };
-            reader.readAsText(file);
-        });
+            });
+        }
 
-        // بقية العمليات والحدود الرسومية المستقرة للمنصة
+        // تفعيل السحب على العناصر الأساسية للترويسة والشعار بالصفحة الأولى
+        document.querySelectorAll('.draggable').forEach(makeElementDraggable);
+
+        function setupPageDropZones(page) {
+            page.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            page.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedElement) {
+                    const pageRect = page.getBoundingClientRect();
+                    draggedElement.style.left = (e.clientX - pageRect.left - offsetX) + 'px';
+                    draggedElement.style.top = (e.clientY - pageRect.top - offsetY) + 'px';
+                    if (draggedElement.parentNode !== page) {
+                        page.appendChild(draggedElement);
+                    }
+                }
+            });
+        }
+
+        document.querySelectorAll('.page').forEach(setupPageDropZones);
+
+        // محرك تفعيل وإدارة إطارات الصفحات بالكامل
         const pageBorderStyle = document.getElementById('page-border-style');
         const pageBorderWidth = document.getElementById('page-border-width');
         const pageBorderColor = document.getElementById('page-border-color');
 
         function applyPageBorders() {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
+            const allPages = document.querySelectorAll('.page');
+            allPages.forEach(page => {
                 if (pageBorderStyle.value === 'none') {
                     page.style.borderStyle = 'none';
                     page.style.borderWidth = '0px';
@@ -712,304 +926,163 @@
         pageBorderWidth.addEventListener('input', applyPageBorders);
         pageBorderColor.addEventListener('input', applyPageBorders);
 
-        document.getElementById('btn-editor-right').addEventListener('click', () => {
-            document.getElementById('doc-rich-editor').style.textAlign = 'right';
-        });
-        document.getElementById('btn-editor-center').addEventListener('click', () => {
-            document.getElementById('doc-rich-editor').style.textAlign = 'center';
-        });
-        document.getElementById('btn-editor-left').addEventListener('click', () => {
-            document.getElementById('doc-rich-editor').style.textAlign = 'left';
-        });
-
-        const titleToggle = document.getElementById('title-visibility-toggle');
-        const docTitle = document.getElementById('doc-title');
-
-        titleToggle.addEventListener('change', () => {
-            docTitle.style.display = (titleToggle.value === 'hide') ? 'none' : 'block';
-        });
-
-        function makeElementDraggable(el) {
-            el.addEventListener('dragstart', (e) => {
-                draggedElement = el;
-                const rect = el.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-            });
-
-            el.addEventListener('click', (e) => {
-                if (el.classList.contains('shape-element')) {
-                    e.stopPropagation();
-                    document.querySelectorAll('.shape-element').forEach(s => s.classList.remove('selected'));
-                    el.classList.add('selected');
-                    selectedShapeElement = el;
-                    loadShapeProperties(el);
-                }
-            });
-        }
-
-        document.querySelectorAll('.draggable').forEach(makeElementDraggable);
-
-        document.getElementById('workspace').addEventListener('click', () => {
-            document.querySelectorAll('.shape-element').forEach(s => s.classList.remove('selected'));
-            selectedShapeElement = null;
-        });
-
-        function setupPageDropZones(page) {
-            page.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            page.addEventListener('drop', (e) => {
-                e.preventDefault();
-                if (draggedElement) {
-                    const pageRect = page.getBoundingClientRect();
-                    let left = e.clientX - pageRect.left - offsetX;
-                    let top = e.clientY - pageRect.top - offsetY;
-
-                    draggedElement.style.left = left + 'px';
-                    draggedElement.style.top = top + 'px';
-                    draggedElement.style.right = 'auto';
-                    
-                    if (!draggedElement.parentNode.classList.contains('page')) {
-                        page.appendChild(draggedElement);
-                    }
-                }
-            });
-        }
-
-        document.querySelectorAll('.page').forEach(setupPageDropZones);
-
-        document.getElementById('input-start-line').addEventListener('input', (e) => {
-            document.getElementById('doc-rich-editor').style.paddingTop = (e.target.value || 0) + 'px';
-        });
-
-        function loadShapeProperties(el) {
-            const innerShape = el.querySelector('.shape-line, .shape-rect, .shape-diamond');
-            if (!innerShape) return;
-
-            const isLine = innerShape.classList.contains('shape-line');
+        // محرك إضافة الصفحات المتعددة المتناسقة تلقائياً
+        let pageCount = 1;
+        document.getElementById('btn-add-page').addEventListener('click', function() {
+            pageCount++;
+            const workspace = document.getElementById('workspace');
+            const newPage = document.createElement('div');
+            newPage.className = 'page';
+            newPage.id = 'page-' + pageCount;
             
-            if (isLine) {
-                document.getElementById('shape-width').value = parseInt(innerShape.style.width) || innerShape.offsetWidth;
-                document.getElementById('shape-height').value = parseInt(innerShape.style.height) || parseInt(innerShape.style.borderTopWidth) || 2;
-                document.getElementById('shape-border-style').value = innerShape.dataset.style || 'solid';
-                document.getElementById('shape-border-width').value = parseInt(innerShape.style.height) || parseInt(innerShape.style.borderTopWidth) || 2;
-                document.getElementById('shape-color').value = rgbToHex(innerShape.style.backgroundColor || innerShape.style.borderColor || '#000000');
-            } else {
-                document.getElementById('shape-width').value = parseInt(innerShape.style.width) || innerShape.offsetWidth;
-                document.getElementById('shape-height').value = parseInt(innerShape.style.height) || innerShape.offsetHeight;
-                document.getElementById('shape-border-style').value = innerShape.style.borderStyle || 'solid';
-                document.getElementById('shape-border-width').value = parseInt(innerShape.style.borderWidth) || 2;
-                document.getElementById('shape-color').value = rgbToHex(innerShape.style.borderColor || '#000000');
-                
-                const textEl = el.querySelector('.shape-text');
-                if(textEl) {
-                    highlightAlignButton(textEl.style.justifyContent || 'center');
-                }
-            }
-        }
-
-        function highlightAlignButton(align) {
-            document.getElementById('btn-align-right').style.background = '#fff';
-            document.getElementById('btn-align-right').style.color = '#000';
-            document.getElementById('btn-align-center').style.background = '#fff';
-            document.getElementById('btn-align-center').style.color = '#000';
-            document.getElementById('btn-align-left').style.background = '#fff';
-            document.getElementById('btn-align-left').style.color = '#000';
-
-            if(align === 'flex-start' || align === 'right') {
-                document.getElementById('btn-align-right').style.background = '#000';
-                document.getElementById('btn-align-right').style.color = '#fff';
-            } else if(align === 'flex-end' || align === 'left') {
-                document.getElementById('btn-align-left').style.background = '#000';
-                document.getElementById('btn-align-left').style.color = '#fff';
-            } else {
-                document.getElementById('btn-align-center').style.background = '#000';
-                document.getElementById('btn-align-center').style.color = '#fff';
-            }
-        }
-
-        document.getElementById('btn-align-right').addEventListener('click', () => {
-            if (!selectedShapeElement) return;
-            const textEl = selectedShapeElement.querySelector('.shape-text');
-            if (textEl) {
-                textEl.style.justifyContent = 'flex-start';
-                textEl.style.textAlign = 'right';
-                highlightAlignButton('flex-start');
-            }
+            const editorContainer = document.createElement('div');
+            editorContainer.id = 'doc-editor-container';
+            
+            const bodyEditor = document.createElement('div');
+            bodyEditor.className = 'doc-body-editor';
+            bodyEditor.setAttribute('contenteditable', 'true');
+            bodyEditor.textContent = '[محتوى الصفحة الإضافية رقم ' + pageCount + ']...';
+            
+            editorContainer.appendChild(bodyEditor);
+            newPage.appendChild(editorContainer);
+            workspace.appendChild(newPage);
+            
+            setupPageDropZones(newPage);
+            applyPageBorders();
+            applyFontsToAllPages();
         });
 
-        document.getElementById('btn-align-center').addEventListener('click', () => {
-            if (!selectedShapeElement) return;
-            const textEl = selectedShapeElement.querySelector('.shape-text');
-            if (textEl) {
-                textEl.style.justifyContent = 'center';
-                textEl.style.textAlign = 'center';
-                highlightAlignButton('center');
-            }
-        });
-
-        document.getElementById('btn-align-left').addEventListener('click', () => {
-            if (!selectedShapeElement) return;
-            const textEl = selectedShapeElement.querySelector('.shape-text');
-            if (textEl) {
-                textEl.style.justifyContent = 'flex-end';
-                textEl.style.textAlign = 'left';
-                highlightAlignButton('flex-end');
-            }
-        });
-
-        function rgbToHex(rgb) {
-            if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
-            const rgbArr = rgb.match(/\d+/g);
-            if (!rgbArr) return '#000000';
-            return "#" + rgbArr.slice(0, 3).map(x => {
-                const hex = parseInt(x).toString(16);
-                return hex.length === 1 ? "0" + hex : hex;
-            }).join("");
-        }
-
-        function updateSelectedShapeProperty() {
-            if (!selectedShapeElement) return;
-            const innerShape = selectedShapeElement.querySelector('.shape-line, .shape-rect, .shape-diamond');
-            if (!innerShape) return;
-
-            const widthVal = document.getElementById('shape-width').value + 'px';
-            const heightVal = document.getElementById('shape-height').value + 'px';
-            const styleVal = document.getElementById('shape-border-style').value;
-            const borderWidthVal = document.getElementById('shape-border-width').value + 'px';
-            const colorVal = document.getElementById('shape-color').value;
-
-            const isLine = innerShape.classList.contains('shape-line');
-
-            if (isLine) {
-                innerShape.style.width = widthVal;
-                innerShape.dataset.style = styleVal;
-                if (styleVal === 'solid') {
-                    innerShape.style.height = borderWidthVal;
-                    innerShape.style.backgroundColor = colorVal;
-                    innerShape.style.borderTop = 'none';
-                } else {
-                    innerShape.style.height = '0px';
-                    innerShape.style.backgroundColor = 'transparent';
-                    innerShape.style.borderTop = `${borderWidthVal} ${styleVal} ${colorVal}`;
-                }
-            } else {
-                innerShape.style.width = widthVal;
-                innerShape.style.height = heightVal;
-                innerShape.style.borderStyle = styleVal;
-                innerShape.style.borderWidth = borderWidthVal;
-                innerShape.style.borderColor = colorVal;
-            }
-        }
-
-        document.getElementById('shape-width').addEventListener('input', updateSelectedShapeProperty);
-        document.getElementById('shape-height').addEventListener('input', updateSelectedShapeProperty);
-        document.getElementById('shape-border-style').addEventListener('change', updateSelectedShapeProperty);
-        document.getElementById('shape-border-width').addEventListener('input', updateSelectedShapeProperty);
-        document.getElementById('shape-color').addEventListener('input', updateSelectedShapeProperty);
-
-        let shapeIdCounter = 0;
-        function createShape(type) {
-            shapeIdCounter++;
-            const shapeDiv = document.createElement('div');
-            shapeDiv.className = 'draggable shape-element';
-            shapeDiv.id = `shape-${type}-${shapeIdCounter}`;
-            shapeDiv.setAttribute('draggable', 'true');
-            shapeDiv.style.top = '120px';
-            shapeDiv.style.left = '120px';
-
-            if (type === 'line') {
-                shapeDiv.innerHTML = '<div class="shape-line" data-style="solid" style="width: 150px; height: 2px; background-color: #000000;"></div>';
-            } else if (type === 'rect') {
-                shapeDiv.innerHTML = '<div class="shape-rect" style="width: 100px; height: 100px;"><div class="shape-text" style="justify-content: center; text-align: center;" contenteditable="true">[نص]</div></div>';
-            } else if (type === 'diamond') {
-                shapeDiv.innerHTML = '<div class="shape-diamond" style="width: 80px; height: 80px;"><div class="shape-text" style="justify-content: center; text-align: center;" contenteditable="true">[نص]</div></div>';
-            }
-
-            document.getElementById('page-1').appendChild(shapeDiv);
-            makeElementDraggable(shapeDiv);
-            shapeDiv.click();
-        }
-
-        function execCmd(command, value = null) {
-            document.execCommand(command, false, value);
-        }
-
-        document.getElementById('btn-apply-censor').addEventListener('click', () => {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0 && selection.toString().trim() !== "") {
-                const range = selection.getRangeAt(0);
-                const span = document.createElement('span');
-                span.className = 'blackout-censor';
-                span.textContent = selection.toString();
-                range.deleteContents();
-                range.insertNode(span);
-                selection.removeAllRanges();
-            } else {
-                alert("تنبيه أمني: يرجى تحديد وتظليل النص السري داخل المحرر أولاً لتطبيق الشريط الأسود!");
-            }
-        });
-
-        document.getElementById('btn-undo-censor').addEventListener('click', () => {
-            const censors = document.querySelectorAll('.blackout-censor');
-            if (censors.length > 0) {
-                const lastCensor = censors[censors.length - 1];
-                const textNode = document.createTextNode(lastCensor.textContent);
-                lastCensor.parentNode.replaceChild(textNode, lastCensor);
-            }
-        });
-
+        // محرك تحميل ومعالجة شعار الهوية الرسمي
         document.getElementById('logo-uploader').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    document.getElementById('doc-logo').innerHTML = `<img src="${event.target.result}" alt="Logo">`;
+                    const logoDiv = document.getElementById('doc-logo');
+                    logoDiv.innerHTML = '<img src="' + event.target.result + '" alt="Logo">';
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        const dateMode = document.getElementById('date-mode');
-        const dateInput = document.getElementById('date-input');
-        const lblDocDate = document.getElementById('lbl-doc-date');
-
-        function updateDate() {
-            if (dateMode.value === 'auto') {
-                const today = new Date();
-                lblDocDate.textContent = today.toISOString().split('T')[0];
-                dateInput.style.display = 'none';
-            } else {
-                dateInput.style.display = 'block';
-                lblDocDate.textContent = dateInput.value || '[تاريخ مخصص]';
-            }
-        }
-        dateMode.addEventListener('change', updateDate);
-        dateInput.addEventListener('input', updateDate);
-        updateDate();
-
-        let pageCount = 1;
-        document.getElementById('btn-add-page').addEventListener('click', () => {
-            pageCount++;
-            const workspace = document.getElementById('workspace');
-            const newPage = document.createElement('div');
-            newPage.className = 'page';
-            newPage.id = `page-${pageCount}`;
-            newPage.innerHTML = `
-                <div id="doc-rich-editor-p${pageCount}" contenteditable="true" style="width:100%; height:100%; outline:none; font-size:15px; line-height:1.8; text-align:right; direction:rtl;">
-                    [تتمة محتوى المستند الرسمي في الصفحة رقم ${pageCount}]...
-                </div>
-            `;
-            workspace.appendChild(newPage);
-            setupPageDropZones(newPage);
-            applyPageBorders();
+        // إلغاء تحديد الأشكال عند الضغط في مساحة العمل الخارجية
+        document.getElementById('workspace').addEventListener('click', function() {
+            document.querySelectorAll('.shape-element').forEach(s => s.classList.remove('selected'));
+            selectedShapeElement = null;
         });
 
-        document.getElementById('btn-print').addEventListener('click', () => {
+        // محرك حفظ القوالب كملفات سجلات ذكية باسم عشوائي منظم ومطابق للأمن
+        document.getElementById('btn-save-template').addEventListener('click', function() {
+            const templateData = {
+                borderStyle: pageBorderStyle.value,
+                borderWidth: pageBorderWidth.value,
+                borderColor: pageBorderColor.value,
+                classification: classification.value,
+                savedDocId: lblDocId.textContent,
+                fontEn: fontSelectEn.value,
+                fontAr: fontSelectAr.value,
+                fontLocal: fontCustomLocal.value,
+                metaHolderHtml: document.getElementById('meta-fields-holder').innerHTML,
+                pagesContent: []
+            };
+
+            const allPages = document.querySelectorAll('.page');
+            allPages.forEach(page => {
+                const titleEl = page.querySelector('.doc-title-input');
+                const bodyEl = page.querySelector('.doc-body-editor');
+                templateData.pagesContent.push({
+                    title: titleEl ? titleEl.innerHTML : "",
+                    body: bodyEl ? bodyEl.innerHTML : ""
+                });
+            });
+
+            let filename = (classification.value === 'secret' ? "STATEMENT-S-" : "STATEMENT-P-") + currentRawCode + ".json";
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", filename);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        });
+
+        // محرك استدعاء ورفع القوالب وإعادة بناء السجلات والصفحات بالكامل بالتفصيل الشامل
+        document.getElementById('template-loader').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    pageBorderStyle.value = data.borderStyle || 'none';
+                    pageBorderWidth.value = data.borderWidth || '4';
+                    pageBorderColor.value = data.borderColor || '#000000';
+                    classification.value = data.classification || 'public';
+                    fontSelectEn.value = data.fontEn || "'Courier New', monospace";
+                    fontSelectAr.value = data.fontAr || "'Courier New', serif";
+                    fontCustomLocal.value = data.fontLocal || "";
+
+                    if (data.metaHolderHtml) {
+                        document.getElementById('meta-fields-holder').innerHTML = data.metaHolderHtml;
+                    }
+
+                    const workspace = document.getElementById('workspace');
+                    workspace.innerHTML = "";
+                    
+                    data.pagesContent.forEach((pData, idx) => {
+                        const newP = document.createElement('div');
+                        newP.className = 'page';
+                        newP.id = 'page-' + (idx + 1);
+                        
+                        if (idx === 0) {
+                            newP.innerHTML = `
+                                <div class="draggable" id="doc-logo" draggable="true">
+                                    <div style="border: 1px dashed #000000; padding:12px;">[ موضع الشعار ]</div>
+                                </div>
+                                <div class="draggable" id="doc-header-info" draggable="true">
+                                    <div class="meta-container" id="meta-fields-holder">${data.metaHolderHtml}</div>
+                                </div>
+                                <div id="doc-editor-container">
+                                    <div class="doc-title-input" id="doc-title" contenteditable="true">${pData.title || ''}</div>
+                                    <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">${pData.body || ''}</div>
+                                </div>
+                            `;
+                        } else {
+                            newP.innerHTML = `
+                                <div id="doc-editor-container">
+                                    <div class="doc-body-editor" contenteditable="true">${pData.body || ''}</div>
+                                </div>
+                            `;
+                        }
+                        
+                        workspace.appendChild(newP);
+                        setupPageDropZones(newP);
+                        
+                        if (idx === 0) {
+                            makeElementDraggable(document.getElementById('doc-logo'));
+                            makeElementDraggable(document.getElementById('doc-header-info'));
+                        }
+                    });
+
+                    applyPageBorders();
+                    applyFontsToAllPages();
+                    refreshDocumentSecurityTokens(data.savedDocId || null);
+                    alert("تم استدعاء القالب بنجاح متكامل على كافة الصفحات!");
+                } catch (err) {
+                    alert("خطأ: ملف القالب غير صالح أو تالف.");
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // محرك استدعاء دالة الطباعة النهائية
+        document.getElementById('btn-print').addEventListener('click', function() {
             window.print();
         });
+
+        // تشغيل نظام إدارة الخطوط واللغات الأولي
+        applyFontsToAllPages();
     </script>
 </body>
 </html>
