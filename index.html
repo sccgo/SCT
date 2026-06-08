@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V17 - دعم الجوال وتوسيع المربع</title>
+    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V18 - النسخة الهيكلية الممتدة الكاملة</title>
     
-    <!-- استدعاء الخطوط العالمية لضمان ظهورها على الجوال والطباعة بشكل رسمي وموحد -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           1. الإعدادات العامة ومتغيرات النظام الهندسية
+           1. الإعدادات العامة ومتغيرات النظام الهندسية (أحادية اللون)
            ========================================================================== */
         :root {
             --bg-light: #dbdbdb;
             --panel-bg: #ffffff;
             --panel-section-bg: #f0f0f0;
             --border-color: #000000;
-            --font-ar: 'Courier New', 'Courier Prime', serif;
-            --font-en: 'Courier New', 'Courier Prime', monospace;
+            --font-ar: 'Courier New', 'Courier Prime', 'Amiri', serif;
+            --font-en: 'Courier New', 'Courier Prime', 'Roboto Mono', monospace;
+            --header-font-size: 11px;
+            --body-font-size: 15px;
         }
 
         * {
@@ -40,7 +41,7 @@
             position: relative;
         }
 
-        /* زر التحكم في لوحة التحكم الخاص بالجوال */
+        /* زر تحكم مستقل لفتح لوحة التحكم على الأجهزة الذكية */
         #toggle-panel-btn {
             display: none;
             position: fixed;
@@ -57,7 +58,7 @@
         }
 
         /* ==========================================================================
-           2. تصميم لوحة التحكم الجانبية المتجاوبة (Control Panel)
+           2. لوحة التحكم الجانبية المتجاوبة (Control Panel)
            ========================================================================== */
         #control-panel {
             width: 380px;
@@ -75,14 +76,14 @@
         }
 
         #control-panel h2 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             text-align: center;
             padding-bottom: 8px;
             border-bottom: 2px solid var(--border-color);
             margin-bottom: 5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .section-title {
@@ -110,7 +111,8 @@
         .control-group select, 
         .control-group input[type="file"],
         .control-group input[type="number"],
-        .control-group input[type="color"] {
+        .control-group input[type="color"],
+        .control-group input[type="range"] {
             width: 100%;
             padding: 6px 8px;
             border: 1px solid var(--border-color);
@@ -127,7 +129,7 @@
         }
 
         /* ==========================================================================
-           3. شريط تحرير النصوص والتلوين ومسح التنسيقات
+           3. شريط تحرير المحتوى وبناء المصفوفات الهندسية
            ========================================================================== */
         .editor-toolbar {
             display: grid;
@@ -139,8 +141,8 @@
         }
 
         .editor-toolbar button {
-            padding: 5px 2px !important;
-            font-size: 11px !important;
+            padding: 5px 2px;
+            font-size: 11px;
             background: #ffffff;
             color: #000000;
             border: 1px solid #cccccc;
@@ -210,7 +212,7 @@
         }
 
         /* ==========================================================================
-           4. مساحة عرض المستندات الرسمية وأوراق الـ A4 المتجاوبة
+           4. مساحة عرض المستندات الرسمية وأوراق الـ A4
            ========================================================================== */
         #workspace {
             flex: 1;
@@ -235,7 +237,7 @@
             box-sizing: border-box;
         }
 
-        /* تطبيق المحاذاة والخطوط المدعومة عالمياً وسحابياً */
+        /* تطبيق عائلات الخطوط المدعومة محلياً وسحابياً */
         :lang(ar) { 
             font-family: var(--font-ar), 'Courier New', serif !important; 
         }
@@ -260,23 +262,23 @@
         #doc-logo {
             top: 15mm;
             right: 20mm;
-            min-width: 100px;
-            max-width: 130px;
+            width: 120px;
+            height: 120px;
             text-align: center;
         }
 
         #doc-logo img {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
-        /* مربع الترويسة الأساسي - يدعم التكبير اليدوي والشفافية والتوسيط والتجاوب */
+        /* مربع الترويسة الأساسي - يدعم التكبير والتحكم الكامل */
         #doc-header-info {
             top: 15mm;
             left: 50%;
             transform: translateX(-50%);
-            width: 260px; /* العرض الافتراضي */
+            width: 280px;
             min-width: 180px;
             border: 1px solid #000000;
             padding: 8px;
@@ -284,11 +286,11 @@
             direction: ltr;
             text-align: left;
             overflow: hidden;
-            resize: both; /* تمكين ميزة تكبير المربع يدوياً بالفأرة أو اللمس من الزاوية */
+            resize: both; /* تمكين التوسيع اليدوي من الزاوية */
         }
 
         .meta-line {
-            font-size: 11px;
+            font-size: var(--header-font-size);
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
@@ -296,47 +298,48 @@
             word-break: break-all;
         }
 
-        /* هيكل المحرر النصي الداخلي للوثيقة */
+        /* حاوية المحرر وهيكلية النصوص بدون عنوان افتراضي */
         #doc-editor-container {
-            margin-top: 45mm;
+            margin-top: 48mm;
             width: 100%;
             display: flex;
             flex-direction: column;
         }
 
         .doc-title-input {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             outline: none;
             width: 100%;
-            border-bottom: 1px dashed transparent;
+            border-bottom: 1px dashed #000000;
+            padding-bottom: 5px;
         }
 
         .doc-body-editor {
             width: 100%;
-            min-height: 180mm;
+            min-height: 170mm;
             outline: none;
-            font-size: 15px;
+            font-size: var(--body-font-size);
             line-height: 1.8;
             text-align: right;
             user-select: text !important;
         }
 
-        /* تنسيق الجداول لتظهر بشكل واضح وجذاب في الطباعة والمنصة */
+        /* هندسة الجداول لمنع التخرب أثناء التعتيم والتعديل */
         .doc-body-editor table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
-            background-color: transparent;
+            table-layout: fixed; /* حماية تامة لأبعاد الأعمدة والصفوف */
         }
         
         .doc-body-editor table, .doc-body-editor th, .doc-body-editor td {
             border: 1px solid #000000 !important;
-            padding: 8px 10px;
+            padding: 8px;
             text-align: right;
-            font-size: 13px;
+            word-break: break-all;
         }
         
         .doc-body-editor th {
@@ -344,17 +347,36 @@
             font-weight: bold;
         }
 
+        /* شريط التعتيم السري المتناسق هندسياً داخل وخارج الجداول */
         .blackout-censor {
             background-color: #000000 !important;
-            color: #000000 !important;
+            color: #ffffff !important;
             display: inline-block;
-            line-height: 1.2;
-            padding: 0 2px;
-            position: relative;
+            padding: 0 4px;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+            border-radius: 0px;
+            line-height: 1.4;
             user-select: none !important;
         }
 
-        /* الأشكال الهندسية */
+        /* حاوية تقرير مطابقة الرموز المشفرة المطبوعة تلقائياً */
+        #censor-mapping-report {
+            margin-top: 35px;
+            border-top: 2px dashed #000000;
+            padding-top: 15px;
+            display: none;
+        }
+
+        #censor-mapping-report h3 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* الأشكال الهندسية والخطوط الحرة */
         .shape-element {
             display: flex;
             align-items: center;
@@ -372,10 +394,10 @@
             width: 100px;
             height: 100px;
             border: 2px solid #000000;
-            background-color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: transparent;
         }
 
         .shape-diamond {
@@ -383,10 +405,10 @@
             height: 80px;
             border: 2px solid #000000;
             transform: rotate(45deg);
-            background-color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: transparent;
         }
 
         .shape-diamond .shape-text {
@@ -400,32 +422,30 @@
             text-align: center;
             outline: none;
             width: 100%;
-            padding: 4px;
         }
 
         /* ==========================================================================
-           5. ميديا كويري لتكامل دعم الجوال والشاشات اللمسية الصغيرة
+           5. دعم الشاشات الذكية والجوال (Responsive Engine)
            ========================================================================== */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
             }
             #toggle-panel-btn {
-                display: block; /* إظهار زر التحكم في الجوال */
+                display: block;
             }
             #control-panel {
                 position: fixed;
                 top: 0;
                 bottom: 0;
                 right: 0;
-                width: 300px;
-                min-width: 300px;
-                transform: translateX(100%); /* إخفاء اللوحة افتراضياً في الجوال */
-                transition: transform 0.3s ease;
-                box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+                width: 320px;
+                min-width: 320px;
+                transform: translateX(100%);
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
             }
             #control-panel.open {
-                transform: translateX(0); /* فتح اللوحة عند الضغط على الزر */
+                transform: translateX(0);
             }
             #workspace {
                 padding: 10px;
@@ -434,66 +454,67 @@
                 overflow-x: auto;
             }
             .page {
-                width: 210mm; /* الحفاظ على أبعاد الطباعة الكاملة مع تمكين التمرير الأفقي الذكي للمعاينة بالجوال */
-                transform: scale(0.45); /* ملاءمة العرض المبدئي لشاشة الجوال دون تدمير التنسيق */
+                width: 210mm;
+                transform: scale(0.45);
                 transform-origin: top center;
                 margin-bottom: -150mm; 
             }
         }
 
-        /* تنسيقات الطباعة الشاملة والموحدة للخطوط والأبعاد */
+        /* قواعد التنسيق الشاملة أثناء الطباعة وتصدير PDF */
         @media print {
             @page { size: A4; margin: 0; }
             body { background-color: #ffffff; overflow: visible; }
             #control-panel, #toggle-panel-btn { display: none !important; }
             #workspace { padding: 0 !important; margin: 0 !important; background-color: #ffffff !important; overflow: visible !important; display: block !important; }
-            .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; page-break-inside: avoid; position: relative !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; position: relative !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .draggable { border: 1px dashed transparent !important; }
-            #doc-header-info { left: 50% !important; transform: translateX(-50%) !important; border: 1px solid #000000; }
+            #doc-header-info { left: 50% !important; transform: translateX(-50%) !important; }
+            #censor-mapping-report { page-break-inside: avoid; }
         }
     </style>
 </head>
 <body>
 
-    <!-- زر التبديل والتحكم للجوال والتابلت -->
-    <button id="toggle-panel-btn">⚙️ لوحة التحكم</button>
+    <button id="toggle-panel-btn">لوحة التحكم</button>
 
-    <!-- ==========================================================================
-       لوحة التحكم والهندسة الرقمية الكاملة V17
-       ========================================================================== -->
     <div id="control-panel">
-        <h2>لوحة هندسة الوثائق V17</h2>
+        <h2>لوحة هندسة الوثائق V18</h2>
         
         <div class="section-title">محرك القوالب وحفظ السجلات</div>
-        <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">💾 حفظ التصميم الحالي كقالب (.json)</button>
+        <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">حفظ التصميم الحالي كقالب (.json)</button>
         <div class="control-group">
             <label>استدعاء قالب من جهازك:</label>
             <input type="file" id="template-loader" accept=".json">
         </div>
 
-        <div class="section-title">نظام إدارة الخطوط الذكي (المدعوم سحابياً)</div>
+        <div class="section-title">التحكم المتقدم بأحجام الخطوط</div>
+        <div class="control-group">
+            <label>حجم الخط داخل مربع الترويسة:</label>
+            <input type="range" id="slider-header-font" min="9" max="24" value="11">
+        </div>
+        <div class="control-group">
+            <label>حجم الخط في نصوص ومحتوى المستند:</label>
+            <input type="range" id="slider-body-font" min="12" max="32" value="15">
+        </div>
+
+        <div class="section-title">نظام إدارة وتخصيص الخطوط المدمجة</div>
         <div class="control-group">
             <label>خط النصوص الإنجليزية (EN):</label>
             <select id="font-select-en">
-                <option value="'Courier Prime', 'Courier New', monospace">Courier Typewriter (سحابي مدمج)</option>
-                <option value="'Roboto Mono', monospace">Roboto Mono (سحابي مدمج)</option>
+                <option value="'Courier Prime', 'Courier New', monospace">Courier Typewriter (محلّي وسحابي)</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono</option>
             </select>
         </div>
         <div class="control-group">
             <label>خط النصوص العربية (AR):</label>
             <select id="font-select-ar">
-                <option value="'Courier New', serif">Courier New (افتراضي للأنظمة)</option>
-                <option value="'Amiri', serif">Amiri (خط أميري سحابي مدمج)</option>
-                <option value="'Times New Roman', serif">Times New Roman</option>
+                <option value="'Courier New', serif">Courier New (رسمي نظام)</option>
+                <option value="'Amiri', serif">Amiri (أميري مدمج)</option>
             </select>
         </div>
-        <div class="control-group">
-            <label>أو اكتب اسم خط محلي بجهازك:</label>
-            <input type="text" id="font-custom-local" placeholder="مثال: Sakkal Majalla">
-        </div>
 
-        <!-- حقول ومربع الترويسة المطور مع التحكم بالإطار والاتجاه والحجم -->
-        <div class="section-title">تطوير حقول وحجم مربع الترويسة الوسطي</div>
+        <div class="section-title">حقول وحجم مربع الترويسة الوسطي</div>
         <div class="control-group" style="background: var(--panel-section-bg); padding: 8px; border: 1px dashed #000000; gap: 8px;">
             <label style="color:#000000;">إطار وحدود مربع الترويسة:</label>
             <select id="header-border-style">
@@ -501,8 +522,8 @@
                 <option value="none">بدون إطار / إطار شفاف</option>
             </select>
 
-            <label style="color:#000000;">تحكم دقيق بعض المربع (بالبكسل):</label>
-            <input type="number" id="header-width-input" value="260" min="150" max="600" step="10">
+            <label style="color:#000000;">عرض مربع الترويسة (بالبكسل):</label>
+            <input type="number" id="header-width-input" value="280" min="150" max="600" step="10">
 
             <label style="color:#000000; margin-top: 5px;">اتجاه النص الداخلي الموحد:</label>
             <div class="row-inputs">
@@ -510,44 +531,70 @@
                 <button type="button" id="btn-dir-ltr" style="background:#555; border-color:#555; padding: 6px;">يسار ليمين</button>
             </div>
             
-            <label style="color:#000000; margin-top: 5px;">إدراج خانة بيانات إضافية للترويسة:</label>
+            <label style="color:#000000; margin-top: 5px;">إضافة خانة بيانات إضافية للترويسة:</label>
             <div class="row-inputs">
-                <input type="text" id="new-meta-key" placeholder="الاسم (ORIGIN)">
-                <input type="text" id="new-meta-val" placeholder="القيمة (RCI-HQ)">
+                <input type="text" id="new-meta-key" placeholder="الاسم">
+                <input type="text" id="new-meta-val" placeholder="القيمة">
             </div>
-            <button type="button" id="btn-add-meta-field" style="padding:5px; background:#34c759; border-color:#34c759;">➕ إضافة خانة للمربع</button>
+            <button type="button" id="btn-add-meta-field" style="padding:5px; background:#34c759; border-color:#34c759;">إضافة خانة للمربع</button>
         </div>
 
-        <div class="section-title">ترسانة التحرير وبناء الجداول الذكية</div>
+        <div class="section-title">منشئ ومحرك مصفوفات الجداول</div>
+        <div class="control-group" style="background: #e9e9e9; padding: 8px; border: 1px solid #000;">
+            <div class="row-inputs">
+                <div>
+                    <label>الصفوف:</label>
+                    <input type="number" id="table-rows-count" value="3" min="1">
+                </div>
+                <div>
+                    <label>الأعمدة:</label>
+                    <input type="number" id="table-cols-count" value="3" min="1">
+                </div>
+            </div>
+            <button type="button" id="btn-insert-custom-table" style="background: #34c759; border-color:#34c759; margin-top:6px;">إدراج الجدول بالمواصفات</button>
+        </div>
+
+        <div class="section-title">خيارات تحرير ومحاذاة نصوص المستند</div>
         <div class="editor-toolbar">
             <button type="button" id="btn-tool-bold"><b>B</b></button>
             <button type="button" id="btn-tool-italic"><i>I</i></button>
             <button type="button" id="btn-tool-underline"><u>U</u></button>
-            <button type="button" id="btn-tool-table" style="background: #34c759; color: #fff; border-color: #34c759;">📊 جدول</button>
-            <button type="button" id="btn-tool-font-lg">🔤 الكبير</button>
-            <button type="button" id="btn-tool-font-md">🔤 العادي</button>
-            <button type="button" id="btn-tool-align-r">▶ ع</button>
-            <button type="button" id="btn-tool-align-c">■ و</button>
+            <button type="button" id="btn-add-title-field" style="background:#000; color:#fff;">+ حقل عنوان</button>
             
+            <button type="button" id="btn-align-right">يمين</button>
+            <button type="button" id="btn-align-center">وسط</button>
+            <button type="button" id="btn-align-left">يسار</button>
+            <button type="button" id="btn-tool-hr">فاصل</button>
+
             <div class="color-picker-wrapper">
-                <span>🎨 لون:</span>
+                <span>لون:</span>
                 <input type="color" id="text-color-picker" value="#000000">
             </div>
             <div class="color-picker-wrapper">
-                <span>✏️ خلفية:</span>
+                <span>خلفية:</span>
                 <input type="color" id="text-bg-picker" value="#ffffff">
             </div>
-
-            <button type="button" id="btn-tool-list">• قائمة</button>
-            <button type="button" id="btn-tool-hr">➖ فاصل</button>
         </div>
-        <!-- زر مسح التنسيق الفوري المطور -->
-        <button type="button" id="btn-clear-formatting" style="background: #ff9500; border-color: #ff9500; margin-top: 2px;">🧹 مسح تنسيق النص المحدد</button>
+        <button type="button" id="btn-clear-formatting" style="background: #ff9500; border-color: #ff9500; margin-top: 2px;">مسح تنسيق النص المحدد</button>
         
-        <button id="btn-apply-censor" style="background: #000000; border: 1px solid #000000; margin-top:4px;">• تطبيق شريط التعتيم السري •</button>
+        <div class="section-title">نظام التعتيم والترميز المرجعي المتقدم</div>
+        <div class="control-group" style="background: #fdf2e9; padding: 6px; border: 1px dashed #ff9500;">
+            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#000;">
+                <input type="checkbox" id="chk-enable-censor-symbols" checked>
+                تفعيل الرموز المرجعية فوق التعتيم والملف المرجعي
+            </label>
+        </div>
+        <button id="btn-apply-censor" style="background: #000000; border: 1px solid #000000; margin-top:4px;">تطبيق شريط التعتيم السري</button>
         <button id="btn-undo-censor" class="btn-danger" style="padding: 4px; font-size: 11px; margin-top:2px;">إزالة آخر شريط تعتيم</button>
 
-        <div class="section-title">تعديل خصائص الشكل/الخط المختار</div>
+        <div class="section-title">إدراج خطوط وأشكال هندسية حرة</div>
+        <div class="shape-grid">
+            <button type="button" id="btn-shape-line">خط حر</button>
+            <button type="button" id="btn-shape-rect">مربع</button>
+            <button type="button" id="btn-shape-diamond">معين</button>
+        </div>
+
+        <div class="section-title">إطارات الأشكال المحددة</div>
         <div class="control-group">
             <div class="row-inputs">
                 <input type="number" id="shape-width" placeholder="العرض">
@@ -561,16 +608,8 @@
             <input type="color" id="shape-color" value="#000000">
         </div>
 
-        <div class="section-title">إدراج خطوط وأشكال هندسية حرة</div>
-        <div class="shape-grid">
-            <button type="button" id="btn-shape-line">➖ خط حر</button>
-            <button type="button" id="btn-shape-rect">⬛ مربع</button>
-            <button type="button" id="btn-shape-diamond">🔷 معين</button>
-        </div>
-
         <div class="section-title">إطار وحدود صفحات المستند</div>
         <div class="control-group">
-            <label>نمط إطار حدود الصفحات:</label>
             <select id="page-border-style">
                 <option value="none">بدون حدود</option>
                 <option value="solid">خط مصمت</option>
@@ -578,17 +617,9 @@
                 <option value="double">خط مزدوج رسمي</option>
             </select>
         </div>
-        <div class="control-group">
-            <label>سمك الإطار ولونه:</label>
-            <div class="row-inputs">
-                <input type="number" id="page-border-width" value="4" min="1" max="20">
-                <input type="color" id="page-border-color" value="#000000">
-            </div>
-        </div>
 
         <div class="section-title">الأمان والسرية الرقمية</div>
         <div class="control-group">
-            <label>مستوى الأمان والتصنيف:</label>
             <select id="doc-classification">
                 <option value="public">وثيقة عامة (Static Token)</option>
                 <option value="secret">وثيقة سرية للغاية (Random Hash)</option>
@@ -597,62 +628,83 @@
 
         <div class="section-title">الهوية والتحكم بالعناوين الهيكلية</div>
         <div class="control-group">
-            <label>تحميل الشعار الرسمي (Logo):</label>
             <input type="file" id="logo-uploader" accept="image/*">
         </div>
 
         <hr style="border: 0; border-top: 1px solid #000000; margin-top: 5px;">
-        <button id="btn-add-page">➕ إضافة صفحة مستند جديدة</button>
-        <button id="btn-print" style="background: #000000; color: #ffffff; border: 2px solid #000000; font-size: 14px; margin-top: auto;">🖨️ طباعة المستند النهائي</button>
+        <button id="btn-add-page">إضافة صفحة مستند جديدة</button>
+        <button id="btn-print" style="background: #000000; color: #ffffff; border: 2px solid #000000; font-size: 14px; margin-top: auto;">طباعة المستند النهائي</button>
     </div>
 
-    <!-- ==========================================================================
-       مساحة العمل وعرض مستندات الـ A4
-       ========================================================================== -->
     <div id="workspace">
         <div class="page" id="page-1">
             
             <div class="draggable" id="doc-logo" draggable="true">
-                <div style="border: 1px dashed #000000; padding: 12px; font-size: 11px; font-weight: bold;">[ موضع الشعار ]</div>
+                <img src="https://i.ibb.co/6cfw8fF8/RCI-Seal.png" alt="Royal Coordination Intelligence">
             </div>
 
-            <!-- مربع الترويسة المحدث والممركز القابل للتوسيع يدوياً أو برمجياً -->
             <div class="draggable" id="doc-header-info" draggable="true">
                 <div class="meta-container" id="meta-fields-holder">
-                    <div class="meta-line"><strong>DOC-REF:</strong> <span id="lbl-doc-id">GENERATING...</span></div>
-                    <div class="meta-line"><strong>DATE-DTG:</strong> <span id="lbl-doc-date">2026-06-08</span></div>
-                    <div class="meta-line"><strong>SECURITY:</strong> <span id="lbl-doc-status">GENERAL_PUBLIC</span></div>
+                    <div class="meta-line"><strong>MRN:</strong> <span id="lbl-doc-id">GENERATING...</span></div>
+                    <div class="meta-line"><strong>DATE/DTG:</strong> <span id="lbl-doc-date">2026-06-08</span></div>
+                    <div class="meta-line"><strong>FROM:</strong> <span>RCI-CORE</span></div>
+                    <div class="meta-line"><strong>ACTION:</strong> <span>IMMEDIATE_RELEASE</span></div>
+                    <div class="meta-line"><strong>E.O.:</strong> <span>13526_COMPLIANT</span></div>
+                    <div class="meta-line"><strong>TAGS:</strong> <span>OPR_INTEL</span></div>
+                    <div class="meta-line"><strong>REFERENCE:</strong> <span>RCI-SYS-V18</span></div>
+                    <div class="meta-line"><strong>SUBJECT:</strong> <span>AUTOMATED_SYSTEM_STATEMENT</span></div>
                 </div>
             </div>
 
             <div id="doc-editor-container">
-                <div class="doc-title-input" id="doc-title" contenteditable="true">عنوان المستند أو البرقية الرسمية</div>
+                <div id="title-wrapper-zone"></div>
                 <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
-                    تمت ترقية المنصة بالكامل إلى النسخة السابعة عشرة (V17). تم جلب الخطوط الاحترافية سحابياً لتعمل بالكامل على الهواتف الذكية وفي الطباعة، مع دعم كامل لاستجابة الشاشات اللمسية الصغيرة، وتوسيع حجم المربع، وبناء جداول البيانات المتقدمة والممتازة.
+                    تم تفعيل وإدراج البنية الهيكلية لملف الترويسة والخطوط المتكاملة بنجاح، يمكنك الكتابة وإدراج المصفوفات والترميز الفوري هنا.
                 </div>
+            </div>
+
+            <div id="censor-mapping-report">
+                <h3>جدول مطابقة مراجع التعتيم والتصنيف السري (CONFIDENTIAL MAPPING REPORT)</h3>
+                <table id="censor-mapping-table">
+                    <thead>
+                        <tr>
+                            <th>الرمز المرجعي</th>
+                            <th>النص الأصلي المحجوب</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
 
         </div>
     </div>
 
-    <!-- ==========================================================================
-       6. محرك التشغيل البرمجي الذكي (الجافاسكريبت الممتد والمفصل)
-       ========================================================================== -->
     <script>
         let draggedElement = null;
         let selectedShapeElement = null; 
-        let offsetX = 0;
+        let offsetX = 0; 
         let offsetY = 0;
         let shapeIdCounter = 0;
         let currentRawCode = "";
+        let censorCounter = 0;
+        let censorMap = new Map();
 
-        // معالجة فتح وإغلاق لوحة التحكم على الجوال
+        // تفعيل استجابة لوحة التحكم على شاشات الجوال والأجهزة اللمسية
         const togglePanelBtn = document.getElementById('toggle-panel-btn');
         const controlPanel = document.getElementById('control-panel');
-        togglePanelBtn.addEventListener('click', function() {
+        
+        togglePanelBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             controlPanel.classList.toggle('open');
         });
 
+        // منع إغلاق اللوحة عند النقر بداخلها
+        controlPanel.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // توليد الرموز العشوائية المشفرة للمستندات السرية
         function generateRandomCode(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';
@@ -666,12 +718,23 @@
         const headerBorderStyle = document.getElementById('header-border-style');
         const headerWidthInput = document.getElementById('header-width-input');
 
-        // تغيير عرض المربع برمجياً من اللوحة الجانبية
-        headerWidthInput.addEventListener('input', function() {
-            docHeaderInfo.style.width = this.value + 'px';
+        // منزلقات تعديل أحجام الخطوط الفورية والديناميكية
+        const sliderHeaderFont = document.getElementById('slider-header-font');
+        const sliderBodyFont = document.getElementById('slider-body-font');
+
+        sliderHeaderFont.addEventListener('input', function() {
+            document.documentElement.style.setProperty('--header-font-size', this.value + 'px');
+        });
+        
+        sliderBodyFont.addEventListener('input', function() {
+            document.documentElement.style.setProperty('--body-font-size', this.value + 'px');
         });
 
-        // مراقبة تغيير حجم المربع يدوياً لتحديث القيمة في المدخل
+        // ربط حقول الإدخال بعرض المربع برمجياً ويدوياً
+        headerWidthInput.addEventListener('input', function() { 
+            docHeaderInfo.style.width = this.value + 'px'; 
+        });
+
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 headerWidthInput.value = Math.round(entry.contentRect.width);
@@ -679,7 +742,7 @@
         });
         resizeObserver.observe(docHeaderInfo);
 
-        // التبديل بين إطار مصمت أو إلغائه للترويسة
+        // تبديل حدود مربع الترويسة الوسطي
         headerBorderStyle.addEventListener('change', function() {
             if (this.value === 'none') {
                 docHeaderInfo.style.borderColor = 'transparent';
@@ -691,70 +754,50 @@
             }
         });
         
-        // التحكم باتجاه نص مربع الترويسة الوسطي
+        // اتجاهات ومحاذاة نصوص مربع الترويسة
         document.getElementById('btn-dir-rtl').addEventListener('click', function() {
-            docHeaderInfo.style.direction = 'rtl';
+            docHeaderInfo.style.direction = 'rtl'; 
             docHeaderInfo.style.textAlign = 'right';
-            const lines = docHeaderInfo.querySelectorAll('.meta-line');
-            lines.forEach(line => { line.style.flexDirection = 'row-reverse'; });
+            docHeaderInfo.querySelectorAll('.meta-line').forEach(line => { 
+                line.style.flexDirection = 'row-reverse'; 
+            });
         });
 
         document.getElementById('btn-dir-ltr').addEventListener('click', function() {
-            docHeaderInfo.style.direction = 'ltr';
+            docHeaderInfo.style.direction = 'ltr'; 
             docHeaderInfo.style.textAlign = 'left';
-            const lines = docHeaderInfo.querySelectorAll('.meta-line');
-            lines.forEach(line => { line.style.flexDirection = 'row'; });
+            docHeaderInfo.querySelectorAll('.meta-line').forEach(line => { 
+                line.style.flexDirection = 'row'; 
+            });
         });
 
-        // محرك إدارة الخطوط واللغات
+        // محرك الألوان والخطوط واللغات المدمج محلياً وسحابياً
         const fontSelectEn = document.getElementById('font-select-en');
         const fontSelectAr = document.getElementById('font-select-ar');
-        const fontCustomLocal = document.getElementById('font-custom-local');
 
         function applyFontsToAllPages() {
-            let arFont = fontSelectAr.value;
-            let enFont = fontSelectEn.value;
-
-            if (fontCustomLocal.value.trim() !== "") {
-                arFont = fontCustomLocal.value;
-                enFont = fontCustomLocal.value;
-            }
-
-            document.documentElement.style.setProperty('--font-ar', arFont);
-            document.documentElement.style.setProperty('--font-en', enFont);
-
-            const textElements = document.querySelectorAll('.doc-body-editor, .doc-title-input, .meta-line, .shape-text');
-            textElements.forEach(el => {
-                const textContent = el.textContent || "";
-                if (/[\u0600-\u06FF]/.test(textContent)) {
+            document.documentElement.style.setProperty('--font-ar', fontSelectAr.value);
+            document.documentElement.style.setProperty('--font-en', fontSelectEn.value);
+            
+            document.querySelectorAll('.doc-body-editor, .meta-line, .shape-text, .doc-title-input').forEach(el => {
+                if (/[\u0600-\u06FF]/.test(el.textContent || "")) {
                     el.setAttribute('lang', 'ar');
                 } else {
                     el.setAttribute('lang', 'en');
                 }
             });
         }
-
         fontSelectEn.addEventListener('change', applyFontsToAllPages);
         fontSelectAr.addEventListener('change', applyFontsToAllPages);
-        fontCustomLocal.addEventListener('input', applyFontsToAllPages);
 
-        document.addEventListener('input', function (e) {
-            if (e.target && (e.target.classList.contains('doc-body-editor') || e.target.classList.contains('doc-title-input') || e.target.classList.contains('shape-text'))) {
-                applyFontsToAllPages();
-            }
-        });
-
-        // إضافة حقول الترويسة الديناميكية
+        // إضافة حقول الترويسة يدوياً وبناء مصفوفة البيانات المتكاملة
         document.getElementById('btn-add-meta-field').addEventListener('click', function() {
-            const keyInput = document.getElementById('new-meta-key');
-            const valInput = document.getElementById('new-meta-val');
-            const keyText = keyInput.value.trim();
-            const valText = valInput.value.trim();
-
+            const keyText = document.getElementById('new-meta-key').value.trim();
+            const valText = document.getElementById('new-meta-val').value.trim();
             if (keyText === "" || valText === "") return;
-
+            
             const holder = document.getElementById('meta-fields-holder');
-            const newLine = document.createElement('div');
+            const newLine = document.createElement('div'); 
             newLine.className = 'meta-line';
             
             if(docHeaderInfo.style.direction === 'rtl') {
@@ -763,83 +806,69 @@
             
             newLine.innerHTML = `<strong>${keyText.toUpperCase()}:</strong> <span>${valText}</span>`;
             holder.appendChild(newLine);
-
-            keyInput.value = "";
-            valInput.value = "";
+            
+            document.getElementById('new-meta-key').value = ""; 
+            document.getElementById('new-meta-val').value = "";
             applyFontsToAllPages();
         });
 
-        // نظام تصنيف الأمن والرموز الرقمية
+        // إضافة حقل العنوان الرئيسي للمستند عند الرغبة والطلب يدوياً
+        document.getElementById('btn-add-title-field').addEventListener('click', function() {
+            const wrapper = document.getElementById('title-wrapper-zone');
+            if (wrapper.children.length === 0) {
+                wrapper.innerHTML = `<div class="doc-title-input" contenteditable="true">العنوان الرئيسي للمستند</div>`;
+                applyFontsToAllPages();
+            }
+        });
+
+        // نظام التراخيص والمطابقة الأمنية الرقمية ومستويات السرية
         const classification = document.getElementById('doc-classification');
         const lblDocId = document.getElementById('lbl-doc-id');
-        const lblDocStatus = document.getElementById('lbl-doc-status');
 
         function refreshDocumentSecurityTokens(forcedCode = null) {
             if (forcedCode) {
-                if (forcedCode.includes('-')) currentRawCode = forcedCode.split('-')[1];
-                else currentRawCode = forcedCode;
+                currentRawCode = forcedCode.includes('-') ? forcedCode.split('-')[1] : forcedCode;
                 lblDocId.textContent = forcedCode;
             } else {
                 currentRawCode = generateRandomCode(classification.value === 'secret' ? 8 : 6);
                 lblDocId.textContent = (classification.value === 'secret' ? 'SEC-' : 'PUB-') + currentRawCode;
             }
-
-            if (classification.value === 'secret') {
-                lblDocStatus.textContent = 'RESTRICTED_CONFIDENTIAL';
-                lblDocStatus.style.color = '#ff3b30';
-                lblDocStatus.style.fontWeight = 'bold';
-            } else {
-                lblDocStatus.textContent = 'GENERAL_PUBLIC';
-                lblDocStatus.style.color = '#000000';
-                lblDocStatus.style.fontWeight = 'normal';
-            }
-            applyFontsToAllPages();
         }
-
         classification.addEventListener('change', function() { refreshDocumentSecurityTokens(null); });
         refreshDocumentSecurityTokens(null);
 
-        // أدوات التحرير الأساسية والمتقدمة
+        // أدوات ومحاذاة تحرير محتوى الوثائق والأوراق الافتراضية
         function execCmd(command, value = null) {
             document.execCommand(command, false, value);
             applyFontsToAllPages();
         }
-
         document.getElementById('btn-tool-bold').addEventListener('click', function() { execCmd('bold'); });
         document.getElementById('btn-tool-italic').addEventListener('click', function() { execCmd('italic'); });
         document.getElementById('btn-tool-underline').addEventListener('click', function() { execCmd('underline'); });
-        document.getElementById('btn-tool-font-lg').addEventListener('click', function() { execCmd('fontSize', '5'); });
-        document.getElementById('btn-tool-font-md').addEventListener('click', function() { execCmd('fontSize', '3'); });
-        document.getElementById('btn-tool-align-r').addEventListener('click', function() { execCmd('justifyRight'); });
-        document.getElementById('btn-tool-align-c').addEventListener('click', function() { execCmd('justifyCenter'); });
-        document.getElementById('btn-tool-list').addEventListener('click', function() { execCmd('insertUnorderedList'); });
+        document.getElementById('btn-align-right').addEventListener('click', function() { execCmd('justifyRight'); });
+        document.getElementById('btn-align-center').addEventListener('click', function() { execCmd('justifyCenter'); });
+        document.getElementById('btn-align-left').addEventListener('click', function() { execCmd('justifyLeft'); });
         document.getElementById('btn-tool-hr').addEventListener('click', function() { execCmd('insertHorizontalRule'); });
+        
         document.getElementById('text-color-picker').addEventListener('change', function() { execCmd('foreColor', this.value); });
         document.getElementById('text-bg-picker').addEventListener('change', function() { execCmd('hiliteColor', this.value); });
-
-        // ميزة مسح التنسيق من النص المحدد
+        
         document.getElementById('btn-clear-formatting').addEventListener('click', function() {
-            execCmd('removeFormat');
-            execCmd('foreColor', '#000000');
+            execCmd('removeFormat'); 
+            execCmd('foreColor', '#000000'); 
             execCmd('hiliteColor', '#ffffff');
         });
 
-        // بناء وإدراج الجداول المتجاورة والمنسقة بالكامل للطباعة والأنظمة
-        document.getElementById('btn-tool-table').addEventListener('click', function() {
-            const rows = prompt("أدخل عدد صفوف الجدول:", "3");
-            const cols = prompt("أدخل عدد أعمدة الجدول:", "3");
-            if (!rows || !cols) return;
-
-            let tableHtml = "<table><thead><tr>";
-            for (let h = 0; h < parseInt(cols); h++) {
-                tableHtml += `<th contenteditable='true'>عنوان ${h+1}</th>`;
-            }
-            tableHtml += "</tr></thead><tbody>";
+        // بناء ومحرك مصفوفات الجداول المتقدم والتحكم بالأعمدة والصفوف يدوياً وبرمجياً
+        document.getElementById('btn-insert-custom-table').addEventListener('click', function() {
+            const rows = parseInt(document.getElementById('table-rows-count').value) || 3;
+            const cols = parseInt(document.getElementById('table-cols-count').value) || 3;
             
-            for (let i = 0; i < parseInt(rows); i++) {
+            let tableHtml = "<table><tbody>";
+            for (let i = 0; i < rows; i++) {
                 tableHtml += "<tr>";
-                for (let j = 0; j < parseInt(cols); j++) {
-                    tableHtml += "<td contenteditable='true'>بيانات</td>";
+                for (let j = 0; j < cols; j++) {
+                    tableHtml += "<td contenteditable='true'>بيانات الخلية</td>";
                 }
                 tableHtml += "</tr>";
             }
@@ -847,60 +876,97 @@
             execCmd('insertHTML', tableHtml);
         });
 
-        // أشرطة التعتيم السرية
+        // محرك التعتيم الآلي وحماية الجداول والنصوص مع توليد الملف المرجعي التلقائي المشفر
         document.getElementById('btn-apply-censor').addEventListener('click', function() {
             const selection = window.getSelection();
             if (selection.rangeCount > 0 && selection.toString().trim() !== "") {
+                censorCounter++;
+                const originalText = selection.toString();
+                const symbolCode = `[C-${censorCounter}]`;
+                
+                const enableSymbols = document.getElementById('chk-enable-censor-symbols').checked;
+                
                 const range = selection.getRangeAt(0);
                 const span = document.createElement('span');
                 span.className = 'blackout-censor';
-                span.textContent = selection.toString();
+                span.setAttribute('contenteditable', 'false');
+                span.textContent = enableSymbols ? symbolCode : "██████";
+                
                 range.deleteContents();
                 range.insertNode(span);
+                
+                if (enableSymbols) {
+                    censorMap.set(symbolCode, originalText);
+                    rebuildCensorReportTable();
+                }
                 selection.removeAllRanges();
             }
         });
 
+        // إعادة بناء التقرير المرجعي السري المطبوع أسفل المستند تلقائياً
+        function rebuildCensorReportTable() {
+            const reportZone = document.getElementById('censor-mapping-report');
+            const tbody = document.getElementById('censor-mapping-table').querySelector('tbody');
+            tbody.innerHTML = "";
+            
+            if (censorMap.size > 0) {
+                reportZone.style.display = 'block';
+                censorMap.forEach((text, code) => {
+                    const r = document.createElement('tr');
+                    r.innerHTML = `<td>${code}</td><td>${text}</td>`;
+                    tbody.appendChild(r);
+                });
+            } else {
+                reportZone.style.display = 'none';
+            }
+        }
+
+        // إزالة آخر تعتيم والتراجع عنه وإعادة النص الأصلي لهيكله ومكانه تماماً
         document.getElementById('btn-undo-censor').addEventListener('click', function() {
             const censors = document.querySelectorAll('.blackout-censor');
             if (censors.length > 0) {
                 const lastCensor = censors[censors.length - 1];
-                const textNode = document.createTextNode(lastCensor.textContent);
-                lastCensor.parentNode.replaceChild(textNode, lastCensor);
+                const code = lastCensor.textContent;
+                
+                if (censorMap.has(code)) {
+                    const originalText = censorMap.get(code);
+                    const textNode = document.createTextNode(originalText);
+                    lastCensor.parentNode.replaceChild(textNode, lastCensor);
+                    censorMap.delete(code);
+                } else {
+                    const textNode = document.createTextNode("");
+                    lastCensor.parentNode.replaceChild(textNode, lastCensor);
+                }
+                rebuildCensorReportTable();
             }
         });
 
-        // محرك إنشاء الأشكال والخطوط الحرة
+        // محرك إنشاء الأشكال والخطوط الهندسية الحرة
         function createShape(type) {
             shapeIdCounter++;
             const shapeDiv = document.createElement('div');
             shapeDiv.className = 'draggable shape-element';
             shapeDiv.id = 'shape-' + type + '-' + shapeIdCounter;
             shapeDiv.setAttribute('draggable', 'true');
-            shapeDiv.style.top = '160px';
-            shapeDiv.style.left = '160px';
+            shapeDiv.style.top = '220px'; 
+            shapeDiv.style.left = '220px';
 
             if (type === 'line') {
-                const innerLine = document.createElement('div');
+                const innerLine = document.createElement('div'); 
                 innerLine.className = 'shape-line';
-                innerLine.style.width = '150px';
-                innerLine.style.height = '2px';
-                innerLine.style.backgroundColor = '#000000';
                 shapeDiv.appendChild(innerLine);
             } else {
                 const inner = document.createElement('div');
                 inner.className = type === 'rect' ? 'shape-rect' : 'shape-diamond';
-                inner.style.width = type === 'rect' ? '100px' : '80px';
-                inner.style.height = type === 'rect' ? '100px' : '80px';
                 
                 const txt = document.createElement('div');
-                txt.className = 'shape-text';
-                txt.setAttribute('contenteditable', 'true');
+                txt.className = 'shape-text'; 
+                txt.setAttribute('contenteditable', 'true'); 
                 txt.textContent = '[نص]';
-                inner.appendChild(txt);
+                
+                inner.appendChild(txt); 
                 shapeDiv.appendChild(inner);
             }
-
             document.getElementById('page-1').appendChild(shapeDiv);
             makeElementDraggable(shapeDiv);
             shapeDiv.click();
@@ -910,6 +976,7 @@
         document.getElementById('btn-shape-rect').addEventListener('click', function() { createShape('rect'); });
         document.getElementById('btn-shape-diamond').addEventListener('click', function() { createShape('diamond'); });
 
+        // تعديل خصائص وقياسات الإطارات للأشكال الحرة المحددة بالفأرة أو اللمس
         function updateSelectedShapeProperty() {
             if (!selectedShapeElement) return;
             const innerShape = selectedShapeElement.querySelector('.shape-line, .shape-rect, .shape-diamond');
@@ -936,19 +1003,18 @@
         document.getElementById('shape-border-style').addEventListener('change', updateSelectedShapeProperty);
         document.getElementById('shape-color').addEventListener('input', updateSelectedShapeProperty);
 
-        // محرك السحب والإفلات واللمس
+        // نظام السحب والإفلات واللمس الذكي للأنظمة المتعددة والجوال
         function makeElementDraggable(el) {
             if (!el) return;
             el.addEventListener('dragstart', function(e) {
                 draggedElement = el;
-                if (el.id === 'doc-header-info') {
-                    el.style.transform = 'none';
-                }
+                if (el.id === 'doc-header-info') el.style.transform = 'none';
                 const rect = el.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
+                offsetX = e.clientX - rect.left; 
                 offsetY = e.clientY - rect.top;
             });
 
+            // معالجة النقر والاختيار للأشكال الهندسية لتعديلها
             el.addEventListener('click', function(e) {
                 if (el.classList.contains('shape-element')) {
                     e.stopPropagation();
@@ -966,7 +1032,6 @@
                 }
             });
         }
-
         document.querySelectorAll('.draggable').forEach(makeElementDraggable);
 
         function setupPageDropZones(page) {
@@ -983,43 +1048,32 @@
         }
         document.querySelectorAll('.page').forEach(setupPageDropZones);
 
-        // إطارات الصفحات
+        // تعديل إطارات وحدود الصفحات والمستندات الافتراضية والجديدة
         const pageBorderStyle = document.getElementById('page-border-style');
-        const pageBorderWidth = document.getElementById('page-border-width');
-        const pageBorderColor = document.getElementById('page-border-color');
-
         function applyPageBorders() {
             document.querySelectorAll('.page').forEach(page => {
-                if (pageBorderStyle.value === 'none') {
-                    page.style.borderStyle = 'none';
-                    page.style.borderWidth = '0px';
-                } else {
-                    page.style.borderStyle = pageBorderStyle.value;
-                    page.style.borderWidth = pageBorderWidth.value + 'px';
-                    page.style.borderColor = pageBorderColor.value;
-                }
+                page.style.borderStyle = pageBorderStyle.value === 'none' ? 'none' : pageBorderStyle.value;
+                page.style.borderWidth = pageBorderStyle.value === 'none' ? '0px' : '4px';
+                page.style.borderColor = '#000000';
             });
         }
         pageBorderStyle.addEventListener('change', applyPageBorders);
-        pageBorderWidth.addEventListener('input', applyPageBorders);
-        pageBorderColor.addEventListener('input', applyPageBorders);
 
-        // محرك الصفحات المتعددة
+        // إدراج صفحة مستند فارغة جديدة بالبنية الهيكلية الكاملة للطباعة
         let pageCount = 1;
         document.getElementById('btn-add-page').addEventListener('click', function() {
             pageCount++;
-            const workspace = document.getElementById('workspace');
             const newPage = document.createElement('div');
-            newPage.className = 'page';
+            newPage.className = 'page'; 
             newPage.id = 'page-' + pageCount;
-            newPage.innerHTML = `<div id="doc-editor-container"><div class="doc-body-editor" contenteditable="true">[محتوى الصفحة الإضافية رقم ${pageCount}]...</div></div>`;
-            workspace.appendChild(newPage);
-            setupPageDropZones(newPage);
-            applyPageBorders();
+            newPage.innerHTML = `<div id="doc-editor-container"><div class="doc-body-editor" contenteditable="true">[محتوى الصفحة الجديدة ${pageCount}]</div></div>`;
+            document.getElementById('workspace').appendChild(newPage);
+            setupPageDropZones(newPage); 
+            applyPageBorders(); 
             applyFontsToAllPages();
         });
 
-        // رفع شعار الهوية
+        // رفع وتخصيص شعار الهوية عبر جهاز المستخدم
         document.getElementById('logo-uploader').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -1031,118 +1085,73 @@
             }
         });
 
+        // إغلاق قوائم الاختيار الحرة عند النقر على مساحة العمل الفارغة
         document.getElementById('workspace').addEventListener('click', function() {
             document.querySelectorAll('.shape-element').forEach(s => s.classList.remove('selected'));
             selectedShapeElement = null;
+            if (window.innerWidth <= 768) {
+                controlPanel.classList.remove('open');
+            }
         });
 
-        // محرك حفظ القالب بصيغة JSON
+        // حفظ واستدعاء كامل مكونات وهندسة القالب الحالي بصيغة ملفات JSON
         document.getElementById('btn-save-template').addEventListener('click', function() {
             const templateData = {
                 borderStyle: pageBorderStyle.value,
-                borderWidth: pageBorderWidth.value,
-                borderColor: pageBorderColor.value,
                 classification: classification.value,
                 savedDocId: lblDocId.textContent,
                 fontEn: fontSelectEn.value,
                 fontAr: fontSelectAr.value,
-                fontLocal: fontCustomLocal.value,
-                headerDirection: docHeaderInfo.style.direction || 'ltr',
-                headerBorderStyle: headerBorderStyle.value,
                 headerWidth: headerWidthInput.value,
+                headerFontSize: sliderHeaderFont.value,
+                bodyFontSize: sliderBodyFont.value,
                 metaHolderHtml: document.getElementById('meta-fields-holder').innerHTML,
-                pagesContent: []
+                titleHtml: document.getElementById('title-wrapper-zone').innerHTML,
+                bodyHtml: document.getElementById('doc-rich-editor').innerHTML
             };
-
-            document.querySelectorAll('.page').forEach(page => {
-                const titleEl = page.querySelector('.doc-title-input');
-                const bodyEl = page.querySelector('.doc-body-editor');
-                templateData.pagesContent.push({
-                    title: titleEl ? titleEl.innerHTML : "",
-                    body: bodyEl ? bodyEl.innerHTML : ""
-                });
-            });
-
-            let filename = (classification.value === 'secret' ? "STATEMENT-S-" : "STATEMENT-P-") + currentRawCode + ".json";
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr); downloadAnchor.setAttribute("download", filename);
-            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+            const dl = document.createElement('a'); 
+            dl.setAttribute("href", dataStr); 
+            dl.setAttribute("download", "RCI-TEMPLATE-V18.json");
+            document.body.appendChild(dl); 
+            dl.click(); 
+            dl.remove();
         });
 
-        // استدعاء القوالب وإعادة البناء الشامل
         document.getElementById('template-loader').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
                     const data = JSON.parse(event.target.result);
                     pageBorderStyle.value = data.borderStyle || 'none';
-                    pageBorderWidth.value = data.borderWidth || '4';
-                    pageBorderColor.value = data.borderColor || '#000000';
                     classification.value = data.classification || 'public';
-                    fontSelectEn.value = data.fontEn || "'Courier Prime', monospace";
-                    fontSelectAr.value = data.fontAr || "'Courier New', serif";
-                    fontCustomLocal.value = data.fontLocal || "";
-                    headerBorderStyle.value = data.headerBorderStyle || 'solid';
-                    headerWidthInput.value = data.headerWidth || '260';
-
-                    const workspace = document.getElementById('workspace');
-                    workspace.innerHTML = "";
+                    fontSelectEn.value = data.fontEn; 
+                    fontSelectAr.value = data.fontAr;
+                    headerWidthInput.value = data.headerWidth || '280';
+                    sliderHeaderFont.value = data.headerFontSize || '11';
+                    sliderBodyFont.value = data.bodyFontSize || '15';
                     
-                    data.pagesContent.forEach((pData, idx) => {
-                        const newP = document.createElement('div');
-                        newP.className = 'page';
-                        newP.id = 'page-' + (idx + 1);
-                        
-                        if (idx === 0) {
-                            newP.innerHTML = `
-                                <div class="draggable" id="doc-logo" draggable="true">
-                                    <div style="border: 1px dashed #000000; padding:12px;">[ موضع الشعار ]</div>
-                                </div>
-                                <div class="draggable" id="doc-header-info" draggable="true">
-                                    <div class="meta-container" id="meta-fields-holder">${data.metaHolderHtml}</div>
-                                </div>
-                                <div id="doc-editor-container">
-                                    <div class="doc-title-input" id="doc-title" contenteditable="true">${pData.title || ''}</div>
-                                    <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">${pData.body || ''}</div>
-                                </div>
-                            `;
-                        } else {
-                            newP.innerHTML = `
-                                <div id="doc-editor-container"><div class="doc-body-editor" contenteditable="true">${pData.body || ''}</div></div>
-                            `;
-                        }
-                        workspace.appendChild(newP);
-                        setupPageDropZones(newP);
-                    });
-
-                    makeElementDraggable(document.getElementById('doc-logo'));
-                    const reloadedHeader = document.getElementById('doc-header-info');
-                    makeElementDraggable(reloadedHeader);
+                    document.getElementById('meta-fields-holder').innerHTML = data.metaHolderHtml;
+                    document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
+                    document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
                     
-                    if (data.headerDirection === 'rtl') {
-                        document.getElementById('btn-dir-rtl').click();
-                    } else {
-                        document.getElementById('btn-dir-ltr').click();
-                    }
-
                     docHeaderInfo.style.width = headerWidthInput.value + 'px';
-                    headerBorderStyle.dispatchEvent(new Event('change'));
-                    applyPageBorders();
-                    applyFontsToAllPages();
-                    refreshDocumentSecurityTokens(data.savedDocId || null);
-                    if (controlPanel.classList.contains('open')) controlPanel.classList.remove('open');
-                    alert("تم استدعاء القالب بنجاح!");
-                } catch (err) {
-                    alert("خطأ في قراءة ملف القالب.");
+                    document.documentElement.style.setProperty('--header-font-size', sliderHeaderFont.value + 'px');
+                    document.documentElement.style.setProperty('--body-font-size', sliderBodyFont.value + 'px');
+                    
+                    applyPageBorders(); 
+                    applyFontsToAllPages(); 
+                    refreshDocumentSecurityTokens(data.savedDocId);
+                    alert("تم استدعاء القالب وتحديث النظام بنجاح تام!");
+                } catch(err) { 
+                    alert("خطأ في قراءة ملف القالب الأصلي."); 
                 }
             };
             reader.readAsText(file);
         });
 
+        // تشغيل نافذة أمر الطباعة وتصدير الـ PDF النهائي للوثيقة والبرقية الرسمية
         document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
         applyFontsToAllPages();
     </script>
