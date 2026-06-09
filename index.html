@@ -559,6 +559,7 @@
                 <option value="'Cairo', sans-serif">Cairo (خط قاهرة الهندسي اللطيف)</option>
                 <option value="'IBM Plex Sans Arabic', sans-serif">IBM Plex Sans (تقني عسكري سيادي)</option>
                 <option value="Arial, sans-serif">Arial Arabic (المعياري المبسط)</option>
+                <option value="'LocalCourierNew', 'Courier New', monospace">Courier New (خط محلي رسمي مكثف)</option>
             </select>
         </div>
 
@@ -734,6 +735,15 @@
         </div>
         <div class="control-group">
             <button type="button" id="btn-print-legend" style="background:#8e44ad; border-color:#8e44ad;">طباعة دليل الأكواد السري (صفحة منفصلة)</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-copy-code" style="background:#2980b9; border-color:#2980b9;">نسخ كود العنصر المحدد 📋</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-unredact-all" style="background:#c0392b; border-color:#c0392b;">فك كل الحجب في المستند</button>
+        </div>
+        <div class="control-group" style="text-align:center;">
+            <span id="redaction-counter" style="font-size:13px; font-weight:bold; color:#16a085;">العناصر المحجوبة: 0 (بأكواد: 0)</span>
         </div>
 
         <hr style="border: 0; border-top: 1px solid #000000; margin-top: 5px;">
@@ -1299,6 +1309,15 @@
             range.deleteContents();
             range.insertNode(span);
             sel.removeAllRanges();
+            updateRedactionCounter();
+        }
+
+        function updateRedactionCounter() {
+            const counter = document.getElementById('redaction-counter');
+            if (!counter) return;
+            const total = document.querySelectorAll('.redacted').length;
+            const coded = document.querySelectorAll('.redacted[data-code]').length;
+            counter.textContent = 'العناصر المحجوبة: ' + total + ' (بأكواد: ' + coded + ')';
         }
 
         document.getElementById('btn-redact-plain').addEventListener('click', function() {
@@ -1317,6 +1336,42 @@
             const textNode = document.createTextNode(original);
             selectedRedaction.parentNode.replaceChild(textNode, selectedRedaction);
             selectedRedaction = null;
+            updateRedactionCounter();
+        });
+
+        document.getElementById('btn-unredact-all').addEventListener('click', function() {
+            const all = document.querySelectorAll('.redacted');
+            if (all.length === 0) {
+                alert('لا توجد عناصر محجوبة في المستند');
+                return;
+            }
+            if (!confirm('سيتم فك الحجب عن جميع العناصر (' + all.length + ') وإظهار النصوص الأصلية. متابعة؟')) return;
+            all.forEach(el => {
+                const original = el.getAttribute('data-original');
+                el.parentNode.replaceChild(document.createTextNode(original), el);
+            });
+            selectedRedaction = null;
+            updateRedactionCounter();
+        });
+
+        document.getElementById('btn-copy-code').addEventListener('click', function() {
+            if (!selectedRedaction) {
+                alert('انقر على عنصر محجوب بكود أولاً لتحديده ثم اضغط نسخ الكود');
+                return;
+            }
+            const code = selectedRedaction.getAttribute('data-code');
+            if (!code) {
+                alert('العنصر المحدد محجوب بدون كود (مستطيل صامت) — لا يوجد كود لنسخه');
+                return;
+            }
+            const done = () => alert('تم نسخ الكود: ' + code);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(done).catch(() => {
+                    window.prompt('انسخ الكود يدوياً:', code);
+                });
+            } else {
+                window.prompt('انسخ الكود يدوياً:', code);
+            }
         });
 
         document.addEventListener('click', function(e) {
