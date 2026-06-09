@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V19.5</title>
+    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V19.6</title>
     
     <style>
         @font-face {
@@ -37,7 +37,7 @@
 
     <style>
         /* ==========================================================================
-           1. الإعدادات الهيكلية العامة ومتغيرات التصميم (أحادية اللون)
+           1. الإعدادات الهيكلية ومتغيرات التصميم (أحادية اللون)
            ========================================================================== */
         :root {
             --bg-light: #dbdbdb;
@@ -83,7 +83,7 @@
         }
 
         /* ==========================================================================
-           2. لوحة التحكم الهندسية الممتدة (Control Panel)
+           2. لوحة التحكم (Control Panel)
            ========================================================================== */
         #control-panel {
             width: 390px;
@@ -108,7 +108,6 @@
             border-bottom: 2px solid var(--border-color);
             margin-bottom: 5px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .section-title {
@@ -132,7 +131,6 @@
             font-weight: bold;
         }
 
-        .control-group input[type="text"], 
         .control-group select, 
         .control-group input[type="file"],
         .control-group input[type="number"],
@@ -210,7 +208,7 @@
         }
 
         /* ==========================================================================
-           3. مساحة عرض المستندات وأوراق الـ A4
+           3. مساحة عرض الورق والـ A4 والتنسيق الإجباري للمستند المرفوع
            ========================================================================== */
         #workspace {
             flex: 1;
@@ -283,6 +281,19 @@
             word-break: break-all;
         }
 
+        /* جعل أجزاء الترويسة قابلة للتعديل والكتابة اليدوية الفورية */
+        .meta-editable-value {
+            outline: none;
+            border-bottom: 1px dashed transparent;
+            min-width: 50px;
+            display: inline-block;
+            user-select: text !important;
+        }
+        .meta-editable-value:focus {
+            border-bottom: 1px dashed #000000;
+            background: #fdfdfd;
+        }
+
         .doc-title-input {
             font-size: 22px;
             font-weight: bold;
@@ -298,6 +309,7 @@
             border: 1px dashed #ff3b30;
         }
 
+        /* إجبار محتوى مستندات الـ Word والـ HTML على الالتزام بالقواعد والتنسيق الهيكلي */
         .doc-body-editor {
             width: 100%;
             flex: 1;
@@ -309,33 +321,28 @@
             user-select: text !important;
         }
 
+        /* قواعد وتنسيقات منسقة وموحدة للجداول القادمة من قوالب خارجية */
         .doc-body-editor table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            table-layout: fixed;
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 15px 0 !important;
+            table-layout: fixed !important;
         }
         
         .doc-body-editor table, .doc-body-editor th, .doc-body-editor td {
             border: 1px solid #000000 !important;
-            padding: 8px;
-            text-align: right;
-            word-break: break-all;
+            padding: 8px !important;
+            text-align: right !important;
+            word-break: break-all !important;
+            background-color: transparent !important;
         }
 
-        .blackout-censor {
-            background-color: #000000 !important;
-            color: #ffffff !important;
-            display: inline-block;
-            padding: 0 6px;
-            font-weight: bold;
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.5;
-            user-select: none !important;
+        .doc-body-editor p {
+            margin-bottom: 10px !important;
+            text-align: justify !important;
         }
 
-        /* هندسة العناصر والأشكال والصور المضافة */
+        /* هندسة العناصر المضافة */
         .shape-element {
             display: flex;
             align-items: center;
@@ -421,15 +428,15 @@
     <button id="toggle-panel-btn">لوحة التحكم</button>
 
     <div id="control-panel">
-        <h2>لوحة هندسة الوثائق V19.5</h2>
+        <h2>لوحة هندسة الوثائق V19.6</h2>
         
         <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
         <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
 
-        <div class="section-title" style="background: #0088cc; color:#fff;">مستدعي القوالب الشامل (JSON / DOCX / DOC)</div>
+        <div class="section-title" style="background: #0088cc; color:#fff;">مستدعي ومحلل القوالب المنسق والذكي</div>
         <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">حفظ التصميم الحالي كقالب (.json)</button>
         <div class="control-group">
-            <label>رفع واستدعاء قالب (اختر ملف JSON أو Word):</label>
+            <label>رفع قالب خارجي (JSON أو مستند Word):</label>
             <input type="file" id="template-loader" accept=".json,.docx,.doc">
         </div>
 
@@ -527,33 +534,32 @@
             <div id="doc-editor-container">
                 <div id="doc-header-info">
                     <div class="meta-container" id="meta-fields-holder">
-                        <div class="meta-line"><strong>MRN:</strong> <span id="lbl-doc-id">GENERATING...</span></div>
-                        <div class="meta-line"><strong>DATE/DTG:</strong> <span id="lbl-doc-date">2026-06-09</span></div>
-                        <div class="meta-line"><strong>FROM:</strong> <span>RCI-CORE</span></div>
-                        <div class="meta-line"><strong>ACTION:</strong> <span>IMMEDIATE_RELEASE</span></div>
-                        <div class="meta-line"><strong>E.O.:</strong> <span>13526_COMPLIANT</span></div>
-                        <div class="meta-line"><strong>TAGS:</strong> <span>OPR_INTEL</span></div>
-                        <div class="meta-line"><strong>REFERENCE:</strong> <span>RCI-SYS-V19.5</span></div>
-                        <div class="meta-line"><strong>SUBJECT:</strong> <span>DOC_DOCX_AND_UNDEFINED_FIX</span></div>
+                        <div class="meta-line"><strong>MRN:</strong> <span class="meta-editable-value" id="lbl-doc-id" contenteditable="true">GENERATING...</span></div>
+                        <div class="meta-line"><strong>DATE/DTG:</strong> <span class="meta-editable-value" id="lbl-doc-date" contenteditable="true">2026-06-09</span></div>
+                        <div class="meta-line"><strong>FROM:</strong> <span class="meta-editable-value" id="lbl-doc-from" contenteditable="true">RCI-CORE</span></div>
+                        <div class="meta-line"><strong>ACTION:</strong> <span class="meta-editable-value" id="lbl-doc-action" contenteditable="true">IMMEDIATE_RELEASE</span></div>
+                        <div class="meta-line"><strong>E.O.:</strong> <span class="meta-editable-value" id="lbl-doc-eo" contenteditable="true">13526_COMPLIANT</span></div>
+                        <div class="meta-line"><strong>TAGS:</strong> <span class="meta-editable-value" id="lbl-doc-tags" contenteditable="true">OPR_INTEL</span></div>
+                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V19.6</span></div>
+                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">COMPLETE_INTELLIGENT_DECODER</span></div>
                     </div>
                 </div>
 
                 <div id="title-wrapper-zone"></div>
                 
                 <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
-                    تمت ترقية المنصة بالكامل إلى الإصدار V19.5. جرى سد ثغرة ظهور أخطاء القيمة غير المعرفة undefined وتصفير العدادات بشكل كامل، مع دعم فوري لتحليل محتويات وجداول قوالب وثائق المايكروسوفت وورد (.docx و .doc) وحقنها برمجياً داخل المنصة بسلاسة مطلقة.
+                    مرحباً بك في الإصدار الهيكلي V19.6. جرى دمج محلل الشيفرات النصية، حيث يقوم النظام الآن بتنسيق كافة الجداول والخطوط الخارجية القادمة من مستندات Word، مع تعبئة الموضوع آلياً بناءً على محتوى النص، وجعل جميع الخانات داخل مربع الترويسة حرة وقابلة للتعديل والكتابة اليدوية فوراً.
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // إعداد وتثبيت عدادات النظام لتجنب أي تعارض أو قيم غير معرفة undefined
         let draggedElement = null;
         let selectedActiveElement = null; 
         let offsetX = 0; 
         let offsetY = 0;
-        let shapeIdCounter = 100;
+        let shapeIdCounter = 200;
         let pageCount = 1; 
         let currentRawCode = "";
 
@@ -661,7 +667,6 @@
         document.getElementById('btn-tool-italic').addEventListener('click', function() { execCmd('italic'); });
         document.getElementById('btn-tool-underline').addEventListener('click', function() { execCmd('underline'); });
 
-        // إنشاء وتوليد الأشكال الهندسية
         function createShape(type) {
             shapeIdCounter++;
             const shapeDiv = document.createElement('div');
@@ -843,7 +848,7 @@
         pageBorderStyle.addEventListener('change', applyPageBorders);
 
         document.getElementById('btn-add-page').addEventListener('click', function() {
-            pageCount++; // تم حظر أي ظهور لـ undefined عبر تصفير وتثبيت المتغير عددياً هنا
+            pageCount++;
             const newPage = document.createElement('div');
             newPage.className = 'page'; 
             newPage.id = 'page-' + pageCount;
@@ -858,7 +863,7 @@
         document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
 
         /* ==========================================================================
-           5. نظام الاستدعاء الشامل والمحدث (JSON + Word Reader)
+           5. محرك التفكيك البرمجي الذكي وقراءة الـ DOCX / JSON المنسق
            ========================================================================== */
         document.getElementById('btn-save-template').addEventListener('click', function() {
             const shapesArray = [];
@@ -894,12 +899,18 @@
             const templateData = {
                 borderStyle: pageBorderStyle.value,
                 classification: classification.value,
-                savedDocId: lblDocId ? lblDocId.textContent : "PUB-000000",
+                savedDocId: document.getElementById('lbl-doc-id').textContent,
+                savedDocDate: document.getElementById('lbl-doc-date').textContent,
+                savedDocFrom: document.getElementById('lbl-doc-from').textContent,
+                savedDocAction: document.getElementById('lbl-doc-action').textContent,
+                savedDocEo: document.getElementById('lbl-doc-eo').textContent,
+                savedDocTags: document.getElementById('lbl-doc-tags').textContent,
+                savedDocRef: document.getElementById('lbl-doc-ref').textContent,
+                savedDocSubject: document.getElementById('lbl-doc-subject').textContent,
                 headerWidth: headerWidthInput.value,
                 headerFontSize: sliderHeaderFont.value,
                 bodyFontSize: sliderBodyFont.value,
                 headerTopPos: sliderHeaderTop.value,
-                metaHolderHtml: document.getElementById('meta-fields-holder').innerHTML,
                 titleHtml: document.getElementById('title-wrapper-zone').innerHTML,
                 bodyHtml: document.getElementById('doc-rich-editor').innerHTML,
                 savedShapes: shapesArray
@@ -914,32 +925,72 @@
             dl.remove();
         });
 
-        // محرك الاستدعاء الذكي لمعالجة قوالب JSON و DOCX/DOC ومنع الأخطاء الفهرسية
         document.getElementById('template-loader').addEventListener('change', function(e) {
             const file = e.target.files[0]; 
             if (!file) return;
 
             const fileName = file.name.toLowerCase();
 
-            // أولاً: إذا كان الملف قالب Word (.docx أو .doc)
+            // فك وتنسيق قوالب الـ Word
             if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const arrayBuffer = event.target.result;
                     mammoth.convertToHtml({arrayBuffer: arrayBuffer})
                         .then(function(result) {
-                            // حقن محتوى الـ Word والجداول والخطوط داخل منطقة التحرير مباشرة دون مسح الترويسة
-                            document.getElementById('doc-rich-editor').innerHTML = result.value;
+                            let rawHtml = result.value;
+                            
+                            // استخراج النصوص من المستند المرفوع للبحث عن بيانات الترويسة بذكاء
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = rawHtml;
+                            const plainText = tempDiv.textContent || tempDiv.innerText;
+
+                            // محرك البحث والالتقاط الذكي لحقول الترويسة من داخل ملف الوورد المرفوع
+                            function extractField(regex) {
+                                const match = plainText.match(regex);
+                                return match ? match[1].trim() : null;
+                            }
+
+                            const extractedMrn = extractField(/mrn\s*:\s*([^\n\r]+)/i);
+                            const extractedDate = extractField(/date\/dtg\s*:\s*([^\n\r]+)/i);
+                            const extractedFrom = extractField(/from\s*:\s*([^\n\r]+)/i);
+                            const extractedAction = extractField(/action\s*:\s*([^\n\r]+)/i);
+                            const extractedEo = extractField(/e\.o\.\s*:\s*([^\n\r]+)/i);
+                            const extractedTags = extractField(/tags\s*:\s*([^\n\r]+)/i);
+                            const extractedRef = extractField(/reference\s*:\s*([^\n\r]+)/i);
+                            const extractedSubject = extractField(/subject\s*:\s*([^\n\r]+)/i);
+
+                            // تطبيق القيم الملتقطة وتثبيتها بالحقول
+                            if (extractedMrn) document.getElementById('lbl-doc-id').textContent = extractedMrn;
+                            if (extractedDate) document.getElementById('lbl-doc-date').textContent = extractedDate;
+                            if (extractedFrom) document.getElementById('lbl-doc-from').textContent = extractedFrom;
+                            if (extractedAction) document.getElementById('lbl-doc-action').textContent = extractedAction;
+                            if (extractedEo) document.getElementById('lbl-doc-eo').textContent = extractedEo;
+                            if (extractedTags) document.getElementById('lbl-doc-tags').textContent = extractedTags;
+                            if (extractedRef) document.getElementById('lbl-doc-ref').textContent = extractedRef;
+                            
+                            // توليد وتعبئة حقل الموضوع آلياً بناء على محتوى القالب أو النص المكتوب
+                            if (extractedSubject) {
+                                document.getElementById('lbl-doc-subject').textContent = extractedSubject;
+                            } else {
+                                // استخلاص أول 60 حرف كعنوان تلقائي في حال عدم وجود حقل موضوع صريح
+                                const fallbackSubject = plainText.replace(/[\r\n]+/g, ' ').trim().substring(0, 60) + "...";
+                                document.getElementById('lbl-doc-subject').textContent = fallbackSubject || "AUTO_LOADED_DOCUMENT";
+                            }
+
+                            // حقن محتوى الوورد منسقاً بالكامل داخل منطقة التحرير الرسمية للمنصة
+                            document.getElementById('doc-rich-editor').innerHTML = rawHtml;
+                            
                             applyFontsToAllPages();
-                            alert("تم استدعاء قالب الـ Word وتحليله بنجاح باهر!");
+                            alert("تم استدعاء قالب الـ Word الخارجي، وتنسيق الجداول، وتعبئة حقول الترويسة المكتشفة بنجاح تـام!");
                         })
                         .catch(function(err) {
-                            alert("حدث خطأ أثناء معالجة ملف الـ Word: " + err);
+                            alert("حدث خطأ أثناء فك ومعالجة قالب الـ Word: " + err);
                         });
                 };
                 reader.readAsArrayBuffer(file);
             } 
-            // ثانياً: إذا كان الملف قالب النظام الأساسي (.json)
+            // استدعاء قوالب النظام المكتوبة بصيغة JSON
             else if (fileName.endsWith('.json')) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
@@ -953,7 +1004,16 @@
                         sliderBodyFont.value = data.bodyFontSize || '15';
                         sliderHeaderTop.value = data.headerTopPos || '0';
                         
-                        document.getElementById('meta-fields-holder').innerHTML = data.metaHolderHtml;
+                        // استرجاع وتعبئة قيم الترويسة القابلة للتعديل يدوياً بدقة
+                        document.getElementById('lbl-doc-id').textContent = data.savedDocId || '';
+                        document.getElementById('lbl-doc-date').textContent = data.savedDocDate || '';
+                        document.getElementById('lbl-doc-from').textContent = data.savedDocFrom || '';
+                        document.getElementById('lbl-doc-action').textContent = data.savedDocAction || '';
+                        document.getElementById('lbl-doc-eo').textContent = data.savedDocEo || '';
+                        document.getElementById('lbl-doc-tags').textContent = data.savedDocTags || '';
+                        document.getElementById('lbl-doc-ref').textContent = data.savedDocRef || '';
+                        document.getElementById('lbl-doc-subject').textContent = data.savedDocSubject || '';
+
                         document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
                         document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
                         
@@ -1013,10 +1073,9 @@
 
                         applyPageBorders(); 
                         applyFontsToAllPages(); 
-                        refreshDocumentSecurityTokens(data.savedDocId);
-                        alert("تم استدعاء قالب النظام JSON بنجاح ميمون!");
+                        alert("تم استدعاء قالب النظام الأساسي JSON بنجاح ميمون!");
                     } catch(err) { 
-                        alert("خطأ في قراءة ملف قالب الـ JSON."); 
+                        alert("خطأ في قراءة وتحليل ملف قالب الـ JSON المرفوع."); 
                     }
                 };
                 reader.readAsText(file);
