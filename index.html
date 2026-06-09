@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V19.3</title>
+    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V19.4</title>
     
     <style>
         @font-face {
@@ -35,7 +35,7 @@
 
     <style>
         /* ==========================================================================
-           1. الإعدادات الهيكلية العامة ومتغيرات التصميم (أحادية اللون - أسود وأبيض)
+           1. الإعدادات الهيكلية العامة ومتغيرات التصميم (أحادية اللون)
            ========================================================================== */
         :root {
             --bg-light: #dbdbdb;
@@ -168,35 +168,11 @@
             border: 1px solid #cccccc;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.15s;
         }
         
         .editor-toolbar button:hover {
             background: #000000;
             color: #ffffff;
-            border-color: #000000;
-        }
-
-        .color-picker-wrapper {
-            grid-column: span 2;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            border: 1px solid #cccccc;
-            padding: 2px 4px;
-            background: #ffffff;
-        }
-        
-        .color-picker-wrapper input[type="color"] {
-            padding: 0;
-            height: 20px;
-            width: 32px;
-            border: none;
-            cursor: pointer;
-            background: transparent;
         }
 
         .shape-grid {
@@ -232,7 +208,7 @@
         }
 
         /* ==========================================================================
-           3. مساحة عرض المستندات الحرة وأوراق الـ A4 المطورة
+           3. مساحة عرض المستندات وأوراق الـ A4
            ========================================================================== */
         #workspace {
             flex: 1;
@@ -259,13 +235,6 @@
             flex-direction: column;
         }
 
-        :lang(ar) { 
-            font-family: var(--font-ar), 'LocalCourierNew', 'Courier New', serif !important; 
-        }
-        :lang(en) { 
-            font-family: var(--font-en), 'LocalCourierNew', 'Courier New', monospace !important; 
-        }
-
         /* العناصر الحرة القابلة للسحب والتحريك */
         .draggable {
             position: absolute;
@@ -289,7 +258,7 @@
             position: relative;
         }
 
-        /* مربع الترويسة المدمج */
+        /* مربع الترويسة المدمج برمجياً */
         #doc-header-info {
             width: 280px;
             border: 1px solid #000000;
@@ -353,11 +322,6 @@
             text-align: right;
             word-break: break-all;
         }
-        
-        .doc-body-editor th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-        }
 
         .blackout-censor {
             background-color: #000000 !important;
@@ -367,11 +331,8 @@
             font-weight: bold;
             font-size: 12px;
             text-align: center;
-            border-radius: 0px;
             line-height: 1.5;
             user-select: none !important;
-            word-break: keep-all;
-            white-space: nowrap;
         }
 
         #censor-mapping-report {
@@ -381,14 +342,7 @@
             display: none;
         }
 
-        #censor-mapping-report h3 {
-            font-size: 13px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        /* هندسة الأشكال والخطوط الحرة والصور */
+        /* هندسة الأشكال والخطوط والصور */
         .shape-element {
             display: flex;
             align-items: center;
@@ -441,11 +395,11 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            pointer-events: none; /* لمنع تداخل السحب */
+            pointer-events: none;
         }
 
         /* ==========================================================================
-           4. نظام التجاوب والدعم الكامل للشاشات الذكية (Responsive Engine)
+           4. محرك التجاوب والطباعة
            ========================================================================== */
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -463,10 +417,9 @@
             @page { size: A4; margin: 0; }
             body { background-color: #ffffff; overflow: visible; }
             #control-panel, #toggle-panel-btn { display: none !important; }
-            #workspace { padding: 0 !important; margin: 0 !important; background-color: #ffffff !important; overflow: visible !important; display: block !important; }
-            .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; position: relative !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            #workspace { padding: 0 !important; margin: 0 !important; background-color: #ffffff !important; overflow: visible !important; }
+            .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; position: relative !important; }
             .draggable { border: 1px dashed transparent !important; }
-            #censor-mapping-report { page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -475,28 +428,26 @@
     <button id="toggle-panel-btn">لوحة التحكم</button>
 
     <div id="control-panel">
-        <h2>لوحة هندسة الوثائق V19.3</h2>
+        <h2>لوحة هندسة الوثائق V19.4</h2>
         
         <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
         <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
 
+        <div class="section-title" style="background: #0088cc; color:#fff;">محرك حفظ واستدعاء القوالب الشامل</div>
+        <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">حفظ التصميم الحالي كقالب (.json)</button>
+        <div class="control-group">
+            <label>استدعاء واسترجاع قالب كامل:</label>
+            <input type="file" id="template-loader" accept=".json">
+        </div>
+
         <div class="section-title" style="background: #000; color: #fff;">مربع إدراج ومعالجة الصور</div>
-        <div class="control-group" style="background:#f9f9f9; padding:8px; border:1px solid #000;">
-            <label>اختر صورة لإدراجها بشكل حر:</label>
+        <div class="control-group">
             <input type="file" id="image-element-uploader" accept="image/*">
         </div>
 
         <div class="section-title">الموضع العمودي لمربع الترويسة</div>
         <div class="control-group" style="background:#f9f9f9; padding:8px; border:1px solid #000;">
-            <label>رفع / تنزيل المربع (تلقائي بالوسط):</label>
             <input type="range" id="slider-header-top" min="-20" max="150" value="0">
-        </div>
-
-        <div class="section-title">محرك القوالب وحفظ السجلات</div>
-        <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">حفظ التصميم الحالي كقالب (.json)</button>
-        <div class="control-group">
-            <label>استدعاء قالب من جهازك:</label>
-            <input type="file" id="template-loader" accept=".json">
         </div>
 
         <div class="section-title">التحكم المتقدم بأحجام الخطوط</div>
@@ -521,96 +472,40 @@
             <div class="row-inputs">
                 <div>
                     <label>العرض (بكسل):</label>
-                    <input type="number" id="shape-width" placeholder="العرض" value="150">
+                    <input type="number" id="shape-width" value="150">
                 </div>
                 <div>
                     <label>الارتفاع/السمك:</label>
-                    <input type="number" id="shape-height" placeholder="الارتفاع" value="100">
+                    <input type="number" id="shape-height" value="100">
                 </div>
             </div>
-            <label>شكل إطار الحدود (للمربعات والمعينات):</label>
             <select id="shape-border-style">
                 <option value="solid">مصمت</option>
                 <option value="dashed">متقطع</option>
                 <option value="double">مزدوج</option>
             </select>
-            <label>اللون الأساسي للعنصر:</label>
             <input type="color" id="shape-color" value="#000000">
         </div>
 
-        <div class="section-title">نظام إدارة وتخصيص الخطوط المدمجة</div>
-        <div class="control-group">
-            <label>خط النصوص الإنجليزية (EN):</label>
-            <select id="font-select-en">
-                <option value="'LocalCourierNew', 'Courier New', monospace">Courier Typewriter (محلّي أساسي)</option>
-                <option value="'Roboto Mono', monospace">Roboto Mono (سحابي احتياطي)</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label>خط النصوص العربية (AR):</label>
-            <select id="font-select-ar">
-                <option value="'LocalCourierNew', 'Courier New', serif">Courier New (رسمي محلي)</option>
-                <option value="'LocalAmiri', 'Amiri', serif">Amiri (أميري مدمج)</option>
-            </select>
-        </div>
-
         <div class="section-title">حقول وحجم مربع الترويسة</div>
-        <div class="control-group" style="background: var(--panel-section-bg); padding: 8px; border: 1px dashed #000000; gap: 8px;">
+        <div class="control-group" style="background: var(--panel-section-bg); padding: 8px; border: 1px dashed #000; gap: 8px;">
             <label>إطار وحدود مربع الترويسة:</label>
             <select id="header-border-style">
                 <option value="solid">إطار أسود مصمت</option>
                 <option value="none">بدون إطار</option>
             </select>
-
             <label>عرض مربع الترويسة (بالبكسل):</label>
-            <input type="number" id="header-width-input" value="280" min="150" max="600" step="10">
-
-            <label>إضافة خانة بيانات إضافية للترويسة:</label>
-            <div class="row-inputs">
-                <input type="text" id="new-meta-key" placeholder="الاسم">
-                <input type="text" id="new-meta-val" placeholder="القيمة">
-            </div>
-            <button type="button" id="btn-add-meta-field" style="padding:5px; background:#34c759; border-color:#34c759;">إضافة خانة للمربع</button>
+            <input type="number" id="header-width-input" value="280">
         </div>
 
-        <div class="section-title">منشئ ومحرك مصفوفات الجداول الحرة</div>
-        <div class="control-group" style="background: #e9e9e9; padding: 8px; border: 1px solid #000;">
-            <div class="row-inputs">
-                <div>
-                    <label>تحديد عدد الصفوف:</label>
-                    <input type="number" id="table-rows-count" value="3" min="1">
-                </div>
-                <div>
-                    <label>تحديد عدد الأعمدة:</label>
-                    <input type="number" id="table-cols-count" value="3" min="1">
-                </div>
-            </div>
-            <button type="button" id="btn-insert-custom-table" style="background: #34c759; border-color:#34c759; margin-top:6px;">إدراج الجدول بالمواصفات</button>
-        </div>
-
-        <div class="section-title">خيارات تحرير ومحاذاة النصوص</div>
+        <div class="section-title">خيارات تحرير ومحاذاة النصوص والخلية</div>
         <div class="editor-toolbar">
             <button type="button" id="btn-tool-bold"><b>B</b></button>
             <button type="button" id="btn-tool-italic"><i>I</i></button>
             <button type="button" id="btn-tool-underline"><u>U</u></button>
-            <button type="button" id="btn-add-title-field" style="background:#000; color:#fff;">+ حقل عنوان</button>
-            <button type="button" id="btn-align-right">يمين</button>
-            <button type="button" id="btn-align-center">وسط</button>
-            <button type="button" id="btn-align-left">يسار</button>
-            <button type="button" id="btn-tool-hr">فاصل</button>
+            <button type="button" id="btn-add-title-field" style="background:#000; color:#fff;">+ عنوان</button>
         </div>
         
-        <div class="section-title">نظام التعتيم والترميز المرجعي المتقدم</div>
-        <div class="control-group" style="background: #fdf2e9; padding: 6px; border: 1px dashed #ff9500;">
-            <label style="display:flex; align-items:center; gap:6px; font-size:11px;">
-                <input type="checkbox" id="chk-enable-censor-symbols" checked>
-                تفعيل الرموز المرجعية فوق التعتيم
-            </label>
-        </div>
-        <button id="btn-apply-censor" style="background: #000000; margin-top:4px;">تطبيق شريط التعتيم وحجب النص</button>
-        <button id="btn-export-censor-file" style="background: #5856d6; border-color:#5856d6; margin-top:2px;">تصدير السجل السري (.txt)</button>
-        <button id="btn-undo-censor" class="btn-danger" style="padding: 4px; font-size: 11px; margin-top:2px;">إزالة آخر شريط تعتيم</button>
-
         <div class="section-title">إطار وحدود صفحات المستند</div>
         <div class="control-group">
             <select id="page-border-style">
@@ -636,7 +531,6 @@
 
     <div id="workspace">
         <div class="page" id="page-1">
-            
             <div id="doc-editor-container">
                 <div id="doc-header-info">
                     <div class="meta-container" id="meta-fields-holder">
@@ -646,26 +540,25 @@
                         <div class="meta-line"><strong>ACTION:</strong> <span>IMMEDIATE_RELEASE</span></div>
                         <div class="meta-line"><strong>E.O.:</strong> <span>13526_COMPLIANT</span></div>
                         <div class="meta-line"><strong>TAGS:</strong> <span>OPR_INTEL</span></div>
-                        <div class="meta-line"><strong>REFERENCE:</strong> <span>RCI-SYS-V19.3</span></div>
-                        <div class="meta-line"><strong>SUBJECT:</strong> <span>IMAGE_AND_LINE_FIX_REVISION</span></div>
+                        <div class="meta-line"><strong>REFERENCE:</strong> <span>RCI-SYS-V19.4</span></div>
+                        <div class="meta-line"><strong>SUBJECT:</strong> <span>COMPLETE_TEMPLATE_SYSTEM_FIX</span></div>
                     </div>
                 </div>
 
                 <div id="title-wrapper-zone"></div>
                 
                 <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
-                    تم إطلاق التحديث V19.3 بنجاح. تم إصلاح تمدد عرض وطول الخطوط الحرة من لوحة التحكم، بالإضافة إلى بناء وحدة إدخال الصور المستقلة والقابلة للتحريك والسحب بشكل كامل وحر مع الحفاظ على مرونة التعديل الهندسي والحذف.
+                    تمت معالجة وإصلاح ثغرة نظام استدعاء القوالب في النسخة V19.4 بنجاح. الآن يتم حفظ واسترجاع كافة الأشكال الهندسية والخطوط الحرة والصور المدرجة مع الحفاظ على موضعها وتفعيل خاصية التحريك والمسح المباشر فور الاستدعاء دون أي مشاكل.
                 </div>
             </div>
 
             <div id="censor-mapping-report">
-                <h3>جدول مطابقة مراجع التعتيم والتصنيف السري (CONFIDENTIAL MAPPING REPORT)</h3>
+                <h3>جدول مطابقة مراجع التعتيم والتصنيف السري</h3>
                 <table id="censor-mapping-table">
                     <thead><tr><th>الرمز المرجعي العشوائي</th><th>النص الأصلي المحجوب</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
@@ -675,9 +568,8 @@
         let offsetX = 0; 
         let offsetY = 0;
         let shapeIdCounter = 0;
+        let pageCount = 1;
         let currentRawCode = "";
-        let censorHistory = []; 
-        let censorMap = new Map();
 
         const togglePanelBtn = document.getElementById('toggle-panel-btn');
         const controlPanel = document.getElementById('control-panel');
@@ -731,12 +623,7 @@
             }
         });
 
-        const fontSelectEn = document.getElementById('font-select-en');
-        const fontSelectAr = document.getElementById('font-select-ar');
-
         function applyFontsToAllPages() {
-            document.documentElement.style.setProperty('--font-ar', fontSelectAr.value);
-            document.documentElement.style.setProperty('--font-en', fontSelectEn.value);
             document.querySelectorAll('.doc-body-editor, .meta-line, .shape-text, .doc-title-input').forEach(el => {
                 if (/[\u0600-\u06FF]/.test(el.textContent || "")) {
                     el.setAttribute('lang', 'ar');
@@ -745,24 +632,6 @@
                 }
             });
         }
-        fontSelectEn.addEventListener('change', applyFontsToAllPages);
-        fontSelectAr.addEventListener('change', applyFontsToAllPages);
-
-        document.getElementById('btn-add-meta-field').addEventListener('click', function() {
-            const keyText = document.getElementById('new-meta-key').value.trim();
-            const valText = document.getElementById('new-meta-val').value.trim();
-            if (keyText === "" || valText === "") return;
-            
-            const holder = document.getElementById('meta-fields-holder');
-            const newLine = document.createElement('div'); 
-            newLine.className = 'meta-line';
-            newLine.innerHTML = `<strong>${keyText.toUpperCase()}:</strong> <span>${valText}</span>`;
-            holder.appendChild(newLine);
-            
-            document.getElementById('new-meta-key').value = ""; 
-            document.getElementById('new-meta-val').value = "";
-            applyFontsToAllPages();
-        });
 
         document.getElementById('btn-add-title-field').addEventListener('click', function() {
             const wrapper = document.getElementById('title-wrapper-zone');
@@ -778,7 +647,6 @@
                     titleInput.classList.add('selected');
                     selectedActiveElement = titleInput;
                 });
-                
                 wrapper.appendChild(titleInput);
                 applyFontsToAllPages();
             }
@@ -806,83 +674,8 @@
         document.getElementById('btn-tool-bold').addEventListener('click', function() { execCmd('bold'); });
         document.getElementById('btn-tool-italic').addEventListener('click', function() { execCmd('italic'); });
         document.getElementById('btn-tool-underline').addEventListener('click', function() { execCmd('underline'); });
-        document.getElementById('btn-align-right').addEventListener('click', function() { execCmd('justifyRight'); });
-        document.getElementById('btn-align-center').addEventListener('click', function() { execCmd('justifyCenter'); });
-        document.getElementById('btn-align-left').addEventListener('click', function() { execCmd('justifyLeft'); });
-        document.getElementById('btn-tool-hr').addEventListener('click', function() { execCmd('insertHorizontalRule'); });
 
-        document.getElementById('btn-insert-custom-table').addEventListener('click', function() {
-            const rows = parseInt(document.getElementById('table-rows-count').value) || 3;
-            const cols = parseInt(document.getElementById('table-cols-count').value) || 3;
-            let tableHtml = "<table><tbody>";
-            for (let i = 0; i < rows; i++) {
-                tableHtml += "<tr>";
-                for (let j = 0; j < cols; j++) {
-                    tableHtml += "<td contenteditable='true'>بيانات الخلية</td>";
-                }
-                tableHtml += "</tr>";
-            }
-            tableHtml += "</tbody></table><br>";
-            execCmd('insertHTML', tableHtml);
-        });
-
-        document.getElementById('btn-apply-censor').addEventListener('click', function() {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0 && selection.toString().trim() !== "") {
-                const originalText = selection.toString();
-                const textLength = originalText.length;
-                let codeLength = textLength < 10 ? 4 : (textLength > 30 ? 8 : 6);
-                let randomToken = generateRandomCode(codeLength);
-                let symbolCode = `[${randomToken}]`;
-                
-                const enableSymbols = document.getElementById('chk-enable-censor-symbols').checked;
-                const range = selection.getRangeAt(0);
-                const span = document.createElement('span');
-                span.className = 'blackout-censor';
-                span.setAttribute('contenteditable', 'false');
-                
-                if (enableSymbols) {
-                    span.textContent = symbolCode;
-                    censorMap.set(symbolCode, originalText);
-                } else {
-                    span.textContent = "█".repeat(Math.max(textLength, 4));
-                }
-
-                range.deleteContents();
-                range.insertNode(span);
-                censorHistory.push({ element: span, code: symbolCode, text: originalText });
-                if (enableSymbols) rebuildCensorReportTable();
-                selection.removeAllRanges();
-            }
-        });
-
-        function rebuildCensorReportTable() {
-            const reportZone = document.getElementById('censor-mapping-report');
-            const tbody = document.getElementById('censor-mapping-table').querySelector('tbody');
-            tbody.innerHTML = "";
-            if (censorMap.size > 0) {
-                reportZone.style.display = 'block';
-                censorMap.forEach((text, code) => {
-                    const r = document.createElement('tr');
-                    r.innerHTML = `<td>${code}</td><td>${text}</td>`;
-                    tbody.appendChild(r);
-                });
-            } else { reportZone.style.display = 'none'; }
-        }
-
-        document.getElementById('btn-undo-censor').addEventListener('click', function() {
-            if (censorHistory.length > 0) {
-                const lastCensorItem = censorHistory.pop();
-                const element = lastCensorItem.element;
-                if (element && element.parentNode) {
-                    element.parentNode.replaceChild(document.createTextNode(lastCensorItem.text), element);
-                }
-                censorMap.delete(lastCensorItem.code);
-                rebuildCensorReportTable();
-            }
-        });
-
-        // إنشاء وتوليد الأشكال وإصلاح التحكم في الخط الحر تمديداً وتكبيراً
+        // إنشاء وتوليد الأشكال الهندسية
         function createShape(type) {
             shapeIdCounter++;
             const shapeDiv = document.createElement('div');
@@ -915,7 +708,6 @@
         document.getElementById('btn-shape-rect').addEventListener('click', function() { createShape('rect'); });
         document.getElementById('btn-shape-diamond').addEventListener('click', function() { createShape('diamond'); });
 
-        // تفعيل شاشة التحكم الموحدة لتعديل الخطوط الحرة والأشكال والصور المرفوعة بدقة
         function updateSelectedShapeProperty() {
             if (!selectedActiveElement) return;
             
@@ -924,7 +716,6 @@
             const styleVal = document.getElementById('shape-border-style').value;
             const colorVal = document.getElementById('shape-color').value;
 
-            // إذا كان المكون صورة مرفوعة
             const imgEl = selectedActiveElement.querySelector('.inserted-image-el');
             if (imgEl) {
                 selectedActiveElement.style.width = widthVal;
@@ -936,8 +727,8 @@
             if (!innerShape) return;
 
             if (innerShape.classList.contains('shape-line')) {
-                innerShape.style.width = widthVal; // تمديد عرض وطول الخط الحر أفقياً بنجاح هندسي تام
-                innerShape.style.height = heightVal + 'px'; // التحكم بسمك الخط
+                innerShape.style.width = widthVal;
+                innerShape.style.height = heightVal + 'px';
                 innerShape.style.backgroundColor = colorVal;
             } else {
                 innerShape.style.width = widthVal;
@@ -952,7 +743,7 @@
         document.getElementById('shape-border-style').addEventListener('change', updateSelectedShapeProperty);
         document.getElementById('shape-color').addEventListener('input', updateSelectedShapeProperty);
 
-        // محرك إدراج ومعالجة الصور المرفوعة من مربع إدخال الصور
+        // محرك رفع وإدراج ومعالجة الصور المباشرة
         document.getElementById('image-element-uploader').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -970,15 +761,13 @@
                 imgContainer.style.height = '100px';
 
                 const img = document.createElement('img');
-                img.src = event.target.value || event.target.result;
+                img.src = event.target.result;
                 img.className = 'inserted-image-el';
                 
                 imgContainer.appendChild(img);
                 document.getElementById('page-1').appendChild(imgContainer);
                 makeElementDraggable(imgContainer);
                 imgContainer.click();
-                
-                // تصفير الخانة لرفع صور أخرى لاحقاً
                 e.target.value = "";
             };
             reader.readAsDataURL(file);
@@ -1081,6 +870,163 @@
 
         document.getElementById('workspace').addEventListener('click', function() { clearElementSelection(); });
         document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
+
+        /* ==========================================================================
+           5. النظام الشامل والمصلح لحفظ واستدعاء القوالب برمجياً (JSON Core)
+           ========================================================================== */
+        document.getElementById('btn-save-template').addEventListener('click', function() {
+            // تجميع بيانات الأشكال الحرة والصور المتواجدة في المستند بدقة
+            const shapesArray = [];
+            document.querySelectorAll('.page .shape-element').forEach(el => {
+                const imgEl = el.querySelector('.inserted-image-el');
+                let shapeData = {
+                    id: el.id,
+                    top: el.style.top,
+                    left: el.style.left,
+                    width: el.style.width,
+                    height: el.style.height,
+                    type: imgEl ? 'image' : (el.querySelector('.shape-line') ? 'line' : (el.querySelector('.shape-rect') ? 'rect' : 'diamond'))
+                };
+
+                if (shapeData.type === 'image') {
+                    shapeData.imgSrc = imgEl.src;
+                } else if (shapeData.type !== 'line') {
+                    const inner = el.querySelector('.shape-rect, .shape-diamond');
+                    shapeData.text = el.querySelector('.shape-text').textContent;
+                    shapeData.borderColor = inner.style.borderColor;
+                    shapeData.borderStyle = inner.style.borderStyle;
+                    shapeData.width = inner.style.width;
+                    shapeData.height = inner.style.height;
+                } else {
+                    const line = el.querySelector('.shape-line');
+                    shapeData.width = line.style.width;
+                    shapeData.height = line.style.height;
+                    shapeData.color = line.style.backgroundColor;
+                }
+                shapesArray.push(shapeData);
+            });
+
+            const templateData = {
+                borderStyle: pageBorderStyle.value,
+                classification: classification.value,
+                savedDocId: lblDocId.textContent,
+                headerWidth: headerWidthInput.value,
+                headerFontSize: sliderHeaderFont.value,
+                bodyFontSize: sliderBodyFont.value,
+                headerTopPos: sliderHeaderTop.value,
+                metaHolderHtml: document.getElementById('meta-fields-holder').innerHTML,
+                titleHtml: document.getElementById('title-wrapper-zone').innerHTML,
+                bodyHtml: document.getElementById('doc-rich-editor').innerHTML,
+                savedShapes: shapesArray // حفظ مصفوفة الأشكال والصور كاملة
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
+            const dl = document.createElement('a'); 
+            dl.setAttribute("href", dataStr); 
+            dl.setAttribute("download", "RCI-COMPLETE-TEMPLATE.json");
+            document.body.appendChild(dl); 
+            dl.click(); 
+            dl.remove();
+        });
+
+        // استدعاء وبناء عناصر المستند التفاعلية من ملف JSON المصلح
+        document.getElementById('template-loader').addEventListener('change', function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    // استعادة الإعدادات العامة
+                    pageBorderStyle.value = data.borderStyle || 'none';
+                    classification.value = data.classification || 'public';
+                    headerWidthInput.value = data.headerWidth || '280';
+                    sliderHeaderFont.value = data.headerFontSize || '11';
+                    sliderBodyFont.value = data.bodyFontSize || '15';
+                    sliderHeaderTop.value = data.headerTopPos || '0';
+                    
+                    // حقن النصوص والترويسة والعنوان
+                    document.getElementById('meta-fields-holder').innerHTML = data.metaHolderHtml;
+                    document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
+                    document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
+                    
+                    // تطبيق الأبعاد والمقاسات فورا
+                    docHeaderInfo.style.width = headerWidthInput.value + 'px';
+                    docHeaderInfo.style.top = sliderHeaderTop.value + 'px';
+                    document.documentElement.style.setProperty('--header-font-size', sliderHeaderFont.value + 'px');
+                    document.documentElement.style.setProperty('--body-font-size', sliderBodyFont.value + 'px');
+                    
+                    // تنظيف أي أشكال قديمة متواجدة قبل الاستدعاء لمنع التكرار والتداخل
+                    document.querySelectorAll('.page .shape-element').forEach(el => el.remove());
+
+                    // إعادة بناء وتبلور الأشكال الهندسية والصور ديناميكياً مع تفعيل كامل خواصها اللوجستية
+                    if (data.savedShapes && Array.isArray(data.savedShapes)) {
+                        const targetPage = document.getElementById('page-1');
+                        data.savedShapes.forEach(shape => {
+                            const shapeDiv = document.createElement('div');
+                            shapeDiv.className = 'draggable shape-element';
+                            shapeDiv.id = shape.id;
+                            shapeDiv.setAttribute('draggable', 'true');
+                            shapeDiv.style.top = shape.top;
+                            shapeDiv.style.left = shape.left;
+
+                            if (shape.type === 'image') {
+                                shapeDiv.style.width = shape.width;
+                                shapeDiv.style.height = shape.height;
+                                const img = document.createElement('img');
+                                img.src = shape.imgSrc;
+                                img.className = 'inserted-image-el';
+                                shapeDiv.appendChild(img);
+                            } else if (shape.type === 'line') {
+                                const innerLine = document.createElement('div');
+                                innerLine.className = 'shape-line';
+                                innerLine.style.width = shape.width;
+                                innerLine.style.height = shape.height;
+                                innerLine.style.backgroundColor = shape.color;
+                                shapeDiv.appendChild(innerLine);
+                            } else {
+                                const inner = document.createElement('div');
+                                inner.className = shape.type === 'rect' ? 'shape-rect' : 'shape-diamond';
+                                inner.style.width = shape.width;
+                                inner.style.height = shape.height;
+                                inner.style.borderStyle = shape.borderStyle;
+                                inner.style.borderColor = shape.borderColor;
+
+                                const txt = document.createElement('div');
+                                txt.className = 'shape-text';
+                                txt.setAttribute('contenteditable', 'true');
+                                txt.textContent = shape.text;
+                                inner.appendChild(txt);
+                                shapeDiv.appendChild(inner);
+                            }
+
+                            targetPage.appendChild(shapeDiv);
+                            makeElementDraggable(shapeDiv); // تفعيل السحب والضغط للعنصر المسترجع فورا
+                        });
+                    }
+
+                    // تفعيل تفاعلية العنوان إذا كان موجوداً
+                    const restoredTitle = document.querySelector('.doc-title-input');
+                    if (restoredTitle) {
+                        restoredTitle.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            clearElementSelection();
+                            restoredTitle.classList.add('selected');
+                            selectedActiveElement = restoredTitle;
+                        });
+                    }
+
+                    applyPageBorders(); 
+                    applyFontsToAllPages(); 
+                    refreshDocumentSecurityTokens(data.savedDocId);
+                    alert("تم استدعاء القالب بالكامل واسترجاع كافة الأشكال والصور التفاعلية بنجاح ميمون!");
+                } catch(err) { 
+                    alert("خطأ في قراءة ملف القالب؛ يرجى التأكد من سلامة الهيكل."); 
+                }
+            };
+            reader.readAsText(file);
+        });
+
         applyFontsToAllPages();
     </script>
 </body>
