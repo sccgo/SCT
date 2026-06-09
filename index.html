@@ -1245,219 +1245,216 @@
             };
 
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
-            const dl = document.createElement('a'); 
-            dl.setAttribute("href", dataStr); 
-            dl.setAttribute("download", "RCI-AUTO-DIRECTION-TEMPLATE.json");
-            document.body.appendChild(dl); dl.click(); dl.remove();
-        });
+    const dl = document.createElement('a'); 
+    dl.setAttribute("href", dataStr); 
+    dl.setAttribute("download", "RCI-AUTO-DIRECTION-TEMPLATE.json");
+    document.body.appendChild(dl); dl.click(); dl.remove();
+});
 
-        document.getElementById('template-loader').addEventListener('change', function(e) {
-            const file = e.target.files[0]; if (!file) return;
-            const fileName = file.name.toLowerCase();
+document.getElementById('template-loader').addEventListener('change', function(e) {
+    const file = e.target.files[0]; if (!file) return;
+    const fileName = file.name.toLowerCase();
 
-            // إخلاء المحتوى والبيانات القديمة لمنع التداخل والتعارض الجذري
-            document.getElementById('title-wrapper-zone').innerHTML = '';
-            document.getElementById('doc-rich-editor').innerHTML = '';
-            document.querySelectorAll('.page .shape-element').forEach(el => el.remove());
+    // إخلاء المحتوى والبيانات القديمة لمنع التداخل والتعارض الجذري
+    document.getElementById('title-wrapper-zone').innerHTML = '';
+    document.getElementById('doc-rich-editor').innerHTML = '';
+    document.querySelectorAll('.page .shape-element').forEach(el => el.remove());
 
-            if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const arrayBuffer = event.target.result;
-                    mammoth.convertToHtml({arrayBuffer: arrayBuffer})
-                        .then(function(result) {
-                            let rawHtml = result.value;
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = rawHtml;
-                            const plainText = tempDiv.textContent || tempDiv.innerText;
+    if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const arrayBuffer = event.target.result;
+            mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+                .then(function(result) {
+                    let rawHtml = result.value;
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = rawHtml;
+                    const plainText = tempDiv.textContent || tempDiv.innerText;
 
-                            function extractField(regex) {
-                                const match = plainText.match(regex);
-                                return match ? match[1].trim() : null;
-                            }
-
-                            const extractedMrn = extractField(/mrn\s*:\s*([^\n\r]+)/i);
-                            const extractedDate = extractField(/date\/dtg\s*:\s*([^\n\r]+)/i);
-                            const extractedFrom = extractField(/from\s*:\s*([^\n\r]+)/i);
-                            const extractedAction = extractField(/action\s*:\s*([^\n\r]+)/i);
-                            const extractedEo = extractField(/e\.o\.\s*:\s*([^\n\r]+)/i);
-                            const extractedTags = extractField(/tags\s*:\s*([^\n\r]+)/i);
-                            const extractedRef = extractField(/reference\s*:\s*([^\n\r]+)/i);
-                            const extractedSubject = extractField(/subject\s*:\s*([^\n\r]+)/i);
-
-                            if (extractedMrn && document.getElementById('lbl-doc-id')) document.getElementById('lbl-doc-id').textContent = extractedMrn;
-                            if (extractedDate && document.getElementById('lbl-doc-date')) document.getElementById('lbl-doc-date').textContent = extractedDate;
-                            if (extractedFrom && document.getElementById('lbl-doc-from')) document.getElementById('lbl-doc-from').textContent = extractedFrom;
-                            if (extractedAction && document.getElementById('lbl-doc-action')) document.getElementById('lbl-doc-action').textContent = extractedAction;
-                            if (extractedEo && document.getElementById('lbl-doc-eo')) document.getElementById('lbl-doc-eo').textContent = extractedEo;
-                            if (extractedTags && document.getElementById('lbl-doc-tags')) document.getElementById('lbl-doc-tags').textContent = extractedTags;
-                            if (extractedRef && document.getElementById('lbl-doc-ref')) document.getElementById('lbl-doc-ref').textContent = extractedRef;
-                            
-                            if (extractedSubject && document.getElementById('lbl-doc-subject')) {
-                                document.getElementById('lbl-doc-subject').textContent = extractedSubject;
-                            } else if(document.getElementById('lbl-doc-subject')) {
-                                const fallbackSubject = plainText.replace(/[\r\n]+/g, ' ').trim().substring(0, 60) + "...";
-                                document.getElementById('lbl-doc-subject').textContent = fallbackSubject || "AUTO_LOADED_DOCUMENT";
-                            }
-
-                            document.getElementById('doc-rich-editor').innerHTML = rawHtml;
-                            applyFontsToAllPages();
-                            updateClassificationUI();
-                            alert("تم استيراد مستند الـ Word وتطهير الحقول السابقة بنجاح تـام!");
-                        });
-                };
-                reader.readAsArrayBuffer(file);
-            } 
-            else if (fileName.endsWith('.json')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        
-                        pageBorderStyle.value = data.borderStyle || 'none';
-                        classification.value = data.classification || 'secret';
-                        docArabicFontSelector.value = data.fontArabic || "'LocalAmiri', 'Amiri', serif";
-                        docEnglishFontSelector.value = data.fontEnglish || "'LocalCourierNew', 'Courier New', monospace";
-                        docShapeFontSelector.value = data.fontShape || "'LocalCourierNew', 'Courier New', monospace";
-                        
-                        document.documentElement.style.setProperty('--font-arabic-current', docArabicFontSelector.value);
-                        document.documentElement.style.setProperty('--font-english-current', docEnglishFontSelector.value);
-                        document.documentElement.style.setProperty('--font-shape-current', docShapeFontSelector.value);
-
-                        inputWatermarkText.value = data.watermarkText || "CONFIDENTIAL";
-                        sliderWatermarkOpacity.value = data.watermarkOpacity || 6;
-                        selectWatermarkAngle.value = data.watermarkAngle || "-45deg";
-                        
-                        headerWidthInput.value = data.headerWidth || '280';
-                        sliderHeaderFont.value = data.headerFontSize || '11';
-                        sliderBodyFont.value = data.bodyFontSize || '15';
-                        sliderHeaderTop.value = data.headerTopPos || '0';
-                        
-                        if(document.getElementById('lbl-doc-id')) document.getElementById('lbl-doc-id').textContent = data.savedDocId || '';
-                        if(document.getElementById('lbl-doc-date')) document.getElementById('lbl-doc-date').textContent = data.savedDocDate || '';
-                        if(document.getElementById('lbl-doc-from')) document.getElementById('lbl-doc-from').textContent = data.savedDocFrom || '';
-                        if(document.getElementById('lbl-doc-action')) document.getElementById('lbl-doc-action').textContent = data.savedDocAction || '';
-                        if(document.getElementById('lbl-doc-eo')) document.getElementById('lbl-doc-eo').textContent = data.savedDocEo || '';
-                        if(document.getElementById('lbl-doc-tags')) document.getElementById('lbl-doc-tags').textContent = data.savedDocTags || '';
-                        if(document.getElementById('lbl-doc-ref')) document.getElementById('lbl-doc-ref').textContent = data.savedDocRef || '';
-                        if(document.getElementById('lbl-doc-subject')) document.getElementById('lbl-doc-subject').textContent = data.savedDocSubject || '';
-
-                        document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
-                        document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
-                        
-                        refreshWatermarkStyles();
-
-                        const header = getActiveHeaderInfo();
-                        if(header) {
-                            header.style.width = headerWidthInput.value + 'px';
-                            header.style.top = sliderHeaderTop.value + 'px';
-                        }
-                        document.documentElement.style.setProperty('--header-font-size', sliderHeaderFont.value + 'px');
-                        document.documentElement.style.setProperty('--body-font-size', sliderBodyFont.value + 'px');
-
-                      // ==========================================================================
-        // النظام السيادي V26.0 - محركات المعالجة المتكاملة
-        // ==========================================================================
-
-        // 1. محرك التوجيه الذكي المطور (Smart Direction Engine)
-        function smartDirectionEngine() {
-            const editor = document.getElementById('doc-rich-editor');
-            const header = document.getElementById('doc-header-info');
-            if (!editor || !header) return;
-            
-            const content = editor.innerText;
-            // الكشف التلقائي عن اللغة وقلب الاتجاه
-            if (/[a-zA-Z]/.test(content)) {
-                editor.style.direction = 'ltr';
-                editor.style.textAlign = 'left';
-                header.style.direction = 'ltr';
-                header.style.textAlign = 'left';
-            } else {
-                editor.style.direction = 'rtl';
-                editor.style.textAlign = 'right';
-                header.style.direction = 'rtl';
-                header.style.textAlign = 'right';
-            }
-        }
-
-        // 2. محرك التنسيق العام (يستهدف جميع الصفحات والخطوط)
-        function applyFontsToAllPages() {
-            document.querySelectorAll('.page').forEach(page => {
-                // تطبيق الحدود لكل صفحة
-                if (typeof pageBorderStyle !== 'undefined') {
-                    page.style.border = (pageBorderStyle.value === 'none') ? 'none' : '4px ' + pageBorderStyle.value + ' #000000';
-                }
-                
-                // تطبيق الخطوط والاتجاه على المحتوى
-                page.querySelectorAll('.doc-body-editor div, .doc-body-editor p').forEach(el => {
-                    const text = el.textContent || "";
-                    if (/[\u0600-\u06FF]/.test(text)) {
-                        el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
-                        if(el.style.textAlign !== 'center' && el.style.textAlign !== 'left') el.style.textAlign = 'right';
-                    } else if(text.trim().length > 0) {
-                        el.style.fontFamily = "var(--font-english-current), monospace";
-                        el.style.direction = 'ltr';
-                        if(el.style.textAlign !== 'center') el.style.textAlign = 'left';
+                    function extractField(regex) {
+                        const match = plainText.match(regex);
+                        return match ? match[1].trim() : null;
                     }
-                });
-            });
-        }
 
-        // 3. محرك محاذاة المربع (يمين، يسار، وسط)
-        function setHeaderAlign(align) {
-            const header = document.getElementById('doc-header-info');
-            if (header) {
-                const dir = (align === 'left') ? 'ltr' : (align === 'right' ? 'rtl' : 'ltr');
-                header.style.direction = dir;
-                header.style.textAlign = align;
+                    const extractedMrn = extractField(/mrn\s*:\s*([^\n\r]+)/i);
+                    const extractedDate = extractField(/date\/dtg\s*:\s*([^\n\r]+)/i);
+                    const extractedFrom = extractField(/from\s*:\s*([^\n\r]+)/i);
+                    const extractedAction = extractField(/action\s*:\s*([^\n\r]+)/i);
+                    const extractedEo = extractField(/e\.o\.\s*:\s*([^\n\r]+)/i);
+                    const extractedTags = extractField(/tags\s*:\s*([^\n\r]+)/i);
+                    const extractedRef = extractField(/reference\s*:\s*([^\n\r]+)/i);
+                    const extractedSubject = extractField(/subject\s*:\s*([^\n\r]+)/i);
+
+                    if (extractedMrn && document.getElementById('lbl-doc-id')) document.getElementById('lbl-doc-id').textContent = extractedMrn;
+                    if (extractedDate && document.getElementById('lbl-doc-date')) document.getElementById('lbl-doc-date').textContent = extractedDate;
+                    if (extractedFrom && document.getElementById('lbl-doc-from')) document.getElementById('lbl-doc-from').textContent = extractedFrom;
+                    if (extractedAction && document.getElementById('lbl-doc-action')) document.getElementById('lbl-doc-action').textContent = extractedAction;
+                    if (extractedEo && document.getElementById('lbl-doc-eo')) document.getElementById('lbl-doc-eo').textContent = extractedEo;
+                    if (extractedTags && document.getElementById('lbl-doc-tags')) document.getElementById('lbl-doc-tags').textContent = extractedTags;
+                    if (extractedRef && document.getElementById('lbl-doc-ref')) document.getElementById('lbl-doc-ref').textContent = extractedRef;
+                    
+                    if (extractedSubject && document.getElementById('lbl-doc-subject')) {
+                        document.getElementById('lbl-doc-subject').textContent = extractedSubject;
+                    } else if(document.getElementById('lbl-doc-subject')) {
+                        const fallbackSubject = plainText.replace(/[\r\n]+/g, ' ').trim().substring(0, 60) + "...";
+                        document.getElementById('lbl-doc-subject').textContent = fallbackSubject || "AUTO_LOADED_DOCUMENT";
+                    }
+
+                    document.getElementById('doc-rich-editor').innerHTML = rawHtml;
+                    applyFontsToAllPages();
+                    updateClassificationUI();
+                    alert("تم استيراد مستند الـ Word وتطهير الحقول السابقة بنجاح تـام!");
+                });
+        };
+        reader.readAsArrayBuffer(file);
+    } 
+    else if (fileName.endsWith('.json')) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
                 
-                const fields = header.querySelectorAll('.meta-line, .meta-editable-value');
-                fields.forEach(field => {
-                    field.style.direction = dir;
-                    field.style.textAlign = align;
-                    field.style.justifyContent = (align === 'left') ? 'flex-start' : (align === 'right' ? 'flex-end' : 'center');
-                });
-            }
-        }
+                pageBorderStyle.value = data.borderStyle || 'none';
+                classification.value = data.classification || 'secret';
+                docArabicFontSelector.value = data.fontArabic || "'LocalAmiri', 'Amiri', serif";
+                docEnglishFontSelector.value = data.fontEnglish || "'LocalCourierNew', 'Courier New', monospace";
+                docShapeFontSelector.value = data.fontShape || "'LocalCourierNew', 'Courier New', monospace";
+                
+                document.documentElement.style.setProperty('--font-arabic-current', docArabicFontSelector.value);
+                document.documentElement.style.setProperty('--font-english-current', docEnglishFontSelector.value);
+                document.documentElement.style.setProperty('--font-shape-current', docShapeFontSelector.value);
 
-        // 4. نظام نقاط الارتكاز (Anchor System)
-        function addAnchorToWorkspace() {
-            const anchor = document.createElement('div');
-            anchor.className = 'anchor-point draggable';
-            anchor.style.position = 'absolute';
-            anchor.style.top = '150px';
-            anchor.style.left = '100px';
-            anchor.style.width = '12px';
-            anchor.style.height = '12px';
-            anchor.style.background = '#00ff41';
-            anchor.style.cursor = 'crosshair';
-            
-            const activePage = document.getElementById('page-1') || document.querySelector('.page');
-            if (activePage) {
-                activePage.appendChild(anchor);
-                if (typeof makeElementDraggable === 'function') {
-                    makeElementDraggable(anchor);
+                inputWatermarkText.value = data.watermarkText || "CONFIDENTIAL";
+                sliderWatermarkOpacity.value = data.watermarkOpacity || 6;
+                selectWatermarkAngle.value = data.watermarkAngle || "-45deg";
+                
+                headerWidthInput.value = data.headerWidth || '280';
+                sliderHeaderFont.value = data.headerFontSize || '11';
+                sliderBodyFont.value = data.bodyFontSize || '15';
+                sliderHeaderTop.value = data.headerTopPos || '0';
+                
+                if(document.getElementById('lbl-doc-id')) document.getElementById('lbl-doc-id').textContent = data.savedDocId || '';
+                if(document.getElementById('lbl-doc-date')) document.getElementById('lbl-doc-date').textContent = data.savedDocDate || '';
+                if(document.getElementById('lbl-doc-from')) document.getElementById('lbl-doc-from').textContent = data.savedDocFrom || '';
+                if(document.getElementById('lbl-doc-action')) document.getElementById('lbl-doc-action').textContent = data.savedDocAction || '';
+                if(document.getElementById('lbl-doc-eo')) document.getElementById('lbl-doc-eo').textContent = data.savedDocEo || '';
+                if(document.getElementById('lbl-doc-tags')) document.getElementById('lbl-doc-tags').textContent = data.savedDocTags || '';
+                if(document.getElementById('lbl-doc-ref')) document.getElementById('lbl-doc-ref').textContent = data.savedDocRef || '';
+                if(document.getElementById('lbl-doc-subject')) document.getElementById('lbl-doc-subject').textContent = data.savedDocSubject || '';
+
+                document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
+                document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
+                
+                refreshWatermarkStyles();
+
+                const header = getActiveHeaderInfo();
+                if(header) {
+                    header.style.width = headerWidthInput.value + 'px';
+                    header.style.top = sliderHeaderTop.value + 'px';
                 }
+                document.documentElement.style.setProperty('--header-font-size', sliderHeaderFont.value + 'px');
+                document.documentElement.style.setProperty('--body-font-size', sliderBodyFont.value + 'px');
+            } catch(err) {
+                console.error("خطأ في معالجة JSON:", err);
             }
-        }
+        };
+        reader.readAsText(file);
+    }
+});
 
-        // 5. ربط الأحداث (Event Listeners)
-        const editor = document.getElementById('doc-rich-editor');
-        if (editor) {
-            editor.addEventListener('input', smartDirectionEngine);
-        }
+// ==========================================================================
+// النظام السيادي V26.0 - محركات المعالجة المتكاملة
+// ==========================================================================
 
-        // تفعيل المحركات عند تحميل الصفحة
-        window.addEventListener('load', () => {
-            applyFontsToAllPages();
+function smartDirectionEngine() {
+    const editor = document.getElementById('doc-rich-editor');
+    const header = document.getElementById('doc-header-info');
+    if (!editor || !header) return;
+    
+    const content = editor.innerText;
+    if (/[a-zA-Z]/.test(content)) {
+        editor.style.direction = 'ltr';
+        editor.style.textAlign = 'left';
+        header.style.direction = 'ltr';
+        header.style.textAlign = 'left';
+    } else {
+        editor.style.direction = 'rtl';
+        editor.style.textAlign = 'right';
+        header.style.direction = 'rtl';
+        header.style.textAlign = 'right';
+    }
+}
+
+function applyFontsToAllPages() {
+    document.querySelectorAll('.page').forEach(page => {
+        if (typeof pageBorderStyle !== 'undefined') {
+            page.style.border = (pageBorderStyle.value === 'none') ? 'none' : '4px ' + pageBorderStyle.value + ' #000000';
+        }
+        
+        page.querySelectorAll('.doc-body-editor div, .doc-body-editor p').forEach(el => {
+            const text = el.textContent || "";
+            if (/[\u0600-\u06FF]/.test(text)) {
+                el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
+                if(el.style.textAlign !== 'center' && el.style.textAlign !== 'left') el.style.textAlign = 'right';
+            } else if(text.trim().length > 0) {
+                el.style.fontFamily = "var(--font-english-current), monospace";
+                el.style.direction = 'ltr';
+                if(el.style.textAlign !== 'center') el.style.textAlign = 'left';
+            }
         });
+    });
+}
 
-        // مراقبة التغييرات في حال إضافة صفحات جديدة
-        const observer = new MutationObserver(applyFontsToAllPages);
-        const workspace = document.getElementById('workspace');
-        if (workspace) {
-            observer.observe(workspace, { childList: true, subtree: true });
+function setHeaderAlign(align) {
+    const header = document.getElementById('doc-header-info');
+    if (header) {
+        const dir = (align === 'left') ? 'ltr' : (align === 'right' ? 'rtl' : 'ltr');
+        header.style.direction = dir;
+        header.style.textAlign = align;
+        
+        const fields = header.querySelectorAll('.meta-line, .meta-editable-value');
+        fields.forEach(field => {
+            field.style.direction = dir;
+            field.style.textAlign = align;
+            field.style.justifyContent = (align === 'left') ? 'flex-start' : (align === 'right' ? 'flex-end' : 'center');
+        });
+    }
+}
+
+function addAnchorToWorkspace() {
+    const anchor = document.createElement('div');
+    anchor.className = 'anchor-point draggable';
+    anchor.style.position = 'absolute';
+    anchor.style.top = '150px';
+    anchor.style.left = '100px';
+    anchor.style.width = '12px';
+    anchor.style.height = '12px';
+    anchor.style.background = '#00ff41';
+    anchor.style.cursor = 'crosshair';
+    
+    const activePage = document.getElementById('page-1') || document.querySelector('.page');
+    if (activePage) {
+        activePage.appendChild(anchor);
+        if (typeof makeElementDraggable === 'function') {
+            makeElementDraggable(anchor);
         }
+    }
+}
+
+const editor = document.getElementById('doc-rich-editor');
+if (editor) {
+    editor.addEventListener('input', smartDirectionEngine);
+}
+
+window.addEventListener('load', () => {
+    applyFontsToAllPages();
+});
+
+const observer = new MutationObserver(applyFontsToAllPages);
+const workspace = document.getElementById('workspace');
+if (workspace) {
+    observer.observe(workspace, { childList: true, subtree: true });
+}
     </script>
 </body>
 </html>
