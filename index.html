@@ -49,7 +49,7 @@
             --page-padding-right: 20mm;
             --watermark-opacity: 0.06;
             --watermark-text: "CONFIDENTIAL";
-            --watermark-angle: "-45deg";
+            --watermark-angle: -45deg;
         }
 
         * {
@@ -479,6 +479,37 @@
             .page { width: 210mm; transform: scale(0.48); transform-origin: top center; margin-bottom: -140mm; }
         }
 
+        /* ==========================================================================
+           نظام الحجب/التشفير الوثائقي (Redaction System)
+           ========================================================================== */
+        .redacted {
+            display: inline;
+            background-color: #000000;
+            color: transparent;
+            padding: 1px 4px;
+            border-radius: 1px;
+            user-select: none;
+            cursor: pointer;
+            position: relative;
+            font-family: inherit;
+            line-height: inherit;
+        }
+        .redacted:hover {
+            outline: 2px dashed #e74c3c;
+        }
+        .redacted.selected-redaction {
+            outline: 2px solid #e74c3c;
+        }
+        .redacted-symbol-overlay {
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            direction: ltr;
+            unicode-bidi: embed;
+            pointer-events: none;
+        }
+
         @media print {
             @page { size: A4; margin: 0; }
             body { background-color: #ffffff; overflow: visible; }
@@ -486,6 +517,7 @@
             #workspace { padding: 0 !important; margin: 0 !important; background-color: #ffffff !important; overflow: visible !important; }
             .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; position: relative !important; }
             .draggable { border: 1px dashed transparent !important; }
+            .redacted:hover { outline: none; }
         }
         /* إضافة نظام النقطة المرجعية للنصوص (Anchor System) */
         .anchor-point {
@@ -573,7 +605,7 @@
             </div>
         </div>
 
-        <div class="section-title" style="background: #00px; color: #fff;">مربع إدراج ومعالجة الصور المباشرة</div>
+        <div class="section-title" style="background: #8e44ad; color: #fff;">مربع إدراج ومعالجة الصور المباشرة</div>
         <div class="control-group">
             <input type="file" id="image-element-uploader" accept="image/*">
         </div>
@@ -686,6 +718,22 @@
                 <option value="public">وثيقة عامة (تطهير وحذف الحقول السرية وتثبيت المعطيات)</option>
                 <option value="secret" selected>وثيقة سرية للغاية (إظهار كافة الحقول الدبلوماسية والأمنية كاملة)</option>
             </select>
+        </div>
+
+        <div class="section-title" style="background: #16a085; color: #fff;">تشفير النص (تغطية سرية وحجب وثائقي)</div>
+        <div class="control-group">
+            <label>① تشفير بدون رموز (مستطيل أسود صامت):</label>
+            <button type="button" id="btn-redact-plain" style="background:#111; border-color:#111;">حجب النص المحدد ██████</button>
+        </div>
+        <div class="control-group">
+            <label>② تشفير برموز (مستطيل أسود + كود حروف وأرقام عشوائية):</label>
+            <button type="button" id="btn-redact-symbol" style="background:#16a085; border-color:#16a085;">حجب النص المحدد بكود عشوائي A7x█K2m</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-unredact" style="background:#e74c3c; border-color:#e74c3c;">فك الحجب / إزالة التشفير عن العنصر المحدد</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-print-legend" style="background:#8e44ad; border-color:#8e44ad;">طباعة دليل الأكواد السري (صفحة منفصلة)</button>
         </div>
 
         <hr style="border: 0; border-top: 1px solid #000000; margin-top: 5px;">
@@ -830,28 +878,37 @@
 
         // محرك فحص اللغة والاتجاه والمحاذاة المطور والذكي V23.0
         function applyFontsToAllPages() {
-            // معالجة نصوص المحرر العام سطر بسطر أو فقرة بفقرة لضمان عدم حدوث خلل باللغة الإنجليزية
-            document.querySelectorAll('#doc-rich-editor div, #doc-rich-editor p').forEach(el => {
+            // توحيد إطارات الصفحات إن وُجد عنصر التحكم بها
+            if (typeof pageBorderStyle !== 'undefined' && pageBorderStyle) {
+                document.querySelectorAll('.page').forEach(page => {
+                    page.style.border = (pageBorderStyle.value === 'none')
+                        ? 'none'
+                        : '4px ' + pageBorderStyle.value + ' #000000';
+                });
+            }
+
+            // معالجة نصوص جميع المحررات في كل الصفحات سطراً بسطر أو فقرة بفقرة
+            document.querySelectorAll('.doc-body-editor div, .doc-body-editor p').forEach(el => {
                 const text = el.textContent || "";
                 if (/[\u0600-\u06FF]/.test(text)) {
                     // نص عربي
                     el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
+                    el.style.direction = 'rtl';
                     if(el.style.textAlign !== 'center' && el.style.textAlign !== 'left' && el.style.textAlign !== 'justify') {
                         el.style.textAlign = 'right';
                     }
-                    el.removeAttribute('dir');
                 } else if(text.trim().length > 0) {
                     // نص إنجليزي / لاتيني خالص
                     el.style.fontFamily = "var(--font-english-current), monospace";
-                    el.setAttribute('dir', 'ltr');
-                    // إذا لم تكن المحاذاة مختارة كـ "وسط"، يتم إجبارها لتصبح يسار ويُمنع بدء الإنجليزي من اليمين تماماً
-                    if (el.style.textAlign !== 'center') {
+                    el.style.direction = 'ltr';
+                    // إذا لم تكن المحاذاة مختارة كـ "وسط" أو "ضبط"، تُجبر لتصبح يسار ويُمنع بدء الإنجليزي من اليمين
+                    if (el.style.textAlign !== 'center' && el.style.textAlign !== 'justify') {
                         el.style.textAlign = 'left';
                     }
                 }
             });
 
-            // تحديث العناوين الأساسية
+            // تحديث خط العناوين الأساسية حسب لغتها
             document.querySelectorAll('.doc-title-input').forEach(el => {
                 if (/[\u0600-\u06FF]/.test(el.textContent || "")) {
                     el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
@@ -1181,6 +1238,165 @@
         document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
 
         /* ==========================================================================
+           نظام الحجب/التشفير الوثائقي (Redaction System)
+           حدد نصاً في المحرر ثم اضغط حجب بدون رموز أو برموز
+           ========================================================================== */
+        let selectedRedaction = null;
+
+        // توليد كود عشوائي من حروف وأرقام (يتجنب الأحرف المتشابهة 0/O و1/l)
+        function generateRandomCode(length) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+            let code = '';
+            const cryptoObj = window.crypto || window.msCrypto;
+            if (cryptoObj && cryptoObj.getRandomValues) {
+                const arr = new Uint32Array(length);
+                cryptoObj.getRandomValues(arr);
+                for (let i = 0; i < length; i++) code += chars[arr[i] % chars.length];
+            } else {
+                for (let i = 0; i < length; i++) code += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return code;
+        }
+
+        function redactSelection(withSymbol) {
+            const sel = window.getSelection();
+            if (!sel || sel.isCollapsed || !sel.rangeCount) {
+                alert('حدد النص المراد حجبه أولاً داخل محرر المستند');
+                return;
+            }
+
+            const range = sel.getRangeAt(0);
+            const editor = document.getElementById('doc-rich-editor');
+            if (!editor || !editor.contains(range.commonAncestorContainer)) {
+                alert('حدد النص داخل محرر المستند فقط');
+                return;
+            }
+
+            const originalText = range.toString();
+            if (!originalText.trim()) return;
+
+            const span = document.createElement('span');
+            span.className = 'redacted';
+            span.setAttribute('data-original', originalText);
+            span.setAttribute('contenteditable', 'false');
+
+            if (withSymbol) {
+                const codeLen = Math.min(12, Math.max(5, Math.ceil(originalText.length / 2)));
+                const code = generateRandomCode(codeLen);
+                span.setAttribute('data-code', code);
+                span.innerHTML = '<span class="redacted-symbol-overlay">' + code + '</span>';
+            } else {
+                span.textContent = originalText;
+            }
+
+            span.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.redacted.selected-redaction').forEach(r => r.classList.remove('selected-redaction'));
+                span.classList.add('selected-redaction');
+                selectedRedaction = span;
+            });
+
+            range.deleteContents();
+            range.insertNode(span);
+            sel.removeAllRanges();
+        }
+
+        document.getElementById('btn-redact-plain').addEventListener('click', function() {
+            redactSelection(false);
+        });
+        document.getElementById('btn-redact-symbol').addEventListener('click', function() {
+            redactSelection(true);
+        });
+
+        document.getElementById('btn-unredact').addEventListener('click', function() {
+            if (!selectedRedaction) {
+                alert('انقر على عنصر محجوب (أسود) أولاً لتحديده ثم اضغط فك الحجب');
+                return;
+            }
+            const original = selectedRedaction.getAttribute('data-original');
+            const textNode = document.createTextNode(original);
+            selectedRedaction.parentNode.replaceChild(textNode, selectedRedaction);
+            selectedRedaction = null;
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.redacted') && !e.target.closest('#btn-unredact')) {
+                document.querySelectorAll('.redacted.selected-redaction').forEach(r => r.classList.remove('selected-redaction'));
+                selectedRedaction = null;
+            }
+        });
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        document.getElementById('btn-print-legend').addEventListener('click', function() {
+            const allRedacted = document.querySelectorAll('.redacted[data-code]');
+            if (allRedacted.length === 0) {
+                alert('لا توجد عناصر محجوبة بأكواد في المستند حالياً');
+                return;
+            }
+
+            const entries = [];
+            let idx = 0;
+            allRedacted.forEach(el => {
+                idx++;
+                entries.push({
+                    num: idx,
+                    code: el.getAttribute('data-code'),
+                    original: el.getAttribute('data-original')
+                });
+            });
+
+            const docIdEl = document.getElementById('lbl-doc-id');
+            const docId = docIdEl ? docIdEl.textContent.trim() : 'N/A';
+            const printDate = new Date().toLocaleString('ar-EG');
+
+            let legendHtml = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">';
+            legendHtml += '<title>دليل فك الأكواد السري</title>';
+            legendHtml += '<style>';
+            legendHtml += 'body{font-family:Arial,sans-serif;padding:40px;direction:rtl;text-align:right;}';
+            legendHtml += '.legend-header{text-align:center;border-bottom:3px double #000;padding-bottom:15px;margin-bottom:25px;}';
+            legendHtml += '.legend-header h1{font-size:22px;margin-bottom:5px;}';
+            legendHtml += '.legend-header p{font-size:13px;color:#333;}';
+            legendHtml += '.warn-box{background:#fff3cd;border:2px solid #000;padding:12px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;}';
+            legendHtml += 'table{width:100%;border-collapse:collapse;margin-top:15px;}';
+            legendHtml += 'th,td{border:2px solid #000;padding:12px 15px;text-align:center;font-size:15px;}';
+            legendHtml += 'th{background:#000;color:#fff;font-size:14px;}';
+            legendHtml += '.code-cell{font-family:"Courier New",monospace;font-weight:bold;font-size:16px;letter-spacing:2px;direction:ltr;background:#000;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}';
+            legendHtml += '.orig-cell{text-align:right;font-size:15px;}';
+            legendHtml += '.footer{margin-top:30px;text-align:center;font-size:11px;color:#555;border-top:1px solid #ccc;padding-top:10px;}';
+            legendHtml += '@media print{body{padding:20mm;}.warn-box{background:#fff3cd !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}th{background:#000 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.code-cell{background:#000 !important;color:#fff !important;}}';
+            legendHtml += '</style></head><body>';
+            legendHtml += '<div class="legend-header">';
+            legendHtml += '<h1>دليل فك أكواد التشفير الوثائقي — سري للغاية</h1>';
+            legendHtml += '<p>مرجع المستند (MRN): ' + escapeHtml(docId) + ' | تاريخ الإصدار: ' + escapeHtml(printDate) + '</p>';
+            legendHtml += '</div>';
+            legendHtml += '<div class="warn-box">⚠ وثيقة سرية — تربط كل كود بالنص الأصلي المحجوب — يُحظر نسخها أو توزيعها خارج نطاق الصلاحية ⚠</div>';
+            legendHtml += '<table><thead><tr><th>#</th><th>الكود على المستند</th><th>النص الأصلي المحجوب</th></tr></thead><tbody>';
+
+            entries.forEach(e => {
+                legendHtml += '<tr><td>' + e.num + '</td><td class="code-cell">' + escapeHtml(e.code) + '</td><td class="orig-cell">' + escapeHtml(e.original) + '</td></tr>';
+            });
+
+            legendHtml += '</tbody></table>';
+            legendHtml += '<div class="footer">تم إنشاء هذا الدليل آلياً بواسطة المنصة السيادية المتقدمة لهندسة الوثائق V23.0</div>';
+            legendHtml += '</body></html>';
+
+            const legendWindow = window.open('', '_blank');
+            if (!legendWindow) {
+                alert('تعذّر فتح صفحة الدليل — يرجى السماح بالنوافذ المنبثقة (Popups) لهذا الملف');
+                return;
+            }
+            legendWindow.document.write(legendHtml);
+            legendWindow.document.close();
+            legendWindow.focus();
+            setTimeout(function() { legendWindow.print(); }, 500);
+        });
+
+        /* ==========================================================================
            5. محرك التفكيك والاستدعاء المطور والذكي V23.0
            ========================================================================== */
         document.getElementById('btn-save-template').addEventListener('click', function() {
@@ -1367,42 +1583,23 @@ document.getElementById('template-loader').addEventListener('change', function(e
 // ==========================================================================
 
 function smartDirectionEngine() {
-    const editor = document.getElementById('doc-rich-editor');
+    // اتجاه مربع الترويسة فقط يتبع لغة المستند الغالبة؛ أما اتجاه فقرات المحرر
+    // فيُدار فقرةً بفقرة داخل applyFontsToAllPages حتى لا تتعارض المستندات المختلطة.
     const header = document.getElementById('doc-header-info');
-    if (!editor || !header) return;
-    
-    const content = editor.innerText;
-    if (/[a-zA-Z]/.test(content)) {
-        editor.style.direction = 'ltr';
-        editor.style.textAlign = 'left';
+    const editor = document.getElementById('doc-rich-editor');
+    if (!header) return;
+
+    const content = editor ? editor.innerText : '';
+    const hasArabic = /[\u0600-\u06FF]/.test(content);
+    const hasLatin = /[a-zA-Z]/.test(content);
+
+    if (hasLatin && !hasArabic) {
         header.style.direction = 'ltr';
         header.style.textAlign = 'left';
     } else {
-        editor.style.direction = 'rtl';
-        editor.style.textAlign = 'right';
         header.style.direction = 'rtl';
         header.style.textAlign = 'right';
     }
-}
-
-function applyFontsToAllPages() {
-    document.querySelectorAll('.page').forEach(page => {
-        if (typeof pageBorderStyle !== 'undefined') {
-            page.style.border = (pageBorderStyle.value === 'none') ? 'none' : '4px ' + pageBorderStyle.value + ' #000000';
-        }
-        
-        page.querySelectorAll('.doc-body-editor div, .doc-body-editor p').forEach(el => {
-            const text = el.textContent || "";
-            if (/[\u0600-\u06FF]/.test(text)) {
-                el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
-                if(el.style.textAlign !== 'center' && el.style.textAlign !== 'left') el.style.textAlign = 'right';
-            } else if(text.trim().length > 0) {
-                el.style.fontFamily = "var(--font-english-current), monospace";
-                el.style.direction = 'ltr';
-                if(el.style.textAlign !== 'center') el.style.textAlign = 'left';
-            }
-        });
-    });
 }
 
 function setHeaderAlign(align) {
