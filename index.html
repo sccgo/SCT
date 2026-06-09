@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة السيادية المتقدمة لهندسة الوثائق V21.0 - ثنائية الخطوط</title>
+    <title>المنصة السيادية المتقدمة لهندسة الوثائق V22.0 - محرك القوالب المطور</title>
     
     <style>
         @font-face {
@@ -40,6 +40,7 @@
             --border-color: #000000;
             --font-arabic-current: 'LocalAmiri', 'Amiri', serif;
             --font-english-current: 'LocalCourierNew', 'Courier New', monospace;
+            --font-shape-current: 'Arial', sans-serif;
             --header-font-size: 11px;
             --body-font-size: 15px;
             --page-padding-top: 15mm;
@@ -241,7 +242,6 @@
             overflow: hidden;
         }
 
-        /* محرك هندسة العلامة المائية السيادية داخل الصفحات */
         .page::before {
             content: var(--watermark-text);
             position: absolute;
@@ -305,7 +305,6 @@
             word-break: break-all;
         }
 
-        /* نظام التطهير الأمني للوثائق العامة والسرية */
         .secret-field {
             display: flex;
         }
@@ -341,8 +340,7 @@
             border: 1px dashed #ff3b30;
         }
 
-        /* تطبيق الفصل الذكي المزدوج للخطوط اعتماداً على نوع حزمة المحارف وعنصر المحاذاة */
-        .doc-body-editor, .doc-title-input, .meta-line, .shape-text {
+        .doc-body-editor, .doc-title-input, .meta-line {
             font-family: var(--font-arabic-current), var(--font-english-current), Arial, sans-serif;
             font-size: var(--body-font-size);
             line-height: 1.8;
@@ -350,7 +348,6 @@
             user-select: text !important;
         }
 
-        /* إجبار الكلمات والحروف اللاتينية والإنجليزية على أخذ الخط المختار لها حصراً */
         .doc-body-editor:lang(en), .meta-line, .meta-editable-value, 
         :not([\u0600-\u06FF]) {
             font-family: var(--font-english-current), monospace;
@@ -361,7 +358,6 @@
             font-weight: bold;
         }
 
-        /* التنسيق الإجباري للجداول القادمة من مستندات خارجية */
         .doc-body-editor table {
             width: 100% !important;
             border-collapse: collapse !important;
@@ -381,7 +377,6 @@
             margin-bottom: 10px !important;
         }
 
-        /* هندسة الأشكال والمربعات الحرة والختم الرسمي */
         .shape-element {
             display: flex;
             align-items: center;
@@ -421,7 +416,6 @@
             transform: rotate(-45deg);
         }
 
-        /* قالب ومكون مربع الختم الرسمي السيادي المضاف */
         .official-stamp-box {
             width: 140px;
             height: 140px;
@@ -433,6 +427,7 @@
             justify-content: center;
             padding: 6px;
             text-align: center;
+            font-family: var(--font-shape-current), Arial, sans-serif;
         }
 
         .official-stamp-box .stamp-title {
@@ -451,13 +446,16 @@
             height: 100%;
         }
 
+        /* حقول نصوص الأشكال والمربعات تتبع خانة خط نصوص المربع حصراً */
         .shape-text {
+            font-family: var(--font-shape-current), Arial, sans-serif !important;
             font-size: 12px;
             font-weight: bold;
             color: #000000;
             text-align: center;
             outline: none;
             width: 100%;
+            user-select: text !important;
         }
 
         .inserted-image-el {
@@ -497,7 +495,7 @@
     <button id="toggle-panel-btn">لوحة التحكم</button>
 
     <div id="control-panel">
-        <h2>لوحة الهندسة السيادية V21.0</h2>
+        <h2>لوحة الهندسة السيادية V22.0</h2>
         
         <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
         <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
@@ -509,7 +507,7 @@
             <input type="file" id="template-loader" accept=".json,.docx,.doc">
         </div>
 
-        <div class="section-title" style="background: #007613; color: #fff;">[١] خانة الخط العربي الأصيل</div>
+        <div class="section-title" style="background: #007613; color: #fff;">[١] خانة الخط العربي الاصيل</div>
         <div class="control-group">
             <label>اختر خط النصوص والحروف العربية:</label>
             <select id="doc-arabic-font-selector">
@@ -528,6 +526,17 @@
                 <option value="'Times New Roman', serif">Times New Roman (دبلوماسي تقليدي صلب)</option>
                 <option value="Georgia, serif">Georgia (صحفي وثائقي عريق)</option>
                 <option value="'Roboto Mono', monospace">Roboto Mono (نمط البيانات الحاد)</option>
+            </select>
+        </div>
+
+        <div class="section-title" style="background: #e67e22; color: #fff;">[٣] خانة خط نصوص المربع والأشكال</div>
+        <div class="control-group">
+            <label>اختر الخط المخصص داخل الأشكال والمربعات:</label>
+            <select id="doc-shape-font-selector">
+                <option value="Arial, sans-serif" selected>Arial (خطي هندسي واضح)</option>
+                <option value="'Cairo', sans-serif">Cairo (قاهرة للمربعات والأختام)</option>
+                <option value="'LocalAmiri', 'Amiri', serif">Amiri (كلاسيكي للأشكال)</option>
+                <option value="'LocalCourierNew', 'Courier New', monospace">Courier (نمط البرقيات المقيد)</option>
             </select>
         </div>
 
@@ -683,8 +692,8 @@
                         <div class="meta-line secret-field"><strong>ACTION:</strong> <span class="meta-editable-value" id="lbl-doc-action" contenteditable="true">IMMEDIATE_RELEASE</span></div>
                         <div class="meta-line secret-field"><strong>E.O.:</strong> <span class="meta-editable-value" id="lbl-doc-eo" contenteditable="true">13526_COMPLIANT</span></div>
                         <div class="meta-line secret-field"><strong>TAGS:</strong> <span class="meta-editable-value" id="lbl-doc-tags" contenteditable="true">OPR_INTEL</span></div>
-                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V21.0</span></div>
-                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">SOVEREIGN_DUAL_FONT_SYSTEM</span></div>
+                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V22.0</span></div>
+                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">CLEAN_TEMPLATE_ENGINE</span></div>
                     </div>
                 </div>
 
@@ -758,9 +767,10 @@
             }
         });
 
-        // محرك الفصل المزدوج الذكي للخطوط (عربي / إنجليزي)
+        // محركات التحكم المنفصلة بالخطوط الثلاثة
         const docArabicFontSelector = document.getElementById('doc-arabic-font-selector');
         const docEnglishFontSelector = document.getElementById('doc-english-font-selector');
+        const docShapeFontSelector = document.getElementById('doc-shape-font-selector');
 
         docArabicFontSelector.addEventListener('change', function() {
             document.documentElement.style.setProperty('--font-arabic-current', this.value);
@@ -770,7 +780,11 @@
             document.documentElement.style.setProperty('--font-english-current', this.value);
         });
 
-        // محرك تحديث وبناء العلامات المائية الأمنية
+        docShapeFontSelector.addEventListener('change', function() {
+            document.documentElement.style.setProperty('--font-shape-current', this.value);
+        });
+
+        // محرك العلامات المائية
         const inputWatermarkText = document.getElementById('input-watermark-text');
         const sliderWatermarkOpacity = document.getElementById('slider-watermark-opacity');
         const selectWatermarkAngle = document.getElementById('select-watermark-angle');
@@ -784,7 +798,7 @@
         sliderWatermarkOpacity.addEventListener('input', refreshWatermarkStyles);
         selectWatermarkAngle.addEventListener('change', refreshWatermarkStyles);
 
-        // محرك الإعداد الجغرافي للهوامش والمساحات الداخلية للورقة
+        // ضبط الهوامش الجغرافية للورقة
         const marginFields = ['top', 'bottom', 'left', 'right'];
         marginFields.forEach(margin => {
             document.getElementById(`input-margin-${margin}`).addEventListener('input', function() {
@@ -793,7 +807,7 @@
         });
 
         function applyFontsToAllPages() {
-            document.querySelectorAll('.doc-body-editor, .meta-line, .shape-text, .doc-title-input').forEach(el => {
+            document.querySelectorAll('.doc-body-editor, .meta-line, .doc-title-input').forEach(el => {
                 if (/[\u0600-\u06FF]/.test(el.textContent || "")) {
                     el.setAttribute('lang', 'ar');
                 } else {
@@ -821,7 +835,6 @@
             }
         });
 
-        // محرك تحديد الأمان والسرية الرقمية وتطهير المربع الآلي
         const classification = document.getElementById('doc-classification');
         const lblDocId = document.getElementById('lbl-doc-id');
 
@@ -844,13 +857,9 @@
             updateClassificationUI();
         }
         
-        classification.addEventListener('change', function() { 
-            refreshDocumentSecurityTokens(null); 
-        });
-        
+        classification.addEventListener('change', function() { refreshDocumentSecurityTokens(null); });
         refreshDocumentSecurityTokens(null);
 
-        // محرك الأوامر النصية والمحاذاة
         function execCmd(command, value = null) {
             document.execCommand(command, false, value);
             applyFontsToAllPages();
@@ -864,7 +873,7 @@
         document.getElementById('btn-align-left').addEventListener('click', function() { document.getElementById('doc-rich-editor').style.textAlign = 'left'; });
         document.getElementById('btn-align-justify').addEventListener('click', function() { document.getElementById('doc-rich-editor').style.textAlign = 'justify'; });
 
-        // بناء وهندسة الأشكال المتقدمة والختم الرسمي السيادي
+        // بناء وهندسة الأشكال والختم
         function createShape(type) {
             shapeIdCounter++;
             const shapeDiv = document.createElement('div');
@@ -1080,7 +1089,7 @@
         document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
 
         /* ==========================================================================
-           5. محرك التفكيك وقراءة الـ Word والـ JSON السيادي المتكامل
+           5. محرك التفكيك وقراءة الـ Word والـ JSON السيادي المتكامل (مع التطهير الفوري والكامل)
            ========================================================================== */
         document.getElementById('btn-save-template').addEventListener('click', function() {
             const shapesArray = [];
@@ -1122,6 +1131,7 @@
                 classification: classification.value,
                 fontArabic: docArabicFontSelector.value,
                 fontEnglish: docEnglishFontSelector.value,
+                fontShape: docShapeFontSelector.value,
                 watermarkText: inputWatermarkText.value,
                 watermarkOpacity: sliderWatermarkOpacity.value,
                 watermarkAngle: selectWatermarkAngle.value,
@@ -1152,6 +1162,11 @@
         document.getElementById('template-loader').addEventListener('change', function(e) {
             const file = e.target.files[0]; if (!file) return;
             const fileName = file.name.toLowerCase();
+
+            // عند استدعاء أي قالب أو ملف جديد، نقوم بمسح القالب الافتراضي والبيانات والأشكال القديمة نهائياً لمنع التداخل
+            document.getElementById('title-wrapper-zone').innerHTML = '';
+            document.getElementById('doc-rich-editor').innerHTML = '';
+            document.querySelectorAll('.page .shape-element').forEach(el => el.remove());
 
             if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
                 const reader = new FileReader();
@@ -1196,7 +1211,7 @@
                             document.getElementById('doc-rich-editor').innerHTML = rawHtml;
                             applyFontsToAllPages();
                             updateClassificationUI();
-                            alert("تم فك مستند الـ Word وتعبئة الترويسة وتنسيق الجداول بنجاح تـام!");
+                            alert("تم مسح القالب الافتراضي واستيراد مستند الـ Word الجديد بالكامل وبنجاح!");
                         });
                 };
                 reader.readAsArrayBuffer(file);
@@ -1211,9 +1226,11 @@
                         classification.value = data.classification || 'public';
                         docArabicFontSelector.value = data.fontArabic || "'LocalAmiri', 'Amiri', serif";
                         docEnglishFontSelector.value = data.fontEnglish || "'LocalCourierNew', 'Courier New', monospace";
+                        docShapeFontSelector.value = data.fontShape || "Arial, sans-serif";
                         
                         document.documentElement.style.setProperty('--font-arabic-current', docArabicFontSelector.value);
                         document.documentElement.style.setProperty('--font-english-current', docEnglishFontSelector.value);
+                        document.documentElement.style.setProperty('--font-shape-current', docShapeFontSelector.value);
 
                         inputWatermarkText.value = data.watermarkText || "CONFIDENTIAL";
                         sliderWatermarkOpacity.value = data.watermarkOpacity || 6;
@@ -1244,8 +1261,6 @@
                         }
                         document.documentElement.style.setProperty('--header-font-size', sliderHeaderFont.value + 'px');
                         document.documentElement.style.setProperty('--body-font-size', sliderBodyFont.value + 'px');
-                        
-                        document.querySelectorAll('.page .shape-element').forEach(el => el.remove());
 
                         if (data.savedShapes && Array.isArray(data.savedShapes)) {
                             const targetPage = document.getElementById('page-1');
@@ -1287,7 +1302,7 @@
                             });
                         }
                         applyPageBorders(); applyFontsToAllPages(); updateClassificationUI();
-                        alert("تم استدعاء القالب السيادي JSON بالكامل بنجاح!");
+                        alert("تم تفريغ القديم واستدعاء القالب السيادي JSON بالكامل وبنجاح تـام!");
                     } catch(err) { alert("خطأ في تحليل ملف الـ JSON المرفوع."); }
                 };
                 reader.readAsText(file);
