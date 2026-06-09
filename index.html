@@ -294,7 +294,7 @@
             user-select: none;
             transition: top 0.1s ease;
             /* ربط خط مربع الترويسة بخانة خط نصوص المربع الثالثة */
-            font-family: var(--font-shape-current), monospace !important;
+            font-family: 'Roboto Mono', monospace !important;
         }
 
         .meta-line {
@@ -488,6 +488,12 @@
             .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; position: relative !important; }
             .draggable { border: 1px dashed transparent !important; }
         }
+        /* إضافة نظام النقطة المرجعية للنصوص (Anchor System) */
+        .anchor-point {
+            width: 12px; height: 12px; background: var(--accent-color, #00ff41);
+            border: 1px solid #000; position: absolute; cursor: crosshair;
+            z-index: 1000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
@@ -498,6 +504,8 @@
         <h2>لوحة الهندسة السيادية V23.0</h2>
         
         <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
+        <div class="section-title" style="background: #555; color: #fff;">نظام نقاط المرجع (Anchor)</div>
+        <button type="button" id="btn-add-anchor" style="background:#555;" onclick="addAnchorToWorkspace()">إضافة نقطة ارتكاز</button>
         <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
 
         <div class="section-title" style="background: #0088cc; color:#fff;">مستدعي ومحلل القوالب المنسق والذكي</div>
@@ -1392,6 +1400,38 @@
 
         // التشغيل المبدئي للنظام
         applyFontsToAllPages();
+        /* محرك التوجيه الذكي المطور (Smart Direction Engine) */
+        function smartDirectionEngine() {
+            const editor = document.getElementById('doc-rich-editor');
+            const header = document.getElementById('doc-header-info');
+            const content = editor.innerText;
+
+            // إذا وجد حروف إنجليزية يقلب الاتجاه يساراً فوراً
+            if (/[a-zA-Z]/.test(content)) {
+                editor.style.direction = 'ltr';
+                editor.style.textAlign = 'left';
+                header.style.direction = 'ltr';
+                header.style.textAlign = 'left';
+            } else {
+                editor.style.direction = 'rtl';
+                editor.style.textAlign = 'right';
+                header.style.direction = 'rtl';
+                header.style.textAlign = 'right';
+            }
+        }
+
+        // دالة إضافة نقطة الارتكاز (Anchor)
+        function addAnchorToWorkspace() {
+            const anchor = document.createElement('div');
+            anchor.className = 'anchor-point draggable';
+            anchor.style.top = '150px';
+            anchor.style.left = '100px';
+            document.getElementById('page-1').appendChild(anchor);
+            makeElementDraggable(anchor);
+        }
+
+        // ربط المحرك بالمحرر
+        document.getElementById('doc-rich-editor').addEventListener('input', smartDirectionEngine);
     </script>
 </body>
 </html>
