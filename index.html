@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة السيادية المتقدمة لهندسة وتصميم الوثائق الرسمية V20.0</title>
+    <title>المنصة السيادية المتقدمة لهندسة الوثائق V21.0 - ثنائية الخطوط</title>
     
     <style>
         @font-face {
@@ -38,7 +38,8 @@
             --panel-bg: #ffffff;
             --panel-section-bg: #f7f7f7;
             --border-color: #000000;
-            --font-current: 'LocalCourierNew', 'Courier New', monospace;
+            --font-arabic-current: 'LocalAmiri', 'Amiri', serif;
+            --font-english-current: 'LocalCourierNew', 'Courier New', monospace;
             --header-font-size: 11px;
             --body-font-size: 15px;
             --page-padding-top: 15mm;
@@ -340,16 +341,24 @@
             border: 1px dashed #ff3b30;
         }
 
-        .doc-body-editor {
-            width: 100%;
-            flex: 1;
-            min-height: 140mm;
-            outline: none;
+        /* تطبيق الفصل الذكي المزدوج للخطوط اعتماداً على نوع حزمة المحارف وعنصر المحاذاة */
+        .doc-body-editor, .doc-title-input, .meta-line, .shape-text {
+            font-family: var(--font-arabic-current), var(--font-english-current), Arial, sans-serif;
             font-size: var(--body-font-size);
-            font-family: var(--font-current);
             line-height: 1.8;
             text-align: right;
             user-select: text !important;
+        }
+
+        /* إجبار الكلمات والحروف اللاتينية والإنجليزية على أخذ الخط المختار لها حصراً */
+        .doc-body-editor:lang(en), .meta-line, .meta-editable-value, 
+        :not([\u0600-\u06FF]) {
+            font-family: var(--font-english-current), monospace;
+        }
+
+        .meta-line strong {
+            font-family: var(--font-english-current), monospace;
+            font-weight: bold;
         }
 
         /* التنسيق الإجباري للجداول القادمة من مستندات خارجية */
@@ -488,7 +497,7 @@
     <button id="toggle-panel-btn">لوحة التحكم</button>
 
     <div id="control-panel">
-        <h2>لوحة الهندسة السيادية V20.0</h2>
+        <h2>لوحة الهندسة السيادية V21.0</h2>
         
         <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
         <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
@@ -500,18 +509,25 @@
             <input type="file" id="template-loader" accept=".json,.docx,.doc">
         </div>
 
-        <div class="section-title" style="background: #000; color: #fff;">مصفوفة الخطوط الرسمية للوثيقة</div>
+        <div class="section-title" style="background: #007613; color: #fff;">[١] خانة الخط العربي الأصيل</div>
         <div class="control-group">
-            <label>اختر خط المحتوى الأساسي والترويسية:</label>
-            <select id="doc-font-family-selector">
-                <option value="'LocalCourierNew', 'Courier New', monospace" selected>Courier New (رسمي مكثف)</option>
-                <option value="'LocalAmiri', 'Amiri', serif">Amiri (الخط الأميري الملكي)</option>
-                <option value="'Cairo', sans-serif">Cairo (خط قاهرة الحديث)</option>
-                <option value="'IBM Plex Sans Arabic', sans-serif">IBM Plex Sans (تقني سيادي)</option>
-                <option value="'Times New Roman', serif">Times New Roman (دبلوماسي تقليدي)</option>
-                <option value="Arial, sans-serif">Arial (المعياري المبسط)</option>
-                <option value="Georgia, serif">Georgia (صحفي عريق)</option>
-                <option value="Garamond, serif">Garamond (أكاديمي كلاسيكي)</option>
+            <label>اختر خط النصوص والحروف العربية:</label>
+            <select id="doc-arabic-font-selector">
+                <option value="'LocalAmiri', 'Amiri', serif" selected>Amiri (الخط الأميري الملكي المعتمد)</option>
+                <option value="'Cairo', sans-serif">Cairo (خط قاهرة الهندسي اللطيف)</option>
+                <option value="'IBM Plex Sans Arabic', sans-serif">IBM Plex Sans (تقني عسكري سيادي)</option>
+                <option value="Arial, sans-serif">Arial Arabic (المعياري المبسط)</option>
+            </select>
+        </div>
+
+        <div class="section-title" style="background: #103285; color: #fff;">[٢] خانة الخط الإنجليزي والترويسية</div>
+        <div class="control-group">
+            <label>اختر خط الحروف اللاتينية والمؤشرات الرقمية:</label>
+            <select id="doc-english-font-selector">
+                <option value="'LocalCourierNew', 'Courier New', monospace" selected>Courier New (رسمي استخباراتي مكثف)</option>
+                <option value="'Times New Roman', serif">Times New Roman (دبلوماسي تقليدي صلب)</option>
+                <option value="Georgia, serif">Georgia (صحفي وثائقي عريق)</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono (نمط البيانات الحاد)</option>
             </select>
         </div>
 
@@ -667,15 +683,15 @@
                         <div class="meta-line secret-field"><strong>ACTION:</strong> <span class="meta-editable-value" id="lbl-doc-action" contenteditable="true">IMMEDIATE_RELEASE</span></div>
                         <div class="meta-line secret-field"><strong>E.O.:</strong> <span class="meta-editable-value" id="lbl-doc-eo" contenteditable="true">13526_COMPLIANT</span></div>
                         <div class="meta-line secret-field"><strong>TAGS:</strong> <span class="meta-editable-value" id="lbl-doc-tags" contenteditable="true">OPR_INTEL</span></div>
-                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V20.0</span></div>
-                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">SOVEREIGN_HACK_PROOF_SYSTEM</span></div>
+                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V21.0</span></div>
+                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">SOVEREIGN_DUAL_FONT_SYSTEM</span></div>
                     </div>
                 </div>
 
                 <div id="title-wrapper-zone"></div>
                 
                 <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
-                    تمت ترقية النظام بنجاح إلى النسخة السيادية الشاملة V20.0. قمنا بالحفاظ على كافة الميزات المتقدمة السابقة: (سحب ملفات الوورد وتعبئة الترويسة وتوليد حقل الموضوع التلقائي، الإخفاء والتطهير الآلي للحقول السرية عند الانتقال للوضع العام)، مع إضافة ترسانة واسعة من الخطوط المتكاملة، العلامات المائية الذكية، التحكم بالهوامش والحدود، وأداة الأختام والاعتمادات الرسمية الحرة.
+                     هذا النص مكتوب باللغة العربية وسيأخذ الخط الأميري الملكي المختار من خانة الخط العربي، بينما الرموز والأرقام والروابط اللاتينية مثل: (MRN: RCI-990-2026) سيتم إجبارها تلقائياً على أخذ الخط المختار من خانة الخط الإنجليزي ليكون المظهر النهائي متناسقاً ودبلوماسياً تماماً مثل المراسلات السيادية الرسمية.
                 </div>
             </div>
         </div>
@@ -742,11 +758,16 @@
             }
         });
 
-        // محرك مصفوفة الخطوط الشاملة للتحكم بنوع خط المستند المختار
-        const docFontSelector = document.getElementById('doc-font-family-selector');
-        docFontSelector.addEventListener('change', function() {
-            document.documentElement.style.setProperty('--font-current', this.value);
-            document.getElementById('doc-rich-editor').style.fontFamily = this.value;
+        // محرك الفصل المزدوج الذكي للخطوط (عربي / إنجليزي)
+        const docArabicFontSelector = document.getElementById('doc-arabic-font-selector');
+        const docEnglishFontSelector = document.getElementById('doc-english-font-selector');
+
+        docArabicFontSelector.addEventListener('change', function() {
+            document.documentElement.style.setProperty('--font-arabic-current', this.value);
+        });
+
+        docEnglishFontSelector.addEventListener('change', function() {
+            document.documentElement.style.setProperty('--font-english-current', this.value);
         });
 
         // محرك تحديث وبناء العلامات المائية الأمنية
@@ -858,7 +879,6 @@
                 innerLine.className = 'shape-line';
                 shapeDiv.appendChild(innerLine);
             } else if (type === 'stamp') {
-                // إدراج قالب الختم الرسمي الشامل والمطور
                 const stampBox = document.createElement('div');
                 stampBox.className = 'official-stamp-box';
                 stampBox.innerHTML = `
@@ -1100,7 +1120,8 @@
             const templateData = {
                 borderStyle: pageBorderStyle.value,
                 classification: classification.value,
-                fontFamily: docFontSelector.value,
+                fontArabic: docArabicFontSelector.value,
+                fontEnglish: docEnglishFontSelector.value,
                 watermarkText: inputWatermarkText.value,
                 watermarkOpacity: sliderWatermarkOpacity.value,
                 watermarkAngle: selectWatermarkAngle.value,
@@ -1124,7 +1145,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
             const dl = document.createElement('a'); 
             dl.setAttribute("href", dataStr); 
-            dl.setAttribute("download", "RCI-SOVEREIGN-TEMPLATE-V20.json");
+            dl.setAttribute("download", "RCI-DUAL-FONT-TEMPLATE.json");
             document.body.appendChild(dl); dl.click(); dl.remove();
         });
 
@@ -1188,7 +1209,12 @@
                         
                         pageBorderStyle.value = data.borderStyle || 'none';
                         classification.value = data.classification || 'public';
-                        docFontSelector.value = data.fontFamily || "'LocalCourierNew', 'Courier New', monospace";
+                        docArabicFontSelector.value = data.fontArabic || "'LocalAmiri', 'Amiri', serif";
+                        docEnglishFontSelector.value = data.fontEnglish || "'LocalCourierNew', 'Courier New', monospace";
+                        
+                        document.documentElement.style.setProperty('--font-arabic-current', docArabicFontSelector.value);
+                        document.documentElement.style.setProperty('--font-english-current', docEnglishFontSelector.value);
+
                         inputWatermarkText.value = data.watermarkText || "CONFIDENTIAL";
                         sliderWatermarkOpacity.value = data.watermarkOpacity || 6;
                         selectWatermarkAngle.value = data.watermarkAngle || "-45deg";
@@ -1209,9 +1235,6 @@
 
                         document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
                         document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
-                        
-                        document.getElementById('doc-rich-editor').style.fontFamily = docFontSelector.value;
-                        document.documentElement.style.setProperty('--font-current', docFontSelector.value);
                         
                         refreshWatermarkStyles();
 
