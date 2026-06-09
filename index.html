@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V19.6</title>
+    <title>المنصة المتقدمة لهندسة وتصميم الوثائق الرسمية V19.7</title>
     
     <style>
         @font-face {
@@ -208,7 +208,7 @@
         }
 
         /* ==========================================================================
-           3. مساحة عرض الورق والـ A4 والتنسيق الإجباري للمستند المرفوع
+           3. مساحة عرض الورق والـ A4 والتنسيق الموحد
            ========================================================================== */
         #workspace {
             flex: 1;
@@ -281,7 +281,15 @@
             word-break: break-all;
         }
 
-        /* جعل أجزاء الترويسة قابلة للتعديل والكتابة اليدوية الفورية */
+        /* إخفاء الحقول السرية ديناميكياً عندما تكون الحالة عامة */
+        .secret-field {
+            display: flex;
+        }
+
+        body.public-mode .secret-field {
+            display: none !important;
+        }
+
         .meta-editable-value {
             outline: none;
             border-bottom: 1px dashed transparent;
@@ -309,7 +317,6 @@
             border: 1px dashed #ff3b30;
         }
 
-        /* إجبار محتوى مستندات الـ Word والـ HTML على الالتزام بالقواعد والتنسيق الهيكلي */
         .doc-body-editor {
             width: 100%;
             flex: 1;
@@ -321,7 +328,7 @@
             user-select: text !important;
         }
 
-        /* قواعد وتنسيقات منسقة وموحدة للجداول القادمة من قوالب خارجية */
+        /* تنسيقات الجداول المرفوعة من ملفات خارجية */
         .doc-body-editor table {
             width: 100% !important;
             border-collapse: collapse !important;
@@ -428,7 +435,7 @@
     <button id="toggle-panel-btn">لوحة التحكم</button>
 
     <div id="control-panel">
-        <h2>لوحة هندسة الوثائق V19.6</h2>
+        <h2>لوحة هندسة الوثائق V19.7</h2>
         
         <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
         <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
@@ -519,8 +526,8 @@
         <div class="section-title">الأمان والسرية الرقمية للمستند</div>
         <div class="control-group">
             <select id="doc-classification">
-                <option value="public">وثيقة عامة (Static Token)</option>
-                <option value="secret">وثيقة سرية للغاية (Random Hash)</option>
+                <option value="public">وثيقة عامة (تطهير الحقول السرية)</option>
+                <option value="secret" selected>وثيقة سرية للغاية (إظهار كافة الحقول الدبلوماسية)</option>
             </select>
         </div>
 
@@ -537,18 +544,18 @@
                         <div class="meta-line"><strong>MRN:</strong> <span class="meta-editable-value" id="lbl-doc-id" contenteditable="true">GENERATING...</span></div>
                         <div class="meta-line"><strong>DATE/DTG:</strong> <span class="meta-editable-value" id="lbl-doc-date" contenteditable="true">2026-06-09</span></div>
                         <div class="meta-line"><strong>FROM:</strong> <span class="meta-editable-value" id="lbl-doc-from" contenteditable="true">RCI-CORE</span></div>
-                        <div class="meta-line"><strong>ACTION:</strong> <span class="meta-editable-value" id="lbl-doc-action" contenteditable="true">IMMEDIATE_RELEASE</span></div>
-                        <div class="meta-line"><strong>E.O.:</strong> <span class="meta-editable-value" id="lbl-doc-eo" contenteditable="true">13526_COMPLIANT</span></div>
-                        <div class="meta-line"><strong>TAGS:</strong> <span class="meta-editable-value" id="lbl-doc-tags" contenteditable="true">OPR_INTEL</span></div>
-                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V19.6</span></div>
-                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">COMPLETE_INTELLIGENT_DECODER</span></div>
+                        <div class="meta-line secret-field"><strong>ACTION:</strong> <span class="meta-editable-value" id="lbl-doc-action" contenteditable="true">IMMEDIATE_RELEASE</span></div>
+                        <div class="meta-line secret-field"><strong>E.O.:</strong> <span class="meta-editable-value" id="lbl-doc-eo" contenteditable="true">13526_COMPLIANT</span></div>
+                        <div class="meta-line secret-field"><strong>TAGS:</strong> <span class="meta-editable-value" id="lbl-doc-tags" contenteditable="true">OPR_INTEL</span></div>
+                        <div class="meta-line"><strong>REFERENCE:</strong> <span class="meta-editable-value" id="lbl-doc-ref" contenteditable="true">RCI-SYS-V19.7</span></div>
+                        <div class="meta-line"><strong>SUBJECT:</strong> <span class="meta-editable-value" id="lbl-doc-subject" contenteditable="true">DYNAMIC_CLASSIFICATION_SYSTEM</span></div>
                     </div>
                 </div>
 
                 <div id="title-wrapper-zone"></div>
                 
                 <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
-                    مرحباً بك في الإصدار الهيكلي V19.6. جرى دمج محلل الشيفرات النصية، حيث يقوم النظام الآن بتنسيق كافة الجداول والخطوط الخارجية القادمة من مستندات Word، مع تعبئة الموضوع آلياً بناءً على محتوى النص، وجعل جميع الخانات داخل مربع الترويسة حرة وقابلة للتعديل والكتابة اليدوية فوراً.
+                    تمت ترقية المنصة الهيكلية إلى الإصدار V19.7. جرى تفعيل فلتر التطهير الأمني للوثائق العامة؛ فعند تحويل تصنيف المستند إلى "وثيقة عامة"، يتم حذف الحقول السرية وتطهير مربع الترويسة آلياً وفوراً، وتعود الحقول للظهور بشكل كامل عند اختيار "وثيقة سرية للغاية".
                 </div>
             </div>
         </div>
@@ -559,7 +566,7 @@
         let selectedActiveElement = null; 
         let offsetX = 0; 
         let offsetY = 0;
-        let shapeIdCounter = 200;
+        let shapeIdCounter = 300;
         let pageCount = 1; 
         let currentRawCode = "";
 
@@ -644,8 +651,17 @@
             }
         });
 
+        /* محرك تحديث السرية والتحكم في إظهار أو إخفاء حقول المربع السري */
         const classification = document.getElementById('doc-classification');
         const lblDocId = document.getElementById('lbl-doc-id');
+
+        function updateClassificationUI() {
+            if (classification.value === 'public') {
+                document.body.classList.add('public-mode');
+            } else {
+                document.body.classList.remove('public-mode');
+            }
+        }
 
         function refreshDocumentSecurityTokens(forcedCode = null) {
             if (forcedCode) {
@@ -655,8 +671,14 @@
                 currentRawCode = generateRandomCode(classification.value === 'secret' ? 8 : 6);
                 if(lblDocId) lblDocId.textContent = (classification.value === 'secret' ? 'SEC-' : 'PUB-') + currentRawCode;
             }
+            updateClassificationUI();
         }
-        classification.addEventListener('change', function() { refreshDocumentSecurityTokens(null); });
+        
+        classification.addEventListener('change', function() { 
+            refreshDocumentSecurityTokens(null); 
+        });
+        
+        // تشغيل التهيئة الافتراضية بناء على الخيار المختار
         refreshDocumentSecurityTokens(null);
 
         function execCmd(command, value = null) {
@@ -863,7 +885,7 @@
         document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
 
         /* ==========================================================================
-           5. محرك التفكيك البرمجي الذكي وقراءة الـ DOCX / JSON المنسق
+           5. نظام الحفظ والاستدعاء الشامل والمحدث
            ========================================================================== */
         document.getElementById('btn-save-template').addEventListener('click', function() {
             const shapesArray = [];
@@ -931,7 +953,6 @@
 
             const fileName = file.name.toLowerCase();
 
-            // فك وتنسيق قوالب الـ Word
             if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
@@ -940,12 +961,10 @@
                         .then(function(result) {
                             let rawHtml = result.value;
                             
-                            // استخراج النصوص من المستند المرفوع للبحث عن بيانات الترويسة بذكاء
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = rawHtml;
                             const plainText = tempDiv.textContent || tempDiv.innerText;
 
-                            // محرك البحث والالتقاط الذكي لحقول الترويسة من داخل ملف الوورد المرفوع
                             function extractField(regex) {
                                 const match = plainText.match(regex);
                                 return match ? match[1].trim() : null;
@@ -960,7 +979,6 @@
                             const extractedRef = extractField(/reference\s*:\s*([^\n\r]+)/i);
                             const extractedSubject = extractField(/subject\s*:\s*([^\n\r]+)/i);
 
-                            // تطبيق القيم الملتقطة وتثبيتها بالحقول
                             if (extractedMrn) document.getElementById('lbl-doc-id').textContent = extractedMrn;
                             if (extractedDate) document.getElementById('lbl-doc-date').textContent = extractedDate;
                             if (extractedFrom) document.getElementById('lbl-doc-from').textContent = extractedFrom;
@@ -969,20 +987,18 @@
                             if (extractedTags) document.getElementById('lbl-doc-tags').textContent = extractedTags;
                             if (extractedRef) document.getElementById('lbl-doc-ref').textContent = extractedRef;
                             
-                            // توليد وتعبئة حقل الموضوع آلياً بناء على محتوى القالب أو النص المكتوب
                             if (extractedSubject) {
                                 document.getElementById('lbl-doc-subject').textContent = extractedSubject;
                             } else {
-                                // استخلاص أول 60 حرف كعنوان تلقائي في حال عدم وجود حقل موضوع صريح
                                 const fallbackSubject = plainText.replace(/[\r\n]+/g, ' ').trim().substring(0, 60) + "...";
                                 document.getElementById('lbl-doc-subject').textContent = fallbackSubject || "AUTO_LOADED_DOCUMENT";
                             }
 
-                            // حقن محتوى الوورد منسقاً بالكامل داخل منطقة التحرير الرسمية للمنصة
                             document.getElementById('doc-rich-editor').innerHTML = rawHtml;
                             
                             applyFontsToAllPages();
-                            alert("تم استدعاء قالب الـ Word الخارجي، وتنسيق الجداول، وتعبئة حقول الترويسة المكتشفة بنجاح تـام!");
+                            updateClassificationUI();
+                            alert("تم استدعاء مستند الـ Word وتصفية الحقول المكتشفة بنجاح تـام!");
                         })
                         .catch(function(err) {
                             alert("حدث خطأ أثناء فك ومعالجة قالب الـ Word: " + err);
@@ -990,7 +1006,6 @@
                 };
                 reader.readAsArrayBuffer(file);
             } 
-            // استدعاء قوالب النظام المكتوبة بصيغة JSON
             else if (fileName.endsWith('.json')) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
@@ -1004,7 +1019,6 @@
                         sliderBodyFont.value = data.bodyFontSize || '15';
                         sliderHeaderTop.value = data.headerTopPos || '0';
                         
-                        // استرجاع وتعبئة قيم الترويسة القابلة للتعديل يدوياً بدقة
                         document.getElementById('lbl-doc-id').textContent = data.savedDocId || '';
                         document.getElementById('lbl-doc-date').textContent = data.savedDocDate || '';
                         document.getElementById('lbl-doc-from').textContent = data.savedDocFrom || '';
@@ -1073,6 +1087,7 @@
 
                         applyPageBorders(); 
                         applyFontsToAllPages(); 
+                        updateClassificationUI();
                         alert("تم استدعاء قالب النظام الأساسي JSON بنجاح ميمون!");
                     } catch(err) { 
                         alert("خطأ في قراءة وتحليل ملف قالب الـ JSON المرفوع."); 
