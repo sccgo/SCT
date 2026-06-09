@@ -281,21 +281,19 @@
             z-index: 2;
         }
 
-        /* الترويسة / مربع المعلومات السرية */
-        #doc-header-info {
-            width: 280px;
-            border: 1px solid #000000;
-            padding: 8px;
-            background: #ffffff;
-            position: relative;
-            margin: 0 auto;
-            top: 0px;
-            display: block;
-            user-select: none;
-            transition: top 0.1s ease;
-            /* ربط خط مربع الترويسة بخانة خط نصوص المربع الثالثة */
-            font-family: 'Roboto Mono', monospace !important;
-        }
+       #doc-header-info {
+    width: 280px;
+    border: 1px solid #000000;
+    padding: 8px;
+    background: #ffffff;
+    position: relative;
+    margin: 0 auto;
+    display: flex; /* إضافة */
+    flex-direction: column; /* إضافة */
+    text-align: right; /* القيمة الافتراضية */
+    transition: top 0.1s ease;
+    font-family: var(--font-shape-current), monospace !important;
+}
 
         .meta-line {
             font-size: var(--header-font-size);
@@ -514,7 +512,12 @@
             <label>رفع قالب خارجي (JSON أو مستند Word):</label>
             <input type="file" id="template-loader" accept=".json,.docx,.doc">
         </div>
-
+<div class="section-title">محاذاة نصوص مربع الترويسة</div>
+<div class="editor-toolbar">
+    <button type="button" onclick="setHeaderAlign('right')">يمين ➡️</button>
+    <button type="button" onclick="setHeaderAlign('center')">وسط ⏸️</button>
+    <button type="button" onclick="setHeaderAlign('left')">يسار ⬅️</button>
+</div>
         <div class="section-title" style="background: #007613; color: #fff;">[١] خانة الخط العربي الأصيل</div>
         <div class="control-group">
             <label>اختر خط النصوص والحروف العربية:</label>
@@ -1432,6 +1435,21 @@
 
         // ربط المحرك بالمحرر
         document.getElementById('doc-rich-editor').addEventListener('input', smartDirectionEngine);
+        // دالة التحكم في محاذاة نصوص مربع المعلومات
+function setHeaderAlign(align) {
+    const header = document.getElementById('doc-header-info');
+    if (header) {
+        header.style.textAlign = align;
+        
+        // ضبط محاذاة الخطوط داخل المربع لضمان الاستجابة
+        const lines = header.querySelectorAll('.meta-line');
+        lines.forEach(line => {
+            line.style.justifyContent = align === 'center' ? 'center' : (align === 'right' ? 'flex-start' : 'flex-end');
+            // إذا كانت يمين، نضمن بقاء MRN: على اليمين
+            if(align === 'right') line.style.justifyContent = 'space-between';
+        });
+    }
+}
     </script>
 </body>
 </html>
