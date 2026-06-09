@@ -293,7 +293,8 @@
     text-align: right; /* القيمة الافتراضية */
     transition: top 0.1s ease;
     font-family: var(--font-shape-current), monospace !important;
-}
+    direction: inherit; /* مهم جداً لتغيير الاتجاه برمجياً */
+       }
 
         .meta-line {
             font-size: var(--header-font-size);
@@ -1435,18 +1436,23 @@
 
         // ربط المحرك بالمحرر
         document.getElementById('doc-rich-editor').addEventListener('input', smartDirectionEngine);
-        // دالة التحكم في محاذاة نصوص مربع المعلومات
+        // دالة التحكم في محاذاة واتجاه نصوص مربع المعلومات
 function setHeaderAlign(align) {
     const header = document.getElementById('doc-header-info');
     if (header) {
+        // تغيير اتجاه الكتابة الفعلي (هذا هو الأهم لبداية المؤشر)
+        const dir = (align === 'left') ? 'ltr' : (align === 'right' ? 'rtl' : 'ltr');
+        
+        header.style.direction = dir;
         header.style.textAlign = align;
         
-        // ضبط محاذاة الخطوط داخل المربع لضمان الاستجابة
-        const lines = header.querySelectorAll('.meta-line');
-        lines.forEach(line => {
-            line.style.justifyContent = align === 'center' ? 'center' : (align === 'right' ? 'flex-start' : 'flex-end');
-            // إذا كانت يمين، نضمن بقاء MRN: على اليمين
-            if(align === 'right') line.style.justifyContent = 'space-between';
+        // تطبيق الاتجاه على الحقول الداخلية لضمان عملها بشكل صحيح
+        const fields = header.querySelectorAll('.meta-line, .meta-editable-value');
+        fields.forEach(field => {
+            field.style.direction = dir;
+            field.style.textAlign = align;
+            // تنسيق الحقول لتناسب الاتجاه
+            field.style.justifyContent = (align === 'left') ? 'flex-start' : (align === 'right' ? 'flex-end' : 'center');
         });
     }
 }
