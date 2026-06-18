@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة السيادية المتقدمة لهندسة الوثائق V24.0 - النسخة الاحترافية</title>
+    
+    <style>
+        @font-face {
+            font-family: 'LocalCourierNew';
+            src: url('./fonts/courier.ttf') format('truetype'), url('courier.ttf') format('truetype');
+            font-weight: normal; font-style: normal;
+        }
+        @font-face {
+            font-family: 'LocalCourierBold';
+            src: url('./fonts/courier-bold.ttf') format('truetype'), url('courier-bold.ttf') format('truetype');
+            font-weight: bold; font-style: normal;
+        }
+        @font-face {
+            font-family: 'LocalAmiri';
+            src: url('./fonts/amiri-regular.ttf') format('truetype'), url('amiri-regular.ttf') format('truetype');
+            font-weight: normal; font-style: normal;
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;700;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           1. الإعدادات الهيكلية والألوان الأحادية الاحترافية
+           ========================================================================== */
+        :root {
+            --bg-light: #d1d1d1;
+            --panel-bg: #ffffff;
+            --panel-section-bg: #f7f7f7;
+            --border-color: #000000;
+            --font-arabic-current: 'LocalAmiri', 'Amiri', serif;
+            --font-english-current: 'LocalCourierNew', 'Courier New', monospace;
+            --font-shape-current: 'LocalCourierNew', 'Courier New', monospace; /* ربط خط الترويسة/المربع هنا بالافتراضي */
+            --header-font-size: 11px;
+            --body-font-size: 15px;
+            --page-padding-top: 15mm;
+            --page-padding-bottom: 20mm;
+            --page-padding-left: 20mm;
+            --page-padding-right: 20mm;
+            --watermark-opacity: 0.06;
+            --watermark-text: "CONFIDENTIAL";
+            --watermark-angle: -45deg;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: #000000;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            position: relative;
+        }
+
+        #toggle-panel-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ==========================================================================
+           2. لوحة التحكم المطورة (Control Panel)
+           ========================================================================== */
+        #control-panel {
+            width: 410px;
+            min-width: 410px;
+            background-color: var(--panel-bg);
+            border-left: 2px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #control-panel h2 {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: bold;
+            background: #e6e6e6;
+            padding: 6px 10px;
+            margin-top: 8px;
+            border-right: 4px solid #000000;
+            text-transform: uppercase;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .control-group label {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .control-group select, 
+        .control-group input[type="file"],
+        .control-group input[type="number"],
+        .control-group input[type="color"],
+        .control-group input[type="text"],
+        .control-group input[type="range"] {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .row-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .editor-toolbar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            background: #fdfdfd;
+            padding: 6px;
+            border: 1px solid #000000;
+        }
+
+        .editor-toolbar button {
+            padding: 6px 2px;
+            font-size: 11px;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .editor-toolbar button:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .shape-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 9px;
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #000000;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .btn-danger {
+            background-color: #ff3b30;
+            border-color: #ff3b30;
+        }
+        .btn-danger:hover {
+            background-color: #ffffff;
+            color: #ff3b30;
+        }
+
+        /* ==========================================================================
+           3. مساحة عرض المستند ونظام محاكاة ورق A4
+           ========================================================================== */
+        #workspace {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #d1d1d1;
+            position: relative;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            background-color: #ffffff;
+            border: 0px solid #000000;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+            position: relative;
+            padding-top: var(--page-padding-top);
+            padding-bottom: var(--page-padding-bottom);
+            padding-left: var(--page-padding-left);
+            padding-right: var(--page-padding-right);
+            margin-bottom: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .page::before {
+            content: var(--watermark-text);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(var(--watermark-angle));
+            font-size: 75px;
+            font-weight: 900;
+            color: #000000;
+            opacity: var(--watermark-opacity);
+            pointer-events: none;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 5px;
+        }
+
+        .draggable {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            border: 1px dashed transparent;
+            padding: 4px;
+            z-index: 5;
+        }
+
+        .draggable:hover, .draggable.selected {
+            border: 1px dashed #000000;
+        }
+
+        #doc-editor-container {
+            margin-top: 5mm;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+       #doc-header-info {
+    width: 280px;
+    border: 1px solid #000000;
+    padding: 8px;
+    background: #ffffff;
+    position: relative;
+    margin: 0 auto;
+    display: flex; /* إضافة */
+    flex-direction: column; /* إضافة */
+    text-align: right; /* القيمة الافتراضية */
+    transition: top 0.1s ease;
+    font-family: var(--font-shape-current), monospace !important;
+    direction: inherit; /* مهم جداً لتغيير الاتجاه برمجياً */
+       }
+
+        .meta-line {
+            font-size: var(--header-font-size);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            word-break: break-all;
+            font-family: var(--font-shape-current), monospace !important;
+        }
+
+        .secret-field {
+            display: flex;
+        }
+
+        body.public-mode .secret-field {
+            display: none !important;
+        }
+
+        .meta-editable-value {
+            outline: none;
+            border-bottom: 1px dashed transparent;
+            min-width: 50px;
+            display: inline-block;
+            user-select: text !important;
+            font-family: var(--font-shape-current), monospace !important;
+        }
+        .meta-editable-value:focus {
+            border-bottom: 1px dashed #000000;
+            background: #fcfcfc;
+        }
+
+        .doc-title-input {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 20px;
+            outline: none;
+            width: 100%;
+            border: 1px dashed transparent;
+            padding-bottom: 5px;
+            font-family: var(--font-arabic-current), Arial, sans-serif;
+        }
+        .doc-title-input:hover, .doc-title-input.selected {
+            border: 1px dashed #ff3b30;
+        }
+
+        .doc-body-editor {
+            font-family: var(--font-arabic-current), Arial, sans-serif;
+            font-size: var(--body-font-size);
+            line-height: 1.8;
+            text-align: right;
+            user-select: text !important;
+            outline: none;
+        }
+
+        /* قواعد اتجاه وتنسيق النصوص حسب اللغة داخل المحرر */
+        .doc-body-editor div, .doc-body-editor p {
+            direction: inherit;
+            text-align: inherit;
+        }
+
+        .doc-body-editor table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 15px 0 !important;
+            table-layout: fixed !important;
+        }
+        
+        .doc-body-editor table, .doc-body-editor th, .doc-body-editor td {
+            border: 1px solid #000000 !important;
+            padding: 8px !important;
+            text-align: right !important;
+            word-break: break-all !important;
+            background-color: transparent !important;
+        }
+
+        .doc-body-editor p {
+            margin-bottom: 10px !important;
+        }
+
+        .shape-element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+        }
+
+        .shape-line {
+            width: 150px;
+            height: 3px;
+            background-color: #000000;
+            display: block;
+        }
+
+        .shape-rect {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+        }
+
+        .shape-diamond {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #000000;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+        }
+
+        .shape-diamond .shape-text {
+            transform: rotate(-45deg);
+        }
+
+        .official-stamp-box {
+            width: 140px;
+            height: 140px;
+            border: 3px double #000000;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .official-stamp-box .stamp-title {
+            font-size: 11px;
+            font-weight: bold;
+            border-bottom: 1px solid #000000;
+            width: 100%;
+            padding-bottom: 2px;
+            margin-bottom: 4px;
+        }
+
+        .official-stamp-box .stamp-body {
+            font-size: 10px;
+            outline: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shape-text {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #000000;
+            text-align: center;
+            outline: none;
+            width: 100%;
+            user-select: text !important;
+        }
+
+        .inserted-image-el {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           4. محرك التجاوب والطباعة المتقدمة
+           ========================================================================== */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            #toggle-panel-btn { display: block; }
+            #control-panel {
+                position: fixed; top: 0; bottom: 0; right: 0; width: 340px; min-width: 340px;
+                transform: translateX(100%); box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            }
+            #control-panel.open { transform: translateX(0); }
+            #workspace { padding: 10px; padding-top: 60px; width: 100%; overflow-x: auto; }
+            .page { width: 210mm; transform: scale(0.48); transform-origin: top center; margin-bottom: -140mm; }
+        }
+
+        /* ==========================================================================
+           نظام الحجب/التشفير الوثائقي (Redaction System)
+           ========================================================================== */
+        .redacted {
+            display: inline;
+            background-color: #000000;
+            color: transparent;
+            padding: 1px 4px;
+            border-radius: 1px;
+            user-select: none;
+            cursor: pointer;
+            position: relative;
+            font-family: inherit;
+            line-height: inherit;
+        }
+        .redacted:hover {
+            outline: 2px dashed #e74c3c;
+        }
+        .redacted.selected-redaction {
+            outline: 2px solid #e74c3c;
+        }
+        .redacted-symbol-overlay {
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            direction: ltr;
+            unicode-bidi: embed;
+            pointer-events: none;
+        }
+
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background-color: #ffffff; overflow: visible; }
+            #control-panel, #toggle-panel-btn, #status-bar { display: none !important; }
+            #workspace { padding: 0 !important; margin: 0 !important; background-color: #ffffff !important; overflow: visible !important; }
+            .page { box-shadow: none !important; margin: 0 auto !important; transform: scale(1) !important; page-break-after: always; position: relative !important; }
+            .draggable { border: 1px dashed transparent !important; }
+            .redacted:hover { outline: none; }
+            .confidential-footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+        /* إضافة نظام النقطة المرجعية للنصوص (Anchor System) */
+        .anchor-point {
+            width: 12px; height: 12px; background: var(--accent-color, #00ff41);
+            border: 1px solid #000; position: absolute; cursor: crosshair;
+            z-index: 1000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* ==========================================================================
+           V24.0 — تحسينات الواجهة الاحترافية والأقسام القابلة للطي
+           ========================================================================== */
+        :root {
+            --accent-pro: #0a3d62;
+            --accent-pro-2: #1e5f8e;
+            --panel-radius: 6px;
+        }
+        body { font-family: 'IBM Plex Sans Arabic', 'Cairo', Arial, sans-serif; }
+        #control-panel {
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+            border-left: 1px solid #d0d0d0;
+        }
+        #control-panel h2 {
+            background: linear-gradient(135deg, var(--accent-pro), var(--accent-pro-2));
+            color: #fff;
+            padding: 12px;
+            border-radius: var(--panel-radius);
+            border: none;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .section-title {
+            cursor: pointer;
+            user-select: none;
+            border-radius: 4px 4px 0 0;
+            border-right: 4px solid var(--accent-pro);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+        }
+        .section-title:hover { filter: brightness(0.95); }
+        .section-title::after {
+            content: "▼";
+            font-size: 9px;
+            transition: transform 0.2s;
+        }
+        .section-title.collapsed::after { transform: rotate(-90deg); }
+        .section-body {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px;
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            margin-bottom: 4px;
+        }
+        .section-body.collapsed { display: none; }
+        button {
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+        }
+        .control-group select,
+        .control-group input[type="number"],
+        .control-group input[type="text"] {
+            border-radius: 3px;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .control-group select:focus,
+        .control-group input:focus {
+            border-color: var(--accent-pro);
+            box-shadow: 0 0 0 2px rgba(10, 61, 98, 0.15);
+        }
+
+        /* شريط الحالة السفلي */
+        #status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 410px;
+            background: #0a3d62;
+            color: #fff;
+            padding: 6px 16px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+        }
+        #status-bar .status-item { display: flex; gap: 8px; align-items: center; }
+        #status-bar .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #2ecc71; box-shadow: 0 0 6px #2ecc71;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        /* زر إظهار/إخفاء مربع الترويسة */
+        .header-toggle-row {
+            display: flex; gap: 6px; align-items: center;
+        }
+        body.hide-header-box #doc-header-info { display: none !important; }
+        body.no-header-fields #doc-header-info { display: none !important; }
+
+        /* تذييل ورأس CONFIDENTIAL على كل ورقة (يظهر فقط في الوضع السري) */
+        .confidential-footer, .confidential-header {
+            position: absolute;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: var(--confidential-font, Arial), sans-serif;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #c0392b;
+            font-size: var(--confidential-size, 14px);
+            pointer-events: none;
+            z-index: 3;
+            display: none;
+        }
+        .confidential-footer { bottom: 8mm; }
+        .confidential-header { top: 6mm; }
+        body.secret-mode .confidential-footer,
+        body.secret-mode .confidential-header { display: block; }
+        /* الورقة الأولى: واضحة جداً. باقي الأوراق: خافتة */
+        body.secret-mode .page:not(:first-of-type) .confidential-footer,
+        body.secret-mode .page:not(:first-of-type) .confidential-header {
+            opacity: 0.35;
+        }
+
+        /* مدير حقول مربع المعلومات */
+        .field-manager-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .field-list-item {
+            display: flex; align-items: center; gap: 6px;
+            background: #fff; border: 1px solid #ccc; padding: 4px 6px;
+            border-radius: 3px; font-size: 11px;
+        }
+        .field-list-item .fli-name { flex: 1; font-weight: bold; }
+        .field-list-item .fli-type { color: #666; font-size: 10px; }
+        .field-list-item button {
+            width: auto; padding: 2px 6px; font-size: 10px;
+            background: #c0392b; border-color: #c0392b;
+        }
+        .field-list-item button.fli-refresh {
+            background: #16a085; border-color: #16a085;
+        }
+        #field-list-container { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+        .meta-line[data-auto="1"] .meta-editable-value {
+            background: #fffbe6;
+        }
+
+        /* إشعار toast */
+        #toast {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a3d62;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        #toast.show { opacity: 1; bottom: 70px; }
+
+        @media (max-width: 768px) {
+            #status-bar { right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="toggle-panel-btn">لوحة التحكم</button>
+
+    <div id="control-panel">
+        <h2>⚜ منصة الهندسة السيادية V24.0</h2>
+        
+        <div class="section-title" style="background: #ff3b30; color:#fff;">إدارة وحذف العناصر النشطة</div>
+        <div class="section-title" style="background: #555; color: #fff;">نظام نقاط المرجع (Anchor)</div>
+        <button type="button" id="btn-add-anchor" style="background:#555;" onclick="addAnchorToWorkspace()">إضافة نقطة ارتكاز</button>
+        <button type="button" id="btn-delete-active-element" class="btn-danger">حذف العنصر المحدد حالياً (أو اضغط Delete)</button>
+
+        <div class="section-title" style="background: #0088cc; color:#fff;">مستدعي ومحلل القوالب المنسق والذكي</div>
+        <button id="btn-save-template" style="background: #0088cc; border-color: #0088cc; margin-bottom: 5px;">حفظ التصميم الحالي كقالب (.json)</button>
+        <div class="control-group">
+            <label>رفع قالب خارجي (JSON أو مستند Word):</label>
+            <input type="file" id="template-loader" accept=".json,.docx,.doc">
+        </div>
+<div class="section-title">محاذاة نصوص مربع الترويسة</div>
+<div class="editor-toolbar">
+    <button type="button" onclick="setHeaderAlign('right')">يمين ➡️</button>
+    <button type="button" onclick="setHeaderAlign('center')">وسط ⏸️</button>
+    <button type="button" onclick="setHeaderAlign('left')">يسار ⬅️</button>
+</div>
+        <div class="section-title" style="background: #007613; color: #fff;">[١] خانة الخط العربي الأصيل</div>
+        <div class="control-group">
+            <label>اختر خط النصوص والحروف العربية:</label>
+            <select id="doc-arabic-font-selector">
+                <option value="'LocalAmiri', 'Amiri', serif" selected>Amiri (الخط الأميري الملكي المعتمد)</option>
+                <option value="'Cairo', sans-serif">Cairo (خط قاهرة الهندسي اللطيف)</option>
+                <option value="'IBM Plex Sans Arabic', sans-serif">IBM Plex Sans (تقني عسكري سيادي)</option>
+                <option value="Arial, sans-serif">Arial Arabic (المعياري المبسط)</option>
+                <option value="'LocalCourierNew', 'Courier New', monospace">Courier New (خط محلي رسمي مكثف)</option>
+            </select>
+        </div>
+
+        <div class="section-title" style="background: #103285; color: #fff;">[٢] خانة الخط الإنجليزي العام</div>
+        <div class="control-group">
+            <label>اختر خط الحروف اللاتينية والمؤشرات الرقمية:</label>
+            <select id="doc-english-font-selector">
+                <option value="'LocalCourierNew', 'Courier New', monospace" selected>Courier New (رسمي استخباراتي مكثف)</option>
+                <option value="'Times New Roman', serif">Times New Roman (دبلوماسي تقليدي صلب)</option>
+                <option value="Georgia, serif">Georgia (صحفي وثائقي عريق)</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono (نمط البيانات الحاد)</option>
+            </select>
+        </div>
+
+        <div class="section-title" style="background: #e67e22; color: #fff;">[٣] خانة خط نصوص المربع (المعلومات السرية)</div>
+        <div class="control-group">
+            <label>اختر خط مربع الترويسة والمعلومات السيادية:</label>
+            <select id="doc-shape-font-selector">
+                <option value="'LocalCourierNew', 'Courier New', monospace" selected>Courier (نمط البرقيات المقيد)</option>
+                <option value="Arial, sans-serif">Arial (خطي هندسي واضح)</option>
+                <option value="'Cairo', sans-serif">Cairo (قاهرة للمربعات والأختام)</option>
+                <option value="'LocalAmiri', 'Amiri', serif">Amiri (كلاسيكي للأشكال)</option>
+            </select>
+        </div>
+
+        <div class="section-title" style="background:#c0392b; color:#fff;">تذييل CONFIDENTIAL (الوضع السري)</div>
+        <div class="control-group">
+            <label>نص التذييل (يظهر أسفل كل صفحة):</label>
+            <input type="text" id="confidential-text-input" value="CONFIDENTIAL">
+            <label>خط النص:</label>
+            <select id="confidential-font-selector">
+                <option value="Arial, sans-serif" selected>Arial</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono</option>
+            </select>
+            <label>حجم الخط: <span id="confidential-size-value">14</span>px</label>
+            <input type="range" id="confidential-size-slider" min="8" max="60" value="14">
+        </div>
+
+        <div class="section-title">العلامة المائية الأمنية المائلة خلف الصفحة</div>
+        <div class="control-group">
+            <label>نص العلامة المائية:</label>
+            <input type="text" id="input-watermark-text" value="CONFIDENTIAL">
+            <div class="row-inputs">
+                <div>
+                    <label>درجة الشفافية:</label>
+                    <input type="range" id="slider-watermark-opacity" min="1" max="30" value="6">
+                </div>
+                <div>
+                    <label>زاوية الميل:</label>
+                    <select id="select-watermark-angle">
+                        <option value="-45deg" selected>مائل -45°</option>
+                        <option value="0deg">أفقي 0°</option>
+                        <option value="-30deg">مائل -30°</option>
+                        <option value="-90deg">عمودي -90°</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title" style="background: #8e44ad; color: #fff;">مربع إدراج ومعالجة الصور المباشرة</div>
+        <div class="control-group">
+            <input type="file" id="image-element-uploader" accept="image/*">
+        </div>
+
+        <div class="section-title">الموضع العمودي لمربع الترويسة المثبت</div>
+        <div class="control-group">
+            <input type="range" id="slider-header-top" min="-20" max="150" value="0">
+        </div>
+
+        <div class="section-title">إعدادات الهوامش الجغرافية لورقة الـ A4</div>
+        <div class="control-group">
+            <div class="row-inputs">
+                <div>
+                    <label>هامش أعلى (ملم):</label>
+                    <input type="number" id="input-margin-top" value="15">
+                </div>
+                <div>
+                    <label>هامش أسفل (ملم):</label>
+                    <input type="number" id="input-margin-bottom" value="20">
+                </div>
+            </div>
+            <div class="row-inputs">
+                <div>
+                    <label>هامش يسار (ملم):</label>
+                    <input type="number" id="input-margin-left" value="20">
+                </div>
+                <div>
+                    <label>هامش يمين (ملم):</label>
+                    <input type="number" id="input-margin-right" value="20">
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">التحكم المتقدم بأحجام الخطوط الكلية</div>
+        <div class="control-group">
+            <label>حجم خط مربع الترويسة المثبت:</label>
+            <input type="range" id="slider-header-font" min="8" max="28" value="11">
+        </div>
+        <div class="control-group">
+            <label>حجم الخط في محتوى المستند الكلي:</label>
+            <input type="range" id="slider-body-font" min="10" max="36" value="15">
+        </div>
+
+        <div class="section-title">إدراج خطوط وأشكال وأختام رسمية حرة</div>
+        <div class="shape-grid">
+            <button type="button" id="btn-shape-line">خط حر</button>
+            <button type="button" id="btn-shape-rect">مربع</button>
+            <button type="button" id="btn-shape-diamond">معين</button>
+            <button type="button" id="btn-insert-stamp" style="background:#0088cc; border-color:#0088cc;">الختم الرسمي</button>
+        </div>
+
+        <div class="section-title">إطارات وأبعاد الأشكال والصور النشطة</div>
+        <div class="control-group">
+            <div class="row-inputs">
+                <div>
+                    <label>العرض (بكسل):</label>
+                    <input type="number" id="shape-width" value="150">
+                </div>
+                <div>
+                    <label>الارتفاع/السمك:</label>
+                    <input type="number" id="shape-height" value="100">
+                </div>
+            </div>
+            <select id="shape-border-style">
+                <option value="solid">مصمت</option>
+                <option value="dashed">متقطع</option>
+                <option value="double">مزدوج رسمي</option>
+            </select>
+            <input type="color" id="shape-color" value="#000000">
+        </div>
+
+        <div class="section-title">مربع المعلومات (الترويسة) — مدير الحقول</div>
+        <div class="control-group" style="background: var(--panel-section-bg); padding: 8px; border: 1px dashed #000; gap: 8px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" id="toggle-header-box" style="width:auto; cursor:pointer;">
+                <span>إظهار مربع المعلومات (مخفي افتراضياً)</span>
+            </label>
+            <label>إطار وحدود مربع الترويسة:</label>
+            <select id="header-border-style">
+                <option value="solid">إطار أسود مصمت</option>
+                <option value="none">بدون إطار</option>
+            </select>
+            <label>عرض مربع الترويسة (بالبكسل):</label>
+            <input type="number" id="header-width-input" value="280">
+
+            <hr style="margin:6px 0; border:0; border-top:1px solid #ccc;">
+            <label style="font-weight:bold;">➕ إضافة حقل جديد إلى المربع:</label>
+            <input type="text" id="new-field-label" placeholder="اسم الحقل (مثل: MRN, التاريخ, المرجع)">
+            <select id="new-field-type">
+                <option value="manual">يدوي — أكتب القيمة بنفسي</option>
+                <option value="auto:code">آلي — كود عشوائي (حروف+أرقام)</option>
+                <option value="auto:hex">آلي — كود HEX سداسي عشري</option>
+                <option value="auto:uuid">آلي — معرّف UUID</option>
+                <option value="auto:date">آلي — تاريخ اليوم</option>
+                <option value="auto:datetime">آلي — تاريخ + وقت</option>
+                <option value="auto:dtg">آلي — DTG عسكري</option>
+                <option value="auto:number">آلي — رقم تسلسلي عشوائي</option>
+            </select>
+            <button type="button" id="btn-add-field" style="background:#007613; border-color:#007613;">+ إضافة الحقل إلى المربع</button>
+            <label style="font-weight:bold; margin-top:6px;">📋 الحقول الحالية:</label>
+            <div id="field-list-container"></div>
+            <button type="button" id="btn-regen-auto" style="background:#16a085; border-color:#16a085;">🔄 إعادة توليد كل القيم الآلية</button>
+        </div>
+
+        <div class="section-title">خيارات تحرير ومحاذاة النصوص والسطور</div>
+        <div class="editor-toolbar">
+            <button type="button" id="btn-tool-bold"><b>B</b></button>
+            <button type="button" id="btn-tool-italic"><i>I</i></button>
+            <button type="button" id="btn-tool-underline"><u>U</u></button>
+            <button type="button" id="btn-add-title-field" style="background:#000; color:#fff;">+ عنوان</button>
+        </div>
+        <div class="editor-toolbar" style="margin-top:2px; grid-template-columns: repeat(4, 1fr);">
+            <button type="button" id="btn-align-right" title="محاذاة لليمين">➡️ يمين</button>
+            <button type="button" id="btn-align-center" title="توسيط">⏸️ وسط</button>
+            <button type="button" id="btn-align-left" title="محاذاة لليسار">⬅️ يسار</button>
+            <button type="button" id="btn-align-justify" title="ضبط مصمت">↔️ ضبط</button>
+        </div>
+        
+        <div class="section-title">إطار وحدود صفحات المستند الهيكلية</div>
+        <div class="control-group">
+            <select id="page-border-style">
+                <option value="none">بدون حدود</option>
+                <option value="solid">خط مصمت</option>
+                <option value="dashed">خط متقطع</option>
+                <option value="double">خط مزدوج رسمي وثائقي</option>
+            </select>
+        </div>
+
+        <div class="section-title">الأمان والسرية الرقمية وتطهير الحقول</div>
+        <div class="control-group">
+            <select id="doc-classification">
+                <option value="public">وثيقة عامة (تطهير وحذف الحقول السرية وتثبيت المعطيات)</option>
+                <option value="secret" selected>وثيقة سرية للغاية (إظهار كافة الحقول الدبلوماسية والأمنية كاملة)</option>
+            </select>
+        </div>
+
+        <div class="section-title" style="background: #16a085; color: #fff;">تشفير النص (تغطية سرية وحجب وثائقي)</div>
+        <div class="control-group">
+            <label>① تشفير بدون رموز (مستطيل أسود صامت):</label>
+            <button type="button" id="btn-redact-plain" style="background:#111; border-color:#111;">حجب النص المحدد ██████</button>
+        </div>
+        <div class="control-group">
+            <label>② تشفير برموز (مستطيل أسود + كود حروف وأرقام عشوائية):</label>
+            <button type="button" id="btn-redact-symbol" style="background:#16a085; border-color:#16a085;">حجب النص المحدد بكود عشوائي A7x█K2m</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-unredact" style="background:#e74c3c; border-color:#e74c3c;">فك الحجب / إزالة التشفير عن العنصر المحدد</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-print-legend" style="background:#8e44ad; border-color:#8e44ad;">طباعة دليل الأكواد السري (صفحة منفصلة)</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-copy-code" style="background:#2980b9; border-color:#2980b9;">نسخ كود العنصر المحدد 📋</button>
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn-unredact-all" style="background:#c0392b; border-color:#c0392b;">فك كل الحجب في المستند</button>
+        </div>
+        <div class="control-group" style="text-align:center;">
+            <span id="redaction-counter" style="font-size:13px; font-weight:bold; color:#16a085;">العناصر المحجوبة: 0 (بأكواد: 0)</span>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #000000; margin-top: 5px;">
+        <button id="btn-add-page">إضافة صفحة مستند جديدة</button>
+        <button id="btn-print" style="background: #000000; color: #ffffff; font-size: 14px; margin-top: auto;">طباعة وتصدير المستند النهائي</button>
+    </div>
+
+    <div id="workspace">
+        <div class="page" id="page-1">
+            <div id="doc-editor-container">
+                <div id="doc-header-info">
+                    <div class="meta-container" id="meta-fields-holder"></div>
+                </div>
+
+                <div id="title-wrapper-zone"></div>
+                
+                <div class="doc-body-editor" id="doc-rich-editor" contenteditable="true">
+                    <div><br></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let draggedElement = null;
+        let selectedActiveElement = null; 
+        let offsetX = 0; 
+        let offsetY = 0;
+        let shapeIdCounter = 500;
+        let pageCount = 1; 
+        let currentRawCode = "";
+
+        const togglePanelBtn = document.getElementById('toggle-panel-btn');
+        const controlPanel = document.getElementById('control-panel');
+        
+        togglePanelBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            controlPanel.classList.toggle('open');
+        });
+
+        // الكشف والتحكم التلقائي بمربع معلومات الترويسة
+        function getActiveHeaderInfo() {
+            return document.getElementById('doc-header-info');
+        }
+
+        const sliderHeaderTop = document.getElementById('slider-header-top');
+        sliderHeaderTop.addEventListener('input', function() {
+            const header = getActiveHeaderInfo();
+            if(header) header.style.top = this.value + 'px';
+        });
+
+        function generateRandomCode(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        const headerBorderStyle = document.getElementById('header-border-style');
+        const headerWidthInput = document.getElementById('header-width-input');
+        const sliderHeaderFont = document.getElementById('slider-header-font');
+        const sliderBodyFont = document.getElementById('slider-body-font');
+
+        sliderHeaderFont.addEventListener('input', function() {
+            document.documentElement.style.setProperty('--header-font-size', this.value + 'px');
+        });
+        
+        sliderBodyFont.addEventListener('input', function() {
+            document.documentElement.style.setProperty('--body-font-size', this.value + 'px');
+        });
+
+        headerWidthInput.addEventListener('input', function() { 
+            const header = getActiveHeaderInfo();
+            if(header) header.style.width = this.value + 'px'; 
+        });
+
+        headerBorderStyle.addEventListener('change', function() {
+            const header = getActiveHeaderInfo();
+            if(!header) return;
+            if (this.value === 'none') {
+                header.style.borderColor = 'transparent';
+                header.style.borderStyle = 'none';
+            } else {
+                header.style.borderColor = '#000000';
+                header.style.borderStyle = 'solid';
+                header.style.borderWidth = '1px';
+            }
+        });
+
+        // محركات التحكم المنفصلة بالخطوط الثلاثة السيادية
+        const docArabicFontSelector = document.getElementById('doc-arabic-font-selector');
+        const docEnglishFontSelector = document.getElementById('doc-english-font-selector');
+        const docShapeFontSelector = document.getElementById('doc-shape-font-selector');
+
+        docArabicFontSelector.addEventListener('change', function() {
+            document.documentElement.style.setProperty('--font-arabic-current', this.value);
+            applyFontsToAllPages();
+        });
+
+        docEnglishFontSelector.addEventListener('change', function() {
+            document.documentElement.style.setProperty('--font-english-current', this.value);
+            applyFontsToAllPages();
+        });
+
+        docShapeFontSelector.addEventListener('change', function() {
+            document.documentElement.style.setProperty('--font-shape-current', this.value);
+        });
+
+        // محرك العلامات المائية
+        const inputWatermarkText = document.getElementById('input-watermark-text');
+        const sliderWatermarkOpacity = document.getElementById('slider-watermark-opacity');
+        const selectWatermarkAngle = document.getElementById('select-watermark-angle');
+
+        function refreshWatermarkStyles() {
+            document.documentElement.style.setProperty('--watermark-text', `"${inputWatermarkText.value}"`);
+            document.documentElement.style.setProperty('--watermark-opacity', sliderWatermarkOpacity.value / 100);
+            document.documentElement.style.setProperty('--watermark-angle', selectWatermarkAngle.value);
+        }
+        inputWatermarkText.addEventListener('input', refreshWatermarkStyles);
+        sliderWatermarkOpacity.addEventListener('input', refreshWatermarkStyles);
+        selectWatermarkAngle.addEventListener('change', refreshWatermarkStyles);
+
+        // ضبط الهوامش الجغرافية للورقة
+        const marginFields = ['top', 'bottom', 'left', 'right'];
+        marginFields.forEach(margin => {
+            document.getElementById(`input-margin-${margin}`).addEventListener('input', function() {
+                document.documentElement.style.setProperty(`--page-padding-${margin}`, this.value + 'mm');
+            });
+        });
+
+        // محرك فحص اللغة والاتجاه والمحاذاة المطور والذكي V23.0
+        function applyFontsToAllPages() {
+            // توحيد إطارات الصفحات إن وُجد عنصر التحكم بها
+            if (typeof pageBorderStyle !== 'undefined' && pageBorderStyle) {
+                document.querySelectorAll('.page').forEach(page => {
+                    page.style.border = (pageBorderStyle.value === 'none')
+                        ? 'none'
+                        : '4px ' + pageBorderStyle.value + ' #000000';
+                });
+            }
+
+            // معالجة نصوص جميع المحررات في كل الصفحات سطراً بسطر أو فقرة بفقرة
+            document.querySelectorAll('.doc-body-editor div, .doc-body-editor p').forEach(el => {
+                const text = el.textContent || "";
+                if (/[\u0600-\u06FF]/.test(text)) {
+                    // نص عربي
+                    el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
+                    el.style.direction = 'rtl';
+                    if(el.style.textAlign !== 'center' && el.style.textAlign !== 'left' && el.style.textAlign !== 'justify') {
+                        el.style.textAlign = 'right';
+                    }
+                } else if(text.trim().length > 0) {
+                    // نص إنجليزي / لاتيني خالص
+                    el.style.fontFamily = "var(--font-english-current), monospace";
+                    el.style.direction = 'ltr';
+                    // إذا لم تكن المحاذاة مختارة كـ "وسط" أو "ضبط"، تُجبر لتصبح يسار ويُمنع بدء الإنجليزي من اليمين
+                    if (el.style.textAlign !== 'center' && el.style.textAlign !== 'justify') {
+                        el.style.textAlign = 'left';
+                    }
+                }
+            });
+
+            // تحديث خط العناوين الأساسية حسب لغتها
+            document.querySelectorAll('.doc-title-input').forEach(el => {
+                if (/[\u0600-\u06FF]/.test(el.textContent || "")) {
+                    el.style.fontFamily = "var(--font-arabic-current), Arial, sans-serif";
+                } else {
+                    el.style.fontFamily = "var(--font-english-current), monospace";
+                }
+            });
+        }
+
+        // مراقبة مدخلات المحرر لتطبيق المحاذاة والاتجاه التلقائي فوراً أثناء الكتابة
+        document.getElementById('doc-rich-editor').addEventListener('input', applyFontsToAllPages);
+
+        document.getElementById('btn-add-title-field').addEventListener('click', function() {
+            const wrapper = document.getElementById('title-wrapper-zone');
+            if (wrapper && wrapper.children.length === 0) {
+                const titleInput = document.createElement('div');
+                titleInput.className = 'doc-title-input';
+                titleInput.setAttribute('contenteditable', 'true');
+                titleInput.textContent = 'العنوان الرئيسي للمستند الرسمي';
+                
+                titleInput.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    clearElementSelection();
+                    titleInput.classList.add('selected');
+                    selectedActiveElement = titleInput;
+                });
+                wrapper.appendChild(titleInput);
+                applyFontsToAllPages();
+            }
+        });
+
+        const classification = document.getElementById('doc-classification');
+        
+        function updateClassificationUI() {
+            if (classification.value === 'public') {
+                document.body.classList.add('public-mode');
+            } else {
+                document.body.classList.remove('public-mode');
+            }
+        }
+
+        function refreshDocumentSecurityTokens(forcedCode = null) {
+            const lblDocId = document.getElementById('lbl-doc-id');
+            if (forcedCode) {
+                currentRawCode = forcedCode.includes('-') ? forcedCode.split('-')[1] : forcedCode;
+                if(lblDocId) lblDocId.textContent = forcedCode;
+            } else {
+                currentRawCode = generateRandomCode(classification.value === 'secret' ? 8 : 6);
+                if(lblDocId) lblDocId.textContent = (classification.value === 'secret' ? 'SEC-' : 'PUB-') + currentRawCode;
+            }
+            updateClassificationUI();
+        }
+        
+        classification.addEventListener('change', function() { refreshDocumentSecurityTokens(null); });
+        refreshDocumentSecurityTokens(null);
+
+        function execCmd(command, value = null) {
+            document.execCommand(command, false, value);
+            applyFontsToAllPages();
+        }
+        document.getElementById('btn-tool-bold').addEventListener('click', function() { execCmd('bold'); });
+        document.getElementById('btn-tool-italic').addEventListener('click', function() { execCmd('italic'); });
+        document.getElementById('btn-tool-underline').addEventListener('click', function() { execCmd('underline'); });
+
+        document.getElementById('btn-align-right').addEventListener('click', function() { 
+            const sel = window.getSelection();
+            if(sel.anchorNode && sel.anchorNode.parentNode) {
+                let pNode = sel.anchorNode.parentNode;
+                if(pNode.closest('#doc-rich-editor')) {
+                    if(pNode === document.getElementById('doc-rich-editor')) {
+                        document.execCommand('formatBlock', false, 'div');
+                    }
+                    window.getSelection().anchorNode.parentNode.style.textAlign = 'right';
+                }
+            }
+        });
+        document.getElementById('btn-align-center').addEventListener('click', function() { 
+            const sel = window.getSelection();
+            if(sel.anchorNode && sel.anchorNode.parentNode) {
+                let pNode = sel.anchorNode.parentNode;
+                if(pNode.closest('#doc-rich-editor')) {
+                    if(pNode === document.getElementById('doc-rich-editor')) {
+                        document.execCommand('formatBlock', false, 'div');
+                    }
+                    window.getSelection().anchorNode.parentNode.style.textAlign = 'center';
+                }
+            }
+        });
+        document.getElementById('btn-align-left').addEventListener('click', function() { 
+            const sel = window.getSelection();
+            if(sel.anchorNode && sel.anchorNode.parentNode) {
+                let pNode = sel.anchorNode.parentNode;
+                if(pNode.closest('#doc-rich-editor')) {
+                    if(pNode === document.getElementById('doc-rich-editor')) {
+                        document.execCommand('formatBlock', false, 'div');
+                    }
+                    window.getSelection().anchorNode.parentNode.style.textAlign = 'left';
+                }
+            }
+        });
+        document.getElementById('btn-align-justify').addEventListener('click', function() { 
+            const sel = window.getSelection();
+            if(sel.anchorNode && sel.anchorNode.parentNode) {
+                let pNode = sel.anchorNode.parentNode;
+                if(pNode.closest('#doc-rich-editor')) {
+                    if(pNode === document.getElementById('doc-rich-editor')) {
+                        document.execCommand('formatBlock', false, 'div');
+                    }
+                    window.getSelection().anchorNode.parentNode.style.textAlign = 'justify';
+                }
+            }
+        });
+
+        // بناء وهندسة الأشكال والختم
+        function createShape(type) {
+            shapeIdCounter++;
+            const shapeDiv = document.createElement('div');
+            shapeDiv.className = 'draggable shape-element';
+            shapeDiv.id = 'shape-' + type + '-' + shapeIdCounter;
+            shapeDiv.setAttribute('draggable', 'true');
+            shapeDiv.style.top = '220px'; 
+            shapeDiv.style.left = '220px';
+
+            if (type === 'line') {
+                const innerLine = document.createElement('div'); 
+                innerLine.className = 'shape-line';
+                shapeDiv.appendChild(innerLine);
+            } else if (type === 'stamp') {
+                const stampBox = document.createElement('div');
+                stampBox.className = 'official-stamp-box';
+                stampBox.innerHTML = `
+                    <div class="stamp-title">اعتماد وصلاحية RCI</div>
+                    <div class="stamp-body" contenteditable="true">مُـعـتـمـد<br>[التاريخ والرمز]</div>
+                `;
+                shapeDiv.appendChild(stampBox);
+            } else {
+                const inner = document.createElement('div');
+                inner.className = type === 'rect' ? 'shape-rect' : 'shape-diamond';
+                const txt = document.createElement('div');
+                txt.className = 'shape-text'; 
+                txt.setAttribute('contenteditable', 'true'); 
+                txt.textContent = '[نص وثائقي]';
+                inner.appendChild(txt); 
+                shapeDiv.appendChild(inner);
+            }
+            document.getElementById('page-1').appendChild(shapeDiv);
+            makeElementDraggable(shapeDiv);
+            shapeDiv.click();
+        }
+
+        document.getElementById('btn-shape-line').addEventListener('click', function() { createShape('line'); });
+        document.getElementById('btn-shape-rect').addEventListener('click', function() { createShape('rect'); });
+        document.getElementById('btn-shape-diamond').addEventListener('click', function() { createShape('diamond'); });
+        document.getElementById('btn-insert-stamp').addEventListener('click', function() { createShape('stamp'); });
+
+        function updateSelectedShapeProperty() {
+            if (!selectedActiveElement) return;
+            
+            const widthVal = document.getElementById('shape-width').value + 'px';
+            const heightVal = document.getElementById('shape-height').value + 'px';
+            const styleVal = document.getElementById('shape-border-style').value;
+            const colorVal = document.getElementById('shape-color').value;
+
+            const imgEl = selectedActiveElement.querySelector('.inserted-image-el');
+            if (imgEl) {
+                selectedActiveElement.style.width = widthVal;
+                selectedActiveElement.style.height = heightVal;
+                return;
+            }
+
+            const stampEl = selectedActiveElement.querySelector('.official-stamp-box');
+            if(stampEl) {
+                stampEl.style.width = widthVal;
+                stampEl.style.height = heightVal;
+                stampEl.style.borderColor = colorVal;
+                stampEl.style.borderStyle = styleVal;
+                return;
+            }
+
+            const innerShape = selectedActiveElement.querySelector('.shape-line, .shape-rect, .shape-diamond');
+            if (!innerShape) return;
+
+            if (innerShape.classList.contains('shape-line')) {
+                innerShape.style.width = widthVal;
+                innerShape.style.height = heightVal + 'px';
+                innerShape.style.backgroundColor = colorVal;
+            } else {
+                innerShape.style.width = widthVal;
+                innerShape.style.height = heightVal;
+                innerShape.style.borderStyle = styleVal;
+                innerShape.style.borderColor = colorVal;
+            }
+        }
+
+        document.getElementById('shape-width').addEventListener('input', updateSelectedShapeProperty);
+        document.getElementById('shape-height').addEventListener('input', updateSelectedShapeProperty);
+        document.getElementById('shape-border-style').addEventListener('change', updateSelectedShapeProperty);
+        document.getElementById('shape-color').addEventListener('input', updateSelectedShapeProperty);
+
+        document.getElementById('image-element-uploader').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                shapeIdCounter++;
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'draggable shape-element';
+                imgContainer.id = 'inserted-img-' + shapeIdCounter;
+                imgContainer.setAttribute('draggable', 'true');
+                imgContainer.style.top = '250px';
+                imgContainer.style.left = '250px';
+                imgContainer.style.width = '150px';
+                imgContainer.style.height = '100px';
+
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.className = 'inserted-image-el';
+                
+                imgContainer.appendChild(img);
+                document.getElementById('page-1').appendChild(imgContainer);
+                makeElementDraggable(imgContainer);
+                imgContainer.click();
+                e.target.value = "";
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function clearElementSelection() {
+            document.querySelectorAll('.shape-element, .doc-title-input').forEach(s => s.classList.remove('selected'));
+            selectedActiveElement = null;
+        }
+
+        function deleteActiveElement() {
+            if (selectedActiveElement) {
+                selectedActiveElement.remove();
+                selectedActiveElement = null;
+            }
+        }
+
+        document.getElementById('btn-delete-active-element').addEventListener('click', function(e) {
+            e.stopPropagation();
+            deleteActiveElement();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (selectedActiveElement) {
+                if (document.activeElement && document.activeElement.getAttribute('contenteditable') === 'true') return;
+                if (e.key === 'Delete' || e.key === 'Backspace') {
+                    e.preventDefault();
+                    deleteActiveElement();
+                }
+            }
+        });
+
+        function makeElementDraggable(el) {
+            if (!el) return;
+            el.addEventListener('dragstart', function(e) {
+                draggedElement = el;
+                const rect = el.getBoundingClientRect();
+                offsetX = e.clientX - rect.left; 
+                offsetY = e.clientY - rect.top;
+            });
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                clearElementSelection();
+                el.classList.add('selected');
+                selectedActiveElement = el;
+                
+                const img = el.querySelector('.inserted-image-el');
+                const stamp = el.querySelector('.official-stamp-box');
+                if(img || stamp) {
+                    document.getElementById('shape-width').value = el.offsetWidth;
+                    document.getElementById('shape-height').value = el.offsetHeight;
+                    return;
+                }
+
+                const inner = el.querySelector('.shape-line, .shape-rect, .shape-diamond');
+                if (inner) {
+                    document.getElementById('shape-width').value = inner.classList.contains('shape-line') ? inner.offsetWidth : inner.style.width.replace('px','');
+                    document.getElementById('shape-height').value = inner.classList.contains('shape-line') ? inner.offsetHeight : inner.style.height.replace('px','');
+                    document.getElementById('shape-border-style').value = inner.style.borderStyle || 'solid';
+                    document.getElementById('shape-color').value = inner.style.borderColor || '#000000';
+                }
+            });
+        }
+        document.querySelectorAll('.draggable').forEach(makeElementDraggable);
+
+        function setupPageDropZones(page) {
+            if (!page) return;
+            page.addEventListener('dragover', function(e) { e.preventDefault(); });
+            page.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedElement) {
+                    const pageRect = page.getBoundingClientRect();
+                    draggedElement.style.left = (e.clientX - pageRect.left - offsetX) + 'px';
+                    draggedElement.style.top = (e.clientY - pageRect.top - offsetY) + 'px';
+                    if (draggedElement.parentNode !== page) page.appendChild(draggedElement);
+                }
+            });
+        }
+        document.querySelectorAll('.page').forEach(setupPageDropZones);
+
+        const pageBorderStyle = document.getElementById('page-border-style');
+        function applyPageBorders() {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.borderStyle = pageBorderStyle.value === 'none' ? 'none' : pageBorderStyle.value;
+                page.style.borderWidth = pageBorderStyle.value === 'none' ? '0px' : '4px';
+                page.style.borderColor = '#000000';
+            });
+        }
+        pageBorderStyle.addEventListener('change', applyPageBorders);
+
+        document.getElementById('btn-add-page').addEventListener('click', function() {
+            pageCount++;
+            const newPage = document.createElement('div');
+            newPage.className = 'page'; 
+            newPage.id = 'page-' + pageCount;
+            newPage.innerHTML = `<div id="doc-editor-container"><div class="doc-body-editor" contenteditable="true"><div><br></div></div></div>`;
+            document.getElementById('workspace').appendChild(newPage);
+            setupPageDropZones(newPage); 
+            applyPageBorders(); 
+            applyFontsToAllPages();
+        });
+
+        document.getElementById('workspace').addEventListener('click', function() { clearElementSelection(); });
+        document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
+
+        /* ==========================================================================
+           نظام الحجب/التشفير الوثائقي (Redaction System)
+           حدد نصاً في المحرر ثم اضغط حجب بدون رموز أو برموز
+           ========================================================================== */
+        let selectedRedaction = null;
+
+        // توليد كود عشوائي من حروف وأرقام (يتجنب الأحرف المتشابهة 0/O و1/l)
+        function generateRandomCode(length) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+            let code = '';
+            const cryptoObj = window.crypto || window.msCrypto;
+            if (cryptoObj && cryptoObj.getRandomValues) {
+                const arr = new Uint32Array(length);
+                cryptoObj.getRandomValues(arr);
+                for (let i = 0; i < length; i++) code += chars[arr[i] % chars.length];
+            } else {
+                for (let i = 0; i < length; i++) code += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return code;
+        }
+
+        function redactSelection(withSymbol) {
+            const sel = window.getSelection();
+            if (!sel || sel.isCollapsed || !sel.rangeCount) {
+                alert('حدد النص المراد حجبه أولاً داخل محرر المستند');
+                return;
+            }
+
+            const range = sel.getRangeAt(0);
+            const editor = document.getElementById('doc-rich-editor');
+            if (!editor || !editor.contains(range.commonAncestorContainer)) {
+                alert('حدد النص داخل محرر المستند فقط');
+                return;
+            }
+
+            const originalText = range.toString();
+            if (!originalText.trim()) return;
+
+            const span = document.createElement('span');
+            span.className = 'redacted';
+            span.setAttribute('data-original', originalText);
+            span.setAttribute('contenteditable', 'false');
+
+            if (withSymbol) {
+                const codeLen = Math.min(12, Math.max(5, Math.ceil(originalText.length / 2)));
+                const code = generateRandomCode(codeLen);
+                span.setAttribute('data-code', code);
+                span.innerHTML = '<span class="redacted-symbol-overlay">' + code + '</span>';
+            } else {
+                span.textContent = originalText;
+            }
+
+            span.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.redacted.selected-redaction').forEach(r => r.classList.remove('selected-redaction'));
+                span.classList.add('selected-redaction');
+                selectedRedaction = span;
+            });
+
+            range.deleteContents();
+            range.insertNode(span);
+            sel.removeAllRanges();
+            updateRedactionCounter();
+        }
+
+        function updateRedactionCounter() {
+            const counter = document.getElementById('redaction-counter');
+            if (!counter) return;
+            const total = document.querySelectorAll('.redacted').length;
+            const coded = document.querySelectorAll('.redacted[data-code]').length;
+            counter.textContent = 'العناصر المحجوبة: ' + total + ' (بأكواد: ' + coded + ')';
+        }
+
+        document.getElementById('btn-redact-plain').addEventListener('click', function() {
+            redactSelection(false);
+        });
+        document.getElementById('btn-redact-symbol').addEventListener('click', function() {
+            redactSelection(true);
+        });
+
+        document.getElementById('btn-unredact').addEventListener('click', function() {
+            if (!selectedRedaction) {
+                alert('انقر على عنصر محجوب (أسود) أولاً لتحديده ثم اضغط فك الحجب');
+                return;
+            }
+            const original = selectedRedaction.getAttribute('data-original');
+            const textNode = document.createTextNode(original);
+            selectedRedaction.parentNode.replaceChild(textNode, selectedRedaction);
+            selectedRedaction = null;
+            updateRedactionCounter();
+        });
+
+        document.getElementById('btn-unredact-all').addEventListener('click', function() {
+            const all = document.querySelectorAll('.redacted');
+            if (all.length === 0) {
+                alert('لا توجد عناصر محجوبة في المستند');
+                return;
+            }
+            if (!confirm('سيتم فك الحجب عن جميع العناصر (' + all.length + ') وإظهار النصوص الأصلية. متابعة؟')) return;
+            all.forEach(el => {
+                const original = el.getAttribute('data-original');
+                el.parentNode.replaceChild(document.createTextNode(original), el);
+            });
+            selectedRedaction = null;
+            updateRedactionCounter();
+        });
+
+        document.getElementById('btn-copy-code').addEventListener('click', function() {
+            if (!selectedRedaction) {
+                alert('انقر على عنصر محجوب بكود أولاً لتحديده ثم اضغط نسخ الكود');
+                return;
+            }
+            const code = selectedRedaction.getAttribute('data-code');
+            if (!code) {
+                alert('العنصر المحدد محجوب بدون كود (مستطيل صامت) — لا يوجد كود لنسخه');
+                return;
+            }
+            const done = () => alert('تم نسخ الكود: ' + code);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(done).catch(() => {
+                    window.prompt('انسخ الكود يدوياً:', code);
+                });
+            } else {
+                window.prompt('انسخ الكود يدوياً:', code);
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.redacted') && !e.target.closest('#btn-unredact')) {
+                document.querySelectorAll('.redacted.selected-redaction').forEach(r => r.classList.remove('selected-redaction'));
+                selectedRedaction = null;
+            }
+        });
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        document.getElementById('btn-print-legend').addEventListener('click', function() {
+            const allRedacted = document.querySelectorAll('.redacted[data-code]');
+            if (allRedacted.length === 0) {
+                alert('لا توجد عناصر محجوبة بأكواد في المستند حالياً');
+                return;
+            }
+
+            const entries = [];
+            let idx = 0;
+            allRedacted.forEach(el => {
+                idx++;
+                entries.push({
+                    num: idx,
+                    code: el.getAttribute('data-code'),
+                    original: el.getAttribute('data-original')
+                });
+            });
+
+            const docIdEl = document.getElementById('lbl-doc-id');
+            const docId = docIdEl ? docIdEl.textContent.trim() : 'N/A';
+            const printDate = new Date().toLocaleString('ar-EG');
+
+            let legendHtml = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">';
+            legendHtml += '<title>دليل فك الأكواد السري</title>';
+            legendHtml += '<style>';
+            legendHtml += 'body{font-family:Arial,sans-serif;padding:40px;direction:rtl;text-align:right;}';
+            legendHtml += '.legend-header{text-align:center;border-bottom:3px double #000;padding-bottom:15px;margin-bottom:25px;}';
+            legendHtml += '.legend-header h1{font-size:22px;margin-bottom:5px;}';
+            legendHtml += '.legend-header p{font-size:13px;color:#333;}';
+            legendHtml += '.warn-box{background:#fff3cd;border:2px solid #000;padding:12px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;}';
+            legendHtml += 'table{width:100%;border-collapse:collapse;margin-top:15px;}';
+            legendHtml += 'th,td{border:2px solid #000;padding:12px 15px;text-align:center;font-size:15px;}';
+            legendHtml += 'th{background:#000;color:#fff;font-size:14px;}';
+            legendHtml += '.code-cell{font-family:"Courier New",monospace;font-weight:bold;font-size:16px;letter-spacing:2px;direction:ltr;background:#000;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}';
+            legendHtml += '.orig-cell{text-align:right;font-size:15px;}';
+            legendHtml += '.footer{margin-top:30px;text-align:center;font-size:11px;color:#555;border-top:1px solid #ccc;padding-top:10px;}';
+            legendHtml += '@media print{body{padding:20mm;}.warn-box{background:#fff3cd !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}th{background:#000 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.code-cell{background:#000 !important;color:#fff !important;}}';
+            legendHtml += '</style></head><body>';
+            legendHtml += '<div class="legend-header">';
+            legendHtml += '<h1>دليل فك أكواد التشفير الوثائقي — سري للغاية</h1>';
+            legendHtml += '<p>مرجع المستند (MRN): ' + escapeHtml(docId) + ' | تاريخ الإصدار: ' + escapeHtml(printDate) + '</p>';
+            legendHtml += '</div>';
+            legendHtml += '<div class="warn-box">⚠ وثيقة سرية — تربط كل كود بالنص الأصلي المحجوب — يُحظر نسخها أو توزيعها خارج نطاق الصلاحية ⚠</div>';
+            legendHtml += '<table><thead><tr><th>#</th><th>الكود على المستند</th><th>النص الأصلي المحجوب</th></tr></thead><tbody>';
+
+            entries.forEach(e => {
+                legendHtml += '<tr><td>' + e.num + '</td><td class="code-cell">' + escapeHtml(e.code) + '</td><td class="orig-cell">' + escapeHtml(e.original) + '</td></tr>';
+            });
+
+            legendHtml += '</tbody></table>';
+            legendHtml += '<div class="footer">تم إنشاء هذا الدليل آلياً بواسطة المنصة السيادية المتقدمة لهندسة الوثائق V23.0</div>';
+            legendHtml += '</body></html>';
+
+            const legendWindow = window.open('', '_blank');
+            if (!legendWindow) {
+                alert('تعذّر فتح صفحة الدليل — يرجى السماح بالنوافذ المنبثقة (Popups) لهذا الملف');
+                return;
+            }
+            legendWindow.document.write(legendHtml);
+            legendWindow.document.close();
+            legendWindow.focus();
+            setTimeout(function() { legendWindow.print(); }, 500);
+        });
+
+        /* ==========================================================================
+           5. محرك التفكيك والاستدعاء المطور والذكي V23.0
+           ========================================================================== */
+        document.getElementById('btn-save-template').addEventListener('click', function() {
+            const shapesArray = [];
+            document.querySelectorAll('.page .shape-element').forEach(el => {
+                const imgEl = el.querySelector('.inserted-image-el');
+                const stampEl = el.querySelector('.official-stamp-box');
+                let shapeData = {
+                    id: el.id, top: el.style.top, left: el.style.left,
+                    width: el.style.width, height: el.style.height,
+                    type: imgEl ? 'image' : (stampEl ? 'stamp' : (el.querySelector('.shape-line') ? 'line' : (el.querySelector('.shape-rect') ? 'rect' : 'diamond')))
+                };
+
+                if (shapeData.type === 'image') {
+                    shapeData.imgSrc = imgEl.src;
+                } else if (shapeData.type === 'stamp') {
+                    shapeData.stampHtml = stampEl.innerHTML;
+                    shapeData.width = stampEl.style.width;
+                    shapeData.height = stampEl.style.height;
+                    shapeData.borderColor = stampEl.style.borderColor;
+                    shapeData.borderStyle = stampEl.style.borderStyle;
+                } else if (shapeData.type !== 'line') {
+                    const inner = el.querySelector('.shape-rect, .shape-diamond');
+                    shapeData.text = el.querySelector('.shape-text').textContent;
+                    shapeData.borderColor = inner.style.borderColor;
+                    shapeData.borderStyle = inner.style.borderStyle;
+                    shapeData.width = inner.style.width;
+                    shapeData.height = inner.style.height;
+                } else {
+                    const line = el.querySelector('.shape-line');
+                    shapeData.width = line.style.width;
+                    shapeData.height = line.style.height;
+                    shapeData.color = line.style.backgroundColor;
+                }
+                shapesArray.push(shapeData);
+            });
+
+            const templateData = {
+                borderStyle: pageBorderStyle.value,
+                classification: classification.value,
+                fontArabic: docArabicFontSelector.value,
+                fontEnglish: docEnglishFontSelector.value,
+                fontShape: docShapeFontSelector.value,
+                watermarkText: inputWatermarkText.value,
+                watermarkOpacity: sliderWatermarkOpacity.value,
+                watermarkAngle: selectWatermarkAngle.value,
+                savedDocId: document.getElementById('lbl-doc-id') ? document.getElementById('lbl-doc-id').textContent : '',
+                savedDocDate: document.getElementById('lbl-doc-date') ? document.getElementById('lbl-doc-date').textContent : '',
+                savedDocFrom: document.getElementById('lbl-doc-from') ? document.getElementById('lbl-doc-from').textContent : '',
+                savedDocAction: document.getElementById('lbl-doc-action') ? document.getElementById('lbl-doc-action').textContent : '',
+                savedDocEo: document.getElementById('lbl-doc-eo') ? document.getElementById('lbl-doc-eo').textContent : '',
+                savedDocTags: document.getElementById('lbl-doc-tags') ? document.getElementById('lbl-doc-tags').textContent : '',
+                savedDocRef: document.getElementById('lbl-doc-ref') ? document.getElementById('lbl-doc-ref').textContent : '',
+                savedDocSubject: document.getElementById('lbl-doc-subject') ? document.getElementById('lbl-doc-subject').textContent : '',
+                headerWidth: headerWidthInput.value,
+                headerFontSize: sliderHeaderFont.value,
+                bodyFontSize: sliderBodyFont.value,
+                headerTopPos: sliderHeaderTop.value,
+                titleHtml: document.getElementById('title-wrapper-zone').innerHTML,
+                bodyHtml: document.getElementById('doc-rich-editor').innerHTML,
+                savedShapes: shapesArray
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templateData));
+    const dl = document.createElement('a'); 
+    dl.setAttribute("href", dataStr); 
+    dl.setAttribute("download", "RCI-AUTO-DIRECTION-TEMPLATE.json");
+    document.body.appendChild(dl); dl.click(); dl.remove();
+});
+
+document.getElementById('template-loader').addEventListener('change', function(e) {
+    const file = e.target.files[0]; if (!file) return;
+    const fileName = file.name.toLowerCase();
+
+    // إخلاء المحتوى والبيانات القديمة لمنع التداخل والتعارض الجذري
+    document.getElementById('title-wrapper-zone').innerHTML = '';
+    document.getElementById('doc-rich-editor').innerHTML = '';
+    document.querySelectorAll('.page .shape-element').forEach(el => el.remove());
+
+    if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const arrayBuffer = event.target.result;
+            mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+                .then(function(result) {
+                    let rawHtml = result.value;
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = rawHtml;
+                    const plainText = tempDiv.textContent || tempDiv.innerText;
+
+                    function extractField(regex) {
+                        const match = plainText.match(regex);
+                        return match ? match[1].trim() : null;
+                    }
+
+                    const extractedMrn = extractField(/mrn\s*:\s*([^\n\r]+)/i);
+                    const extractedDate = extractField(/date\/dtg\s*:\s*([^\n\r]+)/i);
+                    const extractedFrom = extractField(/from\s*:\s*([^\n\r]+)/i);
+                    const extractedAction = extractField(/action\s*:\s*([^\n\r]+)/i);
+                    const extractedEo = extractField(/e\.o\.\s*:\s*([^\n\r]+)/i);
+                    const extractedTags = extractField(/tags\s*:\s*([^\n\r]+)/i);
+                    const extractedRef = extractField(/reference\s*:\s*([^\n\r]+)/i);
+                    const extractedSubject = extractField(/subject\s*:\s*([^\n\r]+)/i);
+
+                    if (extractedMrn && document.getElementById('lbl-doc-id')) document.getElementById('lbl-doc-id').textContent = extractedMrn;
+                    if (extractedDate && document.getElementById('lbl-doc-date')) document.getElementById('lbl-doc-date').textContent = extractedDate;
+                    if (extractedFrom && document.getElementById('lbl-doc-from')) document.getElementById('lbl-doc-from').textContent = extractedFrom;
+                    if (extractedAction && document.getElementById('lbl-doc-action')) document.getElementById('lbl-doc-action').textContent = extractedAction;
+                    if (extractedEo && document.getElementById('lbl-doc-eo')) document.getElementById('lbl-doc-eo').textContent = extractedEo;
+                    if (extractedTags && document.getElementById('lbl-doc-tags')) document.getElementById('lbl-doc-tags').textContent = extractedTags;
+                    if (extractedRef && document.getElementById('lbl-doc-ref')) document.getElementById('lbl-doc-ref').textContent = extractedRef;
+                    
+                    if (extractedSubject && document.getElementById('lbl-doc-subject')) {
+                        document.getElementById('lbl-doc-subject').textContent = extractedSubject;
+                    } else if(document.getElementById('lbl-doc-subject')) {
+                        const fallbackSubject = plainText.replace(/[\r\n]+/g, ' ').trim().substring(0, 60) + "...";
+                        document.getElementById('lbl-doc-subject').textContent = fallbackSubject || "AUTO_LOADED_DOCUMENT";
+                    }
+
+                    document.getElementById('doc-rich-editor').innerHTML = rawHtml;
+                    applyFontsToAllPages();
+                    updateClassificationUI();
+                    alert("تم استيراد مستند الـ Word وتطهير الحقول السابقة بنجاح تـام!");
+                });
+        };
+        reader.readAsArrayBuffer(file);
+    } 
+    else if (fileName.endsWith('.json')) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                
+                pageBorderStyle.value = data.borderStyle || 'none';
+                classification.value = data.classification || 'secret';
+                docArabicFontSelector.value = data.fontArabic || "'LocalAmiri', 'Amiri', serif";
+                docEnglishFontSelector.value = data.fontEnglish || "'LocalCourierNew', 'Courier New', monospace";
+                docShapeFontSelector.value = data.fontShape || "'LocalCourierNew', 'Courier New', monospace";
+                
+                document.documentElement.style.setProperty('--font-arabic-current', docArabicFontSelector.value);
+                document.documentElement.style.setProperty('--font-english-current', docEnglishFontSelector.value);
+                document.documentElement.style.setProperty('--font-shape-current', docShapeFontSelector.value);
+
+                inputWatermarkText.value = data.watermarkText || "CONFIDENTIAL";
+                sliderWatermarkOpacity.value = data.watermarkOpacity || 6;
+                selectWatermarkAngle.value = data.watermarkAngle || "-45deg";
+                
+                headerWidthInput.value = data.headerWidth || '280';
+                sliderHeaderFont.value = data.headerFontSize || '11';
+                sliderBodyFont.value = data.bodyFontSize || '15';
+                sliderHeaderTop.value = data.headerTopPos || '0';
+                
+                if(document.getElementById('lbl-doc-id')) document.getElementById('lbl-doc-id').textContent = data.savedDocId || '';
+                if(document.getElementById('lbl-doc-date')) document.getElementById('lbl-doc-date').textContent = data.savedDocDate || '';
+                if(document.getElementById('lbl-doc-from')) document.getElementById('lbl-doc-from').textContent = data.savedDocFrom || '';
+                if(document.getElementById('lbl-doc-action')) document.getElementById('lbl-doc-action').textContent = data.savedDocAction || '';
+                if(document.getElementById('lbl-doc-eo')) document.getElementById('lbl-doc-eo').textContent = data.savedDocEo || '';
+                if(document.getElementById('lbl-doc-tags')) document.getElementById('lbl-doc-tags').textContent = data.savedDocTags || '';
+                if(document.getElementById('lbl-doc-ref')) document.getElementById('lbl-doc-ref').textContent = data.savedDocRef || '';
+                if(document.getElementById('lbl-doc-subject')) document.getElementById('lbl-doc-subject').textContent = data.savedDocSubject || '';
+
+                document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
+                document.getElementById('doc-rich-editor').innerHTML = data.bodyHtml || '';
+                
+                refreshWatermarkStyles();
+
+                const header = getActiveHeaderInfo();
+                if(header) {
+                    header.style.width = headerWidthInput.value + 'px';
+                    header.style.top = sliderHeaderTop.value + 'px';
+                }
+                document.documentElement.style.setProperty('--header-font-size', sliderHeaderFont.value + 'px');
+                document.documentElement.style.setProperty('--body-font-size', sliderBodyFont.value + 'px');
+            } catch(err) {
+                console.error("خطأ في معالجة JSON:", err);
+            }
+        };
+        reader.readAsText(file);
+    }
+});
+
+// ==========================================================================
+// النظام السيادي V26.0 - محركات المعالجة المتكاملة
+// ==========================================================================
+
+function smartDirectionEngine() {
+    // اتجاه مربع الترويسة فقط يتبع لغة المستند الغالبة؛ أما اتجاه فقرات المحرر
+    // فيُدار فقرةً بفقرة داخل applyFontsToAllPages حتى لا تتعارض المستندات المختلطة.
+    const header = document.getElementById('doc-header-info');
+    const editor = document.getElementById('doc-rich-editor');
+    if (!header) return;
+
+    const content = editor ? editor.innerText : '';
+    const hasArabic = /[\u0600-\u06FF]/.test(content);
+    const hasLatin = /[a-zA-Z]/.test(content);
+
+    if (hasLatin && !hasArabic) {
+        header.style.direction = 'ltr';
+        header.style.textAlign = 'left';
+    } else {
+        header.style.direction = 'rtl';
+        header.style.textAlign = 'right';
+    }
+}
+
+function setHeaderAlign(align) {
+    const header = document.getElementById('doc-header-info');
+    if (header) {
+        const dir = (align === 'left') ? 'ltr' : (align === 'right' ? 'rtl' : 'ltr');
+        header.style.direction = dir;
+        header.style.textAlign = align;
+        
+        const fields = header.querySelectorAll('.meta-line, .meta-editable-value');
+        fields.forEach(field => {
+            field.style.direction = dir;
+            field.style.textAlign = align;
+            field.style.justifyContent = (align === 'left') ? 'flex-start' : (align === 'right' ? 'flex-end' : 'center');
+        });
+    }
+}
+
+function addAnchorToWorkspace() {
+    const anchor = document.createElement('div');
+    anchor.className = 'anchor-point draggable';
+    anchor.style.position = 'absolute';
+    anchor.style.top = '150px';
+    anchor.style.left = '100px';
+    anchor.style.width = '12px';
+    anchor.style.height = '12px';
+    anchor.style.background = '#00ff41';
+    anchor.style.cursor = 'crosshair';
+    
+    const activePage = document.getElementById('page-1') || document.querySelector('.page');
+    if (activePage) {
+        activePage.appendChild(anchor);
+        if (typeof makeElementDraggable === 'function') {
+            makeElementDraggable(anchor);
+        }
+    }
+}
+
+const editor = document.getElementById('doc-rich-editor');
+if (editor) {
+    editor.addEventListener('input', smartDirectionEngine);
+}
+
+window.addEventListener('load', () => {
+    applyFontsToAllPages();
+});
+
+// ==========================================================================
+// V24.0 — التحسينات الاحترافية: أقسام قابلة للطي، إظهار/إخفاء الترويسة،
+// تذييل CONFIDENTIAL لكل صفحة، اختصارات لوحة المفاتيح، حفظ تلقائي
+// ==========================================================================
+
+/* ---------- (1) أقسام لوحة التحكم القابلة للطي ---------- */
+(function setupCollapsibleSections() {
+    const panel = document.getElementById('control-panel');
+    if (!panel) return;
+    const titles = panel.querySelectorAll('.section-title');
+    titles.forEach(title => {
+        // اجمع كل العناصر التالية حتى section-title التالي ضمن body
+        const body = document.createElement('div');
+        body.className = 'section-body';
+        let next = title.nextElementSibling;
+        const toMove = [];
+        while (next && !next.classList.contains('section-title')) {
+            toMove.push(next);
+            next = next.nextElementSibling;
+        }
+        toMove.forEach(el => body.appendChild(el));
+        title.parentNode.insertBefore(body, title.nextSibling);
+
+        title.addEventListener('click', () => {
+            title.classList.toggle('collapsed');
+            body.classList.toggle('collapsed');
+            saveCollapsedState();
+        });
+    });
+    // استعادة الحالة المحفوظة
+    try {
+        const saved = JSON.parse(localStorage.getItem('rci_collapsed_sections') || '[]');
+        titles.forEach((t, i) => {
+            if (saved.includes(i)) {
+                t.classList.add('collapsed');
+                t.nextElementSibling.classList.add('collapsed');
+            }
+        });
+    } catch(e) {}
+
+    function saveCollapsedState() {
+        const state = [];
+        titles.forEach((t, i) => { if (t.classList.contains('collapsed')) state.push(i); });
+        localStorage.setItem('rci_collapsed_sections', JSON.stringify(state));
+    }
+})();
+
+/* ---------- (2) إظهار/إخفاء مربع الترويسة (مخفي افتراضياً) ---------- */
+(function setupHeaderToggle() {
+    const cb = document.getElementById('toggle-header-box');
+    if (!cb) return;
+    const saved = localStorage.getItem('rci_header_visible');
+    // الافتراضي: مخفي
+    const visible = (saved === '1');
+    cb.checked = visible;
+    document.body.classList.toggle('hide-header-box', !visible);
+    cb.addEventListener('change', () => {
+        document.body.classList.toggle('hide-header-box', !cb.checked);
+        localStorage.setItem('rci_header_visible', cb.checked ? '1' : '0');
+        showToast(cb.checked ? 'تم إظهار مربع المعلومات' : 'تم إخفاء مربع المعلومات');
+    });
+})();
+
+/* ---------- (3) رأس + تذييل CONFIDENTIAL على كل ورقة عند الوضع السري ---------- */
+function refreshConfidentialFooters() {
+    const isSecret = (document.getElementById('doc-classification').value === 'secret');
+    document.body.classList.toggle('secret-mode', isSecret);
+    const txt = (document.getElementById('confidential-text-input')?.value || 'CONFIDENTIAL');
+
+    document.querySelectorAll('.page').forEach(page => {
+        let footer = page.querySelector('.confidential-footer');
+        if (!footer) {
+            footer = document.createElement('div');
+            footer.className = 'confidential-footer';
+            page.appendChild(footer);
+        }
+        footer.textContent = txt;
+
+        let header = page.querySelector('.confidential-header');
+        if (!header) {
+            header = document.createElement('div');
+            header.className = 'confidential-header';
+            page.appendChild(header);
+        }
+        header.textContent = txt;
+    });
+}
+document.getElementById('doc-classification').addEventListener('change', refreshConfidentialFooters);
+
+// تحكم تذييل CONFIDENTIAL: النص + الخط + الحجم
+(function(){
+    const textIn = document.getElementById('confidential-text-input');
+    const sel = document.getElementById('confidential-font-selector');
+    const slider = document.getElementById('confidential-size-slider');
+    const sizeVal = document.getElementById('confidential-size-value');
+
+    // استعادة الإعدادات المحفوظة
+    const savedText = localStorage.getItem('rci_confidential_text');
+    const savedFont = localStorage.getItem('rci_confidential_font');
+    const savedSize = localStorage.getItem('rci_confidential_size');
+    if (savedText && textIn) textIn.value = savedText;
+    if (savedFont && sel) { sel.value = savedFont; document.documentElement.style.setProperty('--confidential-font', savedFont); }
+    if (savedSize && slider) {
+        slider.value = savedSize;
+        sizeVal.textContent = savedSize;
+        document.documentElement.style.setProperty('--confidential-size', savedSize + 'px');
+    }
+
+    textIn?.addEventListener('input', () => {
+        localStorage.setItem('rci_confidential_text', textIn.value);
+        refreshConfidentialFooters();
+    });
+    sel?.addEventListener('change', () => {
+        document.documentElement.style.setProperty('--confidential-font', sel.value);
+        localStorage.setItem('rci_confidential_font', sel.value);
+    });
+    slider?.addEventListener('input', () => {
+        sizeVal.textContent = slider.value;
+        document.documentElement.style.setProperty('--confidential-size', slider.value + 'px');
+        localStorage.setItem('rci_confidential_size', slider.value);
+    });
+})();
+// تشغيل أوّلي + مراقبة الصفحات المُضافة
+window.addEventListener('load', refreshConfidentialFooters);
+const pageObserver = new MutationObserver(() => { refreshConfidentialFooters(); applyFontsToAllPages(); });
+const ws = document.getElementById('workspace');
+if (ws) pageObserver.observe(ws, { childList: true });
+
+/* ---------- (4) اختصارات لوحة المفاتيح ---------- */
+document.addEventListener('keydown', function(e) {
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (!ctrl) return;
+    const k = e.key.toLowerCase();
+    if (k === 's') {
+        e.preventDefault();
+        document.getElementById('btn-save-template').click();
+        showToast('💾 تم حفظ القالب');
+    } else if (k === 'p') {
+        e.preventDefault();
+        window.print();
+    } else if (k === 'h') {
+        e.preventDefault();
+        const cb = document.getElementById('toggle-header-box');
+        if (cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
+    } else if (k === 'enter' && e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('btn-add-page').click();
+        showToast('➕ تمت إضافة صفحة جديدة');
+    }
+});
+
+/* ---------- (5) حفظ تلقائي للمحتوى في localStorage ---------- */
+const AUTOSAVE_KEY = 'rci_autosave_v24';
+let autosaveTimer = null;
+function autosaveNow() {
+    try {
+        const data = {
+            ts: Date.now(),
+            bodyHtml: document.getElementById('doc-rich-editor').innerHTML,
+            titleHtml: document.getElementById('title-wrapper-zone').innerHTML,
+            meta: {
+                id: document.getElementById('lbl-doc-id')?.textContent,
+                date: document.getElementById('lbl-doc-date')?.textContent,
+                from: document.getElementById('lbl-doc-from')?.textContent,
+                subject: document.getElementById('lbl-doc-subject')?.textContent,
+                ref: document.getElementById('lbl-doc-ref')?.textContent
+            }
+        };
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
+        updateStatusBar('💾 حُفظ تلقائياً ' + new Date().toLocaleTimeString('ar-EG'));
+    } catch(e) { console.warn('autosave failed', e); }
+}
+function scheduleAutosave() {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(autosaveNow, 1500);
+}
+document.getElementById('doc-rich-editor').addEventListener('input', scheduleAutosave);
+document.getElementById('doc-header-info').addEventListener('input', scheduleAutosave);
+
+window.addEventListener('load', () => {
+    try {
+        const raw = localStorage.getItem(AUTOSAVE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (!data.bodyHtml) return;
+        // استعد فقط إذا الورقة فعلياً فارغة
+        const ed = document.getElementById('doc-rich-editor');
+        if (ed && ed.textContent.trim().length === 0) {
+            if (confirm('تم العثور على نسخة محفوظة تلقائياً من جلسة سابقة. هل تريد استعادتها؟')) {
+                ed.innerHTML = data.bodyHtml;
+                document.getElementById('title-wrapper-zone').innerHTML = data.titleHtml || '';
+                applyFontsToAllPages();
+                showToast('✅ تمت استعادة النسخة المحفوظة');
+            }
+        }
+    } catch(e) {}
+});
+
+/* ---------- (6) شريط الحالة + Toast ---------- */
+(function injectStatusBar() {
+    const bar = document.createElement('div');
+    bar.id = 'status-bar';
+    bar.innerHTML = `
+        <div class="status-item"><span class="status-dot"></span><span>المنصة جاهزة V24.0</span></div>
+        <div class="status-item" id="status-message">جاهز</div>
+        <div class="status-item" id="status-stats">صفحات: 1 · كلمات: 0</div>
+    `;
+    document.body.appendChild(bar);
+
+    const toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+})();
+
+function updateStatusBar(msg) {
+    const el = document.getElementById('status-message');
+    if (el) el.textContent = msg;
+}
+function updateStats() {
+    const pages = document.querySelectorAll('.page').length;
+    const text = document.getElementById('doc-rich-editor').textContent || '';
+    const words = text.trim().split(/\s+/).filter(Boolean).length;
+    const el = document.getElementById('status-stats');
+    if (el) el.textContent = `صفحات: ${pages} · كلمات: ${words}`;
+}
+document.getElementById('doc-rich-editor').addEventListener('input', updateStats);
+window.addEventListener('load', updateStats);
+new MutationObserver(updateStats).observe(document.getElementById('workspace'), { childList: true });
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ---------- (7) تلميح بالاختصارات ---------- */
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        showToast('💡 Ctrl+S حفظ · Ctrl+P طباعة · Ctrl+H إخفاء الترويسة · Shift+Enter صفحة');
+    }, 800);
+});
+
+/* ==========================================================================
+   (8) مدير حقول مربع المعلومات — إضافة/حذف/توليد آلي
+   ========================================================================== */
+const FIELDS_KEY = 'rci_header_fields_v1';
+let headerFields = []; // [{id, label, type, value}]
+
+function genAutoValue(type) {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const pad = (n, l=2) => String(n).padStart(l, '0');
+    const d = new Date();
+    if (type === 'auto:code') {
+        let s = ''; for (let i=0;i<8;i++) s += chars[Math.floor(Math.random()*chars.length)];
+        return s;
+    }
+    if (type === 'auto:hex') {
+        return Array.from({length:8}, () => Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');
+    }
+    if (type === 'auto:uuid') {
+        if (crypto && crypto.randomUUID) return crypto.randomUUID().toUpperCase();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+            const r = Math.random()*16|0; return (c==='x'?r:(r&0x3|0x8)).toString(16);
+        }).toUpperCase();
+    }
+    if (type === 'auto:date') return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    if (type === 'auto:datetime') return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    if (type === 'auto:dtg') {
+        const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+        return `${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}Z ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+    if (type === 'auto:number') return String(Math.floor(100000 + Math.random()*899999));
+    return '';
+}
+
+function saveFields() {
+    try { localStorage.setItem(FIELDS_KEY, JSON.stringify(headerFields)); } catch(e) {}
+}
+function loadFields() {
+    try {
+        const raw = localStorage.getItem(FIELDS_KEY);
+        if (raw) headerFields = JSON.parse(raw) || [];
+    } catch(e) { headerFields = []; }
+}
+
+function renderHeaderFields() {
+    const holder = document.getElementById('meta-fields-holder');
+    if (!holder) return;
+    holder.innerHTML = '';
+    headerFields.forEach(f => {
+        const line = document.createElement('div');
+        line.className = 'meta-line';
+        line.setAttribute('data-field-id', f.id);
+        if (f.type !== 'manual') line.setAttribute('data-auto', '1');
+        const lbl = document.createElement('strong');
+        lbl.textContent = f.label + ':';
+        const val = document.createElement('span');
+        val.className = 'meta-editable-value';
+        val.setAttribute('contenteditable', 'true');
+        val.textContent = f.value || '';
+        val.addEventListener('input', () => {
+            const ff = headerFields.find(x => x.id === f.id);
+            if (ff) { ff.value = val.textContent; saveFields(); }
+        });
+        line.appendChild(lbl);
+        line.appendChild(val);
+        holder.appendChild(line);
+    });
+    renderFieldList();
+    document.body.classList.toggle('no-header-fields', headerFields.length === 0);
+}
+
+function renderFieldList() {
+    const list = document.getElementById('field-list-container');
+    if (!list) return;
+    list.innerHTML = '';
+    if (headerFields.length === 0) {
+        list.innerHTML = '<div style="font-size:11px; color:#888; text-align:center; padding:6px;">لا توجد حقول — أضف حقلاً من الأعلى</div>';
+        return;
+    }
+    headerFields.forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'field-list-item';
+        const typeLabel = f.type === 'manual' ? 'يدوي' : 'آلي (' + f.type.replace('auto:','') + ')';
+        item.innerHTML = `<span class="fli-name">${escapeHtml(f.label)}</span><span class="fli-type">${typeLabel}</span>`;
+        if (f.type !== 'manual') {
+            const r = document.createElement('button');
+            r.className = 'fli-refresh';
+            r.textContent = '🔄';
+            r.title = 'توليد قيمة جديدة';
+            r.onclick = () => { f.value = genAutoValue(f.type); saveFields(); renderHeaderFields(); };
+            item.appendChild(r);
+        }
+        const del = document.createElement('button');
+        del.textContent = '✕';
+        del.title = 'حذف الحقل';
+        del.onclick = () => {
+            headerFields = headerFields.filter(x => x.id !== f.id);
+            saveFields(); renderHeaderFields();
+        };
+        item.appendChild(del);
+        list.appendChild(item);
+    });
+}
+
+document.getElementById('btn-add-field')?.addEventListener('click', () => {
+    const labelEl = document.getElementById('new-field-label');
+    const typeEl = document.getElementById('new-field-type');
+    const label = (labelEl.value || '').trim();
+    if (!label) { alert('أدخل اسم الحقل أولاً'); labelEl.focus(); return; }
+    const type = typeEl.value;
+    const field = {
+        id: 'f_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+        label, type,
+        value: type === 'manual' ? '' : genAutoValue(type)
+    };
+    headerFields.push(field);
+    saveFields();
+    renderHeaderFields();
+    labelEl.value = '';
+    // إظهار المربع تلقائياً عند إضافة أول حقل
+    const cb = document.getElementById('toggle-header-box');
+    if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event('change')); }
+    showToast('✅ تم إضافة الحقل: ' + label);
+});
+
+document.getElementById('btn-regen-auto')?.addEventListener('click', () => {
+    let n = 0;
+    headerFields.forEach(f => {
+        if (f.type !== 'manual') { f.value = genAutoValue(f.type); n++; }
+    });
+    saveFields(); renderHeaderFields();
+    showToast(`🔄 أُعيد توليد ${n} قيمة آلية`);
+});
+
+loadFields();
+renderHeaderFields();
+
+/* ==========================================================================
+   (9) ترقيم آلي للصفحات: إنشاء صفحة جديدة عند تجاوز المحتوى أو Enter بنهاية الورقة
+   ========================================================================== */
+function pageOverflows(page) {
+    const editor = page.querySelector('.doc-body-editor');
+    if (!editor) return false;
+    // مقارنة ارتفاع المحتوى مع الارتفاع المتاح
+    return editor.scrollHeight - editor.clientHeight > 4;
+}
+
+function ensureNextPage(currentPage) {
+    let next = currentPage.nextElementSibling;
+    if (next && next.classList.contains('page')) return next;
+    document.getElementById('btn-add-page').click();
+    return currentPage.nextElementSibling;
+}
+
+function moveOverflowToNext(currentPage) {
+    if (!pageOverflows(currentPage)) return null;
+    const next = ensureNextPage(currentPage);
+    if (!next) return null;
+    const fromEditor = currentPage.querySelector('.doc-body-editor');
+    const toEditor = next.querySelector('.doc-body-editor');
+    if (!fromEditor || !toEditor) return null;
+    // انقل الفقرات الأخيرة حتى يختفي الفائض
+    let guard = 0;
+    while (pageOverflows(currentPage) && fromEditor.children.length > 1 && guard < 200) {
+        const last = fromEditor.lastElementChild;
+        if (toEditor.firstChild) toEditor.insertBefore(last, toEditor.firstChild);
+        else toEditor.appendChild(last);
+        guard++;
+    }
+    return next;
+}
+
+function handleEditorInput(e) {
+    const editor = e.target.closest('.doc-body-editor');
+    if (!editor) return;
+    const page = editor.closest('.page');
+    if (!page) return;
+    if (pageOverflows(page)) {
+        const next = moveOverflowToNext(page);
+        if (next && e.type === 'keydown' && e.key === 'Enter') {
+            // ضع المؤشر في بداية الصفحة الجديدة
+            const nextEditor = next.querySelector('.doc-body-editor');
+            if (nextEditor) {
+                nextEditor.focus();
+                const range = document.createRange();
+                const sel = window.getSelection();
+                if (nextEditor.firstChild) {
+                    range.setStart(nextEditor.firstChild, 0);
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                }
+            }
+        }
+    }
+}
+
+document.addEventListener('input', handleEditorInput);
+document.addEventListener('keyup', handleEditorInput);
+
+    </script>
+</body>
+</html>
